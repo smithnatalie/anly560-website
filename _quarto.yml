@@ -5,8 +5,8 @@ website:
   title: "Natalie Smith"
   navbar:
     left:
-      - href: index.qmd
-        text: About Me
+      - text: "Home"
+        file: index.qmd
       - introduction.qmd
       - data-sources.qmd
       - data-visualization.qmd

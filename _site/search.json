@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Natalie Smith",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\nTesting natalie website new testing testing testing"
+    "text": "What is a Time Series?\nAny metric that is measured over regular time intervals makes a Time Series.\nExample: Weather data, Stock prices, Industry forecasts, etc are some of the common ones. The analysis of experimental data that have been observed at different points in time leads to new and unique problems in statistical modeling and inference.\nThe obvious correlation introduced by the sampling of adjacent points in time can severely restrict the applicability of the many conventional statistical methods traditionally dependent on the assumption that these adjacent observations are independent and identically distributed."
   },
   {
     "objectID": "introduction.html",
@@ -25,6 +25,6 @@
     "href": "data-visualization.html",
     "title": "Natalie Smith",
     "section": "",
-    "text": "What is a Time Series?\nAny metric that is measured over regular time intervals makes a Time Series.\nExample: Weather data, Stock prices, Industry forecasts, etc are some of the common ones. The analysis of experimental data that have been observed at different points in time leads to new and unique problems in statistical modeling and inference.\nThe obvious correlation introduced by the sampling of adjacent points in time can severely restrict the applicability of the many conventional statistical methods traditionally dependent on the assumption that these adjacent observations are independent and identically distributed."
+    "text": "XOM      CVX     SHEL      Dates       date\n2012-10-01 59.73258 76.87350 39.79351 2012-10-01 2012-10-01\n2012-10-02 59.68050 77.33901 40.08011 2012-10-02 2012-10-02\n2012-10-03 59.66752 76.14571 39.84510 2012-10-03 2012-10-03\n2012-10-04 60.00588 76.80792 40.01135 2012-10-04 2012-10-04\n2012-10-05 60.22060 77.03740 40.05146 2012-10-05 2012-10-05\n2012-10-08 60.30518 77.11607 40.06291 2012-10-08 2012-10-08\n\n\n\n\n\n\n\nHover over the plot to see the difference.\n\ng4<- ggplot(stock, aes(x=date)) +\n  geom_line(aes(y=XOM, colour=\"XOM\"))+\n  geom_line(aes(y=CVX, colour=\"CVX\"))+\n  geom_line(aes(y=SHEL, colour=\"SHEL\"))+\n   labs(\n    title = \"Stock Prices for the Oil and Gas Companies\",\n    subtitle = \"From 2013-2022\",\n    x = \"Date\",\n    y = \"Adjusted Closing Prices\")+\n    guides(colour=guide_legend(title=\"Oil and Gas Companies\")) \n\n\nggplotly(g4) %>%\n  layout(hovermode = \"x\")"
   }
 ]

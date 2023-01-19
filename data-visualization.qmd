@@ -1,18 +1,101 @@
 ---
 #title: "Data Visualization"
+headertext: "Data Visualization"
 format: 
   html:
     theme: lux
 ---
 
-```{r include = FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+
+
+```{r ,echo=FALSE, message=FALSE, warning=FALSE}
+library(flipbookr)
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
 ```
 
-What is a Time Series?
+```{r, echo=FALSE}
 
-Any metric that is measured over regular time intervals makes a Time Series.
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
 
-Example: Weather data, Stock prices, Industry forecasts, etc are some of the common ones. The analysis of experimental data that have been observed at different points in time leads to new and unique problems in statistical modeling and inference.
+tickers = c("XOM","CVX","SHEL")
+for (i in tickers){
+  getSymbols(i,
+             from = "2012-10-01",
+             to = "2022-12-01")}
 
-The obvious correlation introduced by the sampling of adjacent points in time can severely restrict the applicability of the many conventional statistical methods traditionally dependent on the assumption that these adjacent observations are independent and identically distributed.
+x <- list(
+  title = "date"
+)
+y <- list(
+  title = "value"
+)
+
+stock <- data.frame(XOM$XOM.Adjusted,
+                    CVX$CVX.Adjusted,
+                    SHEL$SHEL.Adjusted)
+
+
+stock <- data.frame(stock,rownames(stock))
+colnames(stock) <- append(tickers,'Dates')
+
+stock$date<-as.Date(stock$Dates,"%Y-%m-%d")
+head(stock)
+```
+
+
+```{r, echo=FALSE}
+ggplot(stock, aes(x=date)) +
+  geom_line(aes(y=XOM, colour="XOM"))+
+  geom_line(aes(y=CVX, colour="CVX"))+
+  geom_line(aes(y=SHEL, colour="SHEL"))+
+   labs(
+    title = "Stock Prices for Oil and Gas Companies",
+    subtitle = "From 2013-2022",
+    x = "Date",
+    y = "Adjusted Closing Prices")+
+    theme(panel.background = element_rect(fill = "white", colour = "grey50"))+
+    guides(colour=guide_legend(title="Oil and Gas Companies")) 
+
+```
+
+Hover over the plot to see the difference.
+ 
+```{r}
+g4<- ggplot(stock, aes(x=date)) +
+  geom_line(aes(y=XOM, colour="XOM"))+
+  geom_line(aes(y=CVX, colour="CVX"))+
+  geom_line(aes(y=SHEL, colour="SHEL"))+
+   labs(
+    title = "Stock Prices for the Oil and Gas Companies",
+    subtitle = "From 2013-2022",
+    x = "Date",
+    y = "Adjusted Closing Prices")+
+    guides(colour=guide_legend(title="Oil and Gas Companies")) 
+
+
+ggplotly(g4) %>%
+  layout(hovermode = "x")
+```
+
+
+
+
+
+
+
+
