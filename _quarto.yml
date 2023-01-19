@@ -8,6 +8,14 @@ website:
       - href: index.qmd
         text: About Me
       - introduction.qmd
+      - data-sources.qmd
+      - data-visualization.qmd
+      - eda.qmd
+      - autoregressive-models.qmd
+      - spectral.qmd
+      - financial-models.qmd
+      - deep-learning.qmd
+      - conclusions.qmd
       
 format:
   html:
