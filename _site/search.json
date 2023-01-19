@@ -5,5 +5,12 @@
     "title": "Natalie Smith",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\nTesting natalie website new testing testing testing"
+  },
+  {
+    "objectID": "introduction.html",
+    "href": "introduction.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
   }
 ]
