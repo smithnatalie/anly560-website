@@ -7,7 +7,7 @@ website:
     left:
       - href: index.qmd
         text: About Me
-      - introduction.qmd
+      - introduction.html
 
 format:
   html:
