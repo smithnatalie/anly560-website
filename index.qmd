@@ -1,9 +1,12 @@
 ---
 title: "anly560-quarto"
+format: 
+  html:
+    theme: lux
 ---
 
 This is a Quarto website.
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-Testing natalie website
+Testing natalie website new testing  testing
