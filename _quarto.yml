@@ -11,7 +11,7 @@ website:
 
 format:
   html:
-    theme: lux
+    theme: yeti
     css: styles.css
     toc: true
 
