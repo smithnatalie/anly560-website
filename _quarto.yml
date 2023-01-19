@@ -8,8 +8,7 @@ website:
       - href: index.qmd
         text: About Me
       - introduction.qmd
-          text: Introduction
-
+      
 format:
   html:
     theme: lux
