@@ -7,10 +7,8 @@ website:
     left:
       - text: "Home"
         file: index.qmd
-      - text: "Introduction"
-        file: introduction.qmd
-      - text: "Data Sources"
-        file: data-sources.qmd
+      - introduction.qmd
+      - data-sources.qmd
       - data-visualization.qmd
       - eda.qmd
       - autoregressive-models.qmd
