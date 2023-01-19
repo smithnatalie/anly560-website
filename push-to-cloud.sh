@@ -1,7 +1,7 @@
 #adding comment to push
 
 # SYNC LOCAL VERSION OF WEBSITE TO GU-DOMAINS SERVER
-rsync -alvr --delete _site/ smithnat@gtown.reclaimhosting.com:/home/smithnat/public_html/anly560
+rsync -alvr _site/ smithnat@gtown.reclaimhosting.com:/home/smithnat/public_html/anly560
 
 # PUSH GIT REPO TO THE CLOUD FOR BACKUP
 DATE=$(date +"DATE-%Y-%m-%d-TIME-%H-%M-%S")
