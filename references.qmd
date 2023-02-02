@@ -1,0 +1,12 @@
+---
+title: "References"
+format: 
+  html:
+    theme: lux
+---
+
+### **Data Sources:**
+
+### **Article References:**
+
+1. Luscombe, Richard. “Will Florida Be Lost Forever to the Climate Crisis?” The Guardian, Guardian News and Media, 21 Apr. 2020, https://www.theguardian.com/environment/2020/apr/21/florida-climate-crisis-sea-level-habitat-loss. 
