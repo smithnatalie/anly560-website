@@ -5,5 +5,48 @@ format:
     theme: lux
 ---
 
-Add data sources section here!
+Various data sources were gathered to create a hollistic, detailed study of climate impacts to the state of Florida. 
+
+All references and links to the following data on the web is located in the References tab.
+
+#### Temperature Data
+
+National Oceanic and Atmospheric Administration's (NOAA) National Centers for Environmental Information:
+
+- Monthly Average Temperature (1895-2022)
+- Monthly Minimum Temperature (1895-2022)
+- Monthly Maximum Temperature (1895-2022)
+
+#### Precipitation Data
+
+Also from NOAA's National Centers for Environmental Information:
+
+- Monthly Precipitation Levels (in inches)(1895-2022)
+
+#### Hurricane and Tropical Storm Data
+
+NOAA Historical Hurricane Tracks:
+
+- Hurricanes and Tropical Storms that made landfall in Florida (1851 - 2021)
+    + Includes storm name, year, date range, wind speed, and pressure.
+
+NOAA National Centers for Environmental Information - Storm Events Database:
+
+- Property damage caused by hurricanes and tropical storms in USD (1996-2022)
+
+#### Flooding
+
+NOAA National Centers for Environmental Information - Storm Events Database:
+
+- Recorded Flooding in Florida (General Floods, Coastal Floods, and Flash Floods) (1996-2022)
+    + Includes data on flood-related property damage in USD
+
+#### Coastal Erosion
+
+Florida Department of Environmental Protection:
+
+- Critical Coastal Erosion Areas
+- Critically Eroded Beaches in Florida
+- Historical Shoreline Database (*Currently reaching out to Florida Department of Environmental Protection GIS and Support department to get access to this data*)
+
 

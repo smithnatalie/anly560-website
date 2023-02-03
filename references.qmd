@@ -7,6 +7,13 @@ format:
 
 ### **Data Sources:**
 
+1. Florida Department of Environmental Protection: Historical Shoreline Database: https://floridadep.gov/rcp/beaches-inlets-ports/content/historic-shoreline-database
+2. NOAA Historical Hurricane Tracks: https://coast.noaa.gov/hurricanes/#map=11.26/28.1411/-91.7719&search=eyJzZWFyY2hTdHJpbmciOiJGbG9yaWRhLCBVU0EiLCJzZWFyY2hUeXBlIjoiZ2VvY29kZWQiLCJvc21JRCI6IjE2MjA1MCIsImNhdGVnb3JpZXMiOlsiSDUiLCJINCIsIkgzIiwiSDIiLCJIMSIsIlRTIiwiVEQiLCJFVCJdLCJ5ZWFycyI6W10sIm1vbnRocyI6W10sImVuc28iOltdLCJwcmVzc3VyZSI6eyJyYW5nZSI6WzAsMTE1MF0sImluY2x1ZGVVbmtub3duUHJlc3N1cmUiOnRydWV9LCJidWZmZXIiOjYwLCJidWZmZXJVbml0IjpbIk5hdXRpY2FsIE1pbGVzIl0sInNvcnRTZWxlY3Rpb24iOnsidmFsdWUiOiJ5ZWFyc19uZXdlc3QiLCJsYWJlbCI6IlllYXIgKE5ld2VzdCkifSwiYXBwbHlUb0FPSSI6dHJ1ZSwiaXNTdG9ybUxhYmVsc1Zpc2libGUiOnRydWV9
+3. NOAA Storm Events Database: https://www.ncdc.noaa.gov/stormevents/
+4. NOAA Climate at a Glance Statewide Time Series Data: https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/pcp/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000
+
+
+
 ### **Article References:**
 
 1. Luscombe, Richard. “Will Florida Be Lost Forever to the Climate Crisis?” The Guardian, Guardian News and Media, 21 Apr. 2020, https://www.theguardian.com/environment/2020/apr/21/florida-climate-crisis-sea-level-habitat-loss. 

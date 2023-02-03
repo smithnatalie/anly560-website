@@ -16,17 +16,24 @@ In the United States, scientists are often looking at Florida when observing bot
 In this project, I will be using time series analysis to study the the current consequences of climate change and predict its potential impacts on the future by zooming in on the state of Florida and answering the following questions:
 
   1. How has Florida's temperature changed over the last few decades?
-    i.) Have averages temperatures continued to trend upwards?
-    ii.) Is Florida experiencing consistent record-high temperatures in the summer year after year?
+      i) Have averages temperatures continued to trend upwards?
+      ii) Is Florida experiencing consistent record-high temperatures in the summer year after year?
   2. Is Florida seeing consistent temperature increases in every season compared to previous years?
-    i.) For example, are winters in Florida in the 2010s and 2020s consistently hotter than the Florida winters of previous decades?
+      i) For example, are winters in Florida in the 2010s and 2020s consistently hotter than the Florida winters of previous decades?
   3. Can current climate data be used to predict future temperature trends in Florida in the coming decades?
+
   4. Has precipitation in Florida changed over the last few decades? Is the state seeing increased, decreased, or relatively constant levels of rain year after year?
+
   5. Have the number hurricanes and tropical storms affecting the state changed over the last few decades?
+
   6. Has the intensity and damage caused by major storms (particularly hurricanes and tropical storms) affecting the state increased?
+
   7. Has flooding overall in coastal Floridian cities and town changed over the years?
+
   8. Has the cost of repairing damage done by major storms, storm surge, and flooding increased over the last few decades?
-  9. How has climate change affected the cost of homes, home insurance, and/or flood insurance in coastal Floridian cities and towns?
+
+  9. How has climate change affected the cost of property and flood insurance in coastal Floridian cities and towns?
+
   10. What is the extent to which Florida's coastline has receded over the decades?
-    i.) Is the state experiencing coastal erosion at a faster rate than in previous decades?
-    ii.) How rapidly are local sea levels rising?
+      i) Is the state experiencing coastal erosion at a faster pace than in previous decades?
+      ii) How rapidly are local sea levels rising?
