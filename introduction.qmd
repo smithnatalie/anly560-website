@@ -32,7 +32,7 @@ In this project, I will be using time series analysis to study the the current c
 
   8. Has the cost of repairing damage done by major storms, storm surge, and flooding increased over the last few decades?
 
-  9. How has climate change affected the cost of property and flood insurance in coastal Floridian cities and towns?
+  9. How has climate change affected the cost of homes, home insurance, and/or flood insurance in coastal Floridian cities and towns?
 
   10. What is the extent to which Florida's coastline has receded over the decades?
       i) Is the state experiencing coastal erosion at a faster pace than in previous decades?
