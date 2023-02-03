@@ -16,6 +16,7 @@ website:
       - financial-models.qmd
       - deep-learning.qmd
       - conclusions.qmd
+      - references.qmd
       
 format:
   html:
