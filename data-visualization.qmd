@@ -3,6 +3,7 @@ title: "Data Visualization"
 format: 
   html:
     theme: lux
+    code-fold: true
 ---
 
 ### **1. Temperature: How has temperature in the state of Florida changed over the years?**
