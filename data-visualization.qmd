@@ -110,7 +110,9 @@ Overall, it's a bit hard to tell from this data visualization alone whether or n
 
 Interestingly enough, a quick search on Florida 2010 December yields a number of results, each reporting the year as the "Coldest December on Record", according to a report from NOAA's [2014 South Florida Weather Year in Review](https://www.weather.gov/media/mfl/news/2010WxSummary.pdf). In this report, they discuss that 2010 overall was a year of extremes, with the summer earlier in the year being recorded as the hottest summer in South Florida history. 
 
-{{< pagebreak >}}
+
+::: {.border}
+:::
 
 
 #### Plotting July Temperature Data Using ggplot:
