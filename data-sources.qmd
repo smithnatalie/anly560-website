@@ -13,9 +13,13 @@ All references and links to the following data on the web is located in the Refe
 
 National Oceanic and Atmospheric Administration's (NOAA) National Centers for Environmental Information:
 
-- Monthly Average Temperature (1895-2022)
-- Monthly Minimum Temperature (1895-2022)
-- Monthly Maximum Temperature (1895-2022)
+- [December Monthly Average Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tavg/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+- [December Monthly Minimum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmax/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+- [December Monthly Maximum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmin/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+- [July Monthly Average Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tavg/1/7/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+- [July Monthly Minimum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmin/1/7/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+- [July Monthly Maximum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmax/1/7/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+
 
 #### Precipitation Data
 

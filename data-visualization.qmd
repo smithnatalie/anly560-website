@@ -5,15 +5,110 @@ format:
     theme: lux
 ---
 
-### **What is a Time Series?**
+### **1. Temperature: How has temperature in the state of Florida changed over the years?**
 
--   Any metric that is measured over regular time intervals makes a Time Series.
+In this section, I want to use time series analysis in the form of time series plots and visualizations to analyze if Florida's minimum, maximum, and average temperature has changed over the years, and, if it has, to what extent it has changed. Although more analysis will need to be done later to determine the significance of these changes, starting with a visual approach will allow for immediate notice of trends over time. 
 
-    -   Example: Weather data, Stock prices, Industry forecasts, etc are some of the common ones.
+The goal of this first set of visualizations ties back to the following questions listed out in the Guiding Questions for Analysis listed out in the Introduction page of this project:
 
--   The analysis of experimental data that have been observed at different points in time leads to new and unique problems in statistical modeling and inference.
+1. How has Florida’s temperature changed over the last few decades?
+      i) Have averages temperatures continued to trend upwards?
+      ii) Is Florida experiencing consistent record-high temperatures in the summer year after year?
+      
+2. Is Florida seeing consistent temperature increases in every season compared to previous years?
+      i) For example, are winters in Florida in the 2010s and 2020s consistently hotter than the Florida winters of previous decades?
 
--   The obvious correlation introduced by the sampling of adjacent points in time can severely restrict the applicability of the many conventional statistical methods traditionally dependent on the assumption that these adjacent observations are independent and identically distributed.
+To begin to answer these questions, I will be looking at temperature changes observed during the month of **December** specifically.
+
+
+#### Plotting December Temperature Data Using Plotly:
+
+```{r, message=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+library(dplyr)
+```
+
+As highlighted in the Data Sources tab of this project, the minimum, maximum, and monthly average temperatures from 1895-2022 in Florida are spread across three different datasets from NOAA's National Centers for Environmental Information. The first thing I need to do is combine this information into one cohesive data frame that can be used for analysis.
+
+```{r}
+#Reading in all three datasets:
+
+avg.temp = read.csv("datasets/temperature/Avg_Temp_1895-2022.csv")
+min.temp = read.csv("datasets/temperature/Min_Temp_1895-2022.csv")
+max.temp = read.csv("datasets/temperature/Max_Temp_1895-2022.csv")
+
+
+#For each, remove the first three rows and the last column, as these are not useful for this analysis
+avg.temp = avg.temp[-(1:4),]
+avg.temp = avg.temp %>% select(-December)
+
+min.temp = min.temp[-(1:4),]
+min.temp = min.temp %>% select(-December)
+
+max.temp = max.temp[-(1:4),]
+max.temp = max.temp %>% select(-December)
+
+#Join all dataframes together 
+
+temp.combo = list(avg.temp, min.temp, max.temp)
+temp.combo = temp.combo %>% reduce(full_join, by='Florida')
+
+#Rename 'Florida' column as Date
+
+temp.combo = temp.combo %>% rename("Date" = "Florida")
+
+# Change Date from character to actual date-time structure
+
+temp.combo$Date = as.Date(paste0(as.character(temp.combo$Date), '01'), format = '%Y%m%d')
+
+```
+
+A table of the first ten values of the combined temperature dataframe can be seen below. (*Note that the date will always say "December 1st" of each month to ensure this is in proper datetime format - it is not necessarily the case that these temperatures (in the case of min and max) were observed on the first of each December.*):
+
+```{r}
+kable(head(temp.combo, 10), align = 'c') %>%
+  kable_styling(font_size = 13) %>%
+    row_spec(0, bold = TRUE, color = "white", background = "darkblue")
+  
+```
+
+```{r}
+require(dplyr)
+require(plotly)
+figure = plot_ly(x = ~temp.combo$Date, y= ~temp.combo$Average.Temperature) %>%
+  add_lines(y = temp.combo$Maximum.Temperature, name = "Maximum Temperature") %>%
+  add_lines(y = temp.combo$Average.Temperature, name = "Average Temperature") %>%
+  add_lines(y = temp.combo$Minimum.Temperature, name = "Minimum Temperature") %>%
+  
+  layout(xaxis = list(title = "Year"), yaxis=list(title="Temperature (F)"), title = "December Temperatures in Florida (1895-2022)",
+         legend  = list(x=100, y = 0.5))
+  
+  
+figure
+```
+
+Overall, it's a bit hard to tell from this data visualization alone whether or not December temperatures on average across Florida have risen significantly. What we can see, however, are years with especially cold or especially warm December in the state. For example, 1931 and 2015 have the two highest maximum, minimum, and average temperatures across the entire dataset, while the coldest December on record was actually in 2010, followed by 1903. 
+
+Interestingly enough, a quick search on Florida 2010 December yields a number of results, each reporting the year as the "Coldest December on Record", according to a report from NOAA's [2014 South Florida Weather Year in Review](https://www.weather.gov/media/mfl/news/2010WxSummary.pdf). In this report, they discuss that 2010 overall was a year of extremes, with the summer earlier in the year being recorded as the hottest summer in South Florida history. 
+
+
+#### Plotting July Temperature Data Using ggplot:
+
+Through using plotly 
+
+
+
+
+
 
 ### **Data Visualization with Stock Data**
 
