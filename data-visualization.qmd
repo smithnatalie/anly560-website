@@ -25,7 +25,7 @@ To begin to answer these questions, I will be looking at temperature changes obs
 
 
 
-#### Plotting December Temperature Data Using Plotly:
+### Plotting December Temperature Data Using Plotly:
 
 
 ```{r, message=FALSE}
@@ -112,8 +112,7 @@ Interestingly enough, a quick search on Florida 2010 December yields a number of
 
 
 
-
-#### Plotting July Temperature Data Using ggplot:
+### Plotting July Temperature Data Using ggplot:
 
 Through using plotly, I was able to learn a bit more about Florida's temperature and climate. Overall, it seems like the minimum, maximum, and average temperatures during the winter have not changed all that much since 1895. However, the plot encouraged some additional exploration into December 2010 in the state, after which I learned that the same year that saw record low temperatures during the winter also saw record high temperatures during the summer. This prompted further exploration into Florida's hottest month of the year, July, to answer my guiding questions for this project.
 
