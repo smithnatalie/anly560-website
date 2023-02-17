@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -119,6 +182,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./conclusions.html">
  <span class="menu-text">Conclusions</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./references.html">
+ <span class="menu-text">References</span></a>
+  </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
@@ -130,7 +197,13 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#precipitation-exploring-floridas-average-monthly-rainfall" id="toc-precipitation-exploring-floridas-average-monthly-rainfall" class="nav-link active" data-scroll-target="#precipitation-exploring-floridas-average-monthly-rainfall">**Precipitation: Exploring Florida’s average monthly rainfall*</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -152,9 +225,206 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Add EDA section here!</p>
+<section id="precipitation-exploring-floridas-average-monthly-rainfall" class="level3">
+<h3 class="anchored" data-anchor-id="precipitation-exploring-floridas-average-monthly-rainfall">**Precipitation: Exploring Florida’s average monthly rainfall*</h3>
+<p>In this section, I want to perform exploratory data analysis on my precipitation dataset to answer the following questions listed out in the Guiding Questions for Analysis in my Introduction to this project:</p>
+<ol type="1">
+<li><p>Has precipitation in Florida changed over the last few decades? Is the state seeing increased, decreased, or relatively constant levels of rain year after year?</p></li>
+<li><p>Is precipitation in Florida more common in some months than others?</p></li>
+</ol>
+<section id="introduction-to-the-rainfall-dataset" class="level4">
+<h4 class="anchored" data-anchor-id="introduction-to-the-rainfall-dataset">Introduction to the rainfall dataset</h4>
+<p>To start, I will read in and clean the data before moving on to EDA.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyquant)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rainfall <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"datasets/precipitation/rainfall_1895-2022.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># rainfall$Date = as.Date(paste0(as.character(rainfall$Date), '01'), format = '%Y%m%d')</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>rainfall <span class="ot">=</span> rainfall<span class="sc">$</span>Value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now, the rainfall data can be turned into a time series object for further analysis. The basic initial plot of the rainfall time series can be seen below.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rainfall.ts = xts(rainfall, order.by = rainfall$Date)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rainfall.ts</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rainfall.ts <span class="ot">=</span> <span class="fu">ts</span>(rainfall, <span class="at">frequency =</span> <span class="dv">12</span>, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1895</span>,<span class="dv">1</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(rainfall.ts, <span class="at">main =</span> <span class="st">"Initial Rainfall Time Series (1895-2022)"</span>, <span class="at">xlab =</span> <span class="st">"Year"</span>, <span class="at">ylab =</span> <span class="st">"Rainfall (in)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="identifying-time-series-components-of-florida-rainfall" class="level4">
+<h4 class="anchored" data-anchor-id="identifying-time-series-components-of-florida-rainfall">Identifying time series components of Florida rainfall</h4>
+<p>Because the initial time series plot above contains too many data points to legible, I am going to zoom in on the 1990 to 2022 time period to see if we can get a clearer visual to draw conclusions from.</p>
+<p>When looking at the new time series plot below, it does not seem like there are any observable upward or downward trends to suggest that rainfall in Florida has increased or decreased over the years. However, there is an observable high variation in rainfall and what looks to be apparent seasonality. Based on the visual alone, I would conclude that the seasonality is neither additive nor multiplicative, because it</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rainfall_2 <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"datasets/precipitation/rainfall_1895-2022.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>rainfall_2 <span class="ot">=</span> rainfall_2[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1140</span>),]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>rainfall_2 <span class="ot">=</span> rainfall_2<span class="sc">$</span>Value</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>rainfall2.ts <span class="ot">=</span> <span class="fu">ts</span>(rainfall_2, <span class="at">frequency =</span> <span class="dv">12</span>, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1990</span>,<span class="dv">1</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(rainfall2.ts, <span class="at">main =</span> <span class="st">"Monthly Average Florida Rainfall (1990-2022)"</span>, <span class="at">xlab =</span> <span class="st">"Year"</span>, <span class="at">ylab =</span> <span class="st">"Rainfall (in)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="decomposition-testing-for-additive-and-multiplicative-seasonality" class="level4">
+<h4 class="anchored" data-anchor-id="decomposition-testing-for-additive-and-multiplicative-seasonality">Decomposition: Testing for additive and multiplicative seasonality</h4>
+<p>First, I will take an additive decomposition to separate the rainfall time series into its different components.</p>
+<p>Below, we can see that there doesn’t seem to be much of trend, and that average rainfall in Florida since 1990 has remained relatively constant rather than increasing or decreasing. This can also be seen when extracting and plotting the trend component on its own.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ts_rainfall <span class="ot">=</span> <span class="fu">ts</span>(rainfall2.ts, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>decompose_rainfall <span class="ot">=</span> <span class="fu">decompose</span>(ts_rainfall, <span class="st">"additive"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decompose_rainfall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">as.ts</span>(decompose_rainfall<span class="sc">$</span>trend), <span class="at">main =</span> <span class="st">"Rainfall Decomposition: Trend Component"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>However, clear seasonality seems to be present. To look at seasonality alone, I will extract the seasonality component form the decomposition.</p>
+<p>As seen below, the dataset is clearly seasonal, suggesting that rainfall in Florida is seasonal, but not additive or multiplicative as it is not increasing or decreasing over time.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">as.ts</span>(decompose_rainfall<span class="sc">$</span>seasonal[<span class="dv">0</span><span class="sc">:</span><span class="dv">50</span>]), <span class="at">main =</span> <span class="st">"Rainfall Decomposition: Seasonal Component"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="detecting-lag-is-average-florida-rainfall-random-or-non-random" class="level4">
+<h4 class="anchored" data-anchor-id="detecting-lag-is-average-florida-rainfall-random-or-non-random">Detecting Lag: Is average Florida rainfall random or non-random?</h4>
+<p>Next, I will be creating a lag plot of my Florida rainfall dataset. The purpose of this portion of exploratory data analysis is to check for randomness or non-random structures in the dataset, outliers, potential model suitability, correlation, and seasonality.</p>
+<p>Below, we can clearly see that, for all lags 1 through 15, the dataset is exhibiting seasonal lag. We know this because months 1-3, months 4-6, months 7-9, and months 10-12 all exist in respective, separate clusters from each other.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gglagplot</span>(rainfall2.ts, <span class="at">do.lines =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Lags"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Yi"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Lag Plot: Rainfall"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="autocorrelation-is-the-dataset-exhibiting-stationarity" class="level4">
+<h4 class="anchored" data-anchor-id="autocorrelation-is-the-dataset-exhibiting-stationarity">Autocorrelation: Is the dataset exhibiting stationarity?</h4>
+<p>The next important step of the EDA lag process is determining if the time series is stationary or non-stationary. In short, a stationary time series is one in which there is no trend, no seasonality, and constant variance over time. Seasonality is an important component of developing a predictive time series model, and non-stationary time series must be transformed to be stationary before proceeding to model development and fitting.</p>
+<p>We can determine if the dataset is stationary or not by looking at the ACF and PACF plots below.</p>
+<p>Below, we can see that there is clear seasonality in the ACF plot, with yearly lag peaks at 12, 24, 36, and 48. Visually, this means that the dataset is not stationary. To confirm the lack of stationarity, we will perform the Augmented Dickey-Fuller Test next.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(rainfall.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: Rainfall TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(rainfall.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"PACF: Rainfall TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="augmented-dickey-fuller-test-confirming-lack-of-stationarity" class="level4">
+<h4 class="anchored" data-anchor-id="augmented-dickey-fuller-test-confirming-lack-of-stationarity">Augmented Dickey-Fuller Test: Confirming lack of stationarity</h4>
+<p>Below, we can see that the results of the ADF test seem to suggest stationarity with a small p-value. However, because of the results of the ACF plot, which is a more reliable measure of stationarity, we can conclude that the time series is not stationary.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tseries<span class="sc">::</span><span class="fu">adf.test</span>(rainfall.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  rainfall.ts
+Dickey-Fuller = -9.3746, Lag order = 11, p-value = 0.01
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+</section>
+<section id="differencing-making-the-rainfall-time-series-stationary" class="level4">
+<h4 class="anchored" data-anchor-id="differencing-making-the-rainfall-time-series-stationary">Differencing: Making the Rainfall Time Series Stationary</h4>
+<p>Here, we can see that taking the first difference has improved the presence of seasonality, but it is still there, meaning that the data is not yet stationary.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>rainfall.diff <span class="ot">=</span> <span class="fu">autoplot</span>(<span class="fu">diff</span>(rainfall.ts), <span class="at">main =</span> <span class="st">"First Difference"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>diff.acf <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(rainfall.ts), <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: First Difference"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(rainfall.diff, diff.acf, <span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As seen below, taking the second difference seems to do the trick and make the data stationary.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>rainfall.diff2 <span class="ot">=</span> <span class="fu">autoplot</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(rainfall.ts)), <span class="at">main =</span> <span class="st">"Second Difference"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>diff.acf2 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(rainfall.ts)), <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: Second Difference"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(rainfall.diff2, diff.acf2, <span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

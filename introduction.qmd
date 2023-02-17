@@ -23,17 +23,19 @@ In this project, I will be using time series analysis to study the the current c
   3. Can current climate data be used to predict future temperature trends in Florida in the coming decades?
 
   4. Has precipitation in Florida changed over the last few decades? Is the state seeing increased, decreased, or relatively constant levels of rain year after year?
+  
+  5. Is precipitation in Florida more common in some months than others?
 
-  5. Have the number hurricanes and tropical storms affecting the state changed over the last few decades?
+  6. Have the number hurricanes and tropical storms affecting the state changed over the last few decades?
 
-  6. Has the intensity and damage caused by major storms (particularly hurricanes and tropical storms) affecting the state increased?
+  7. Has the intensity and damage caused by major storms (particularly hurricanes and tropical storms) affecting the state increased?
 
-  7. Has flooding overall in coastal Floridian cities and town changed over the years?
+  8. Has flooding overall in coastal Floridian cities and town changed over the years?
 
-  8. Has the cost of repairing damage done by major storms, storm surge, and flooding increased over the last few decades?
+  9. Has the cost of repairing damage done by major storms, storm surge, and flooding increased over the last few decades?
 
-  9. How has climate change affected the cost of homes, home insurance, and/or flood insurance in coastal Floridian cities and towns?
+  10. How has climate change affected the cost of homes, home insurance, and/or flood insurance in coastal Floridian cities and towns?
 
-  10. What is the extent to which Florida's coastline has receded over the decades?
+  11. What is the extent to which Florida's coastline has receded over the decades?
       i) Is the state experiencing coastal erosion at a faster pace than in previous decades?
       ii) How rapidly are local sea levels rising?
