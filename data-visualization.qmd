@@ -7,7 +7,7 @@ format:
 ---
 
 
-### **1. Temperature: How has temperature in the state of Florida changed over the years?**
+### **Temperature: How has temperature in the state of Florida changed over the years?**
 
 
 In this section, I want to use time series analysis in the form of time series plots and visualizations to analyze if Florida's minimum, maximum, and average temperature has changed over the years, and, if it has, to what extent it has changed. Although more analysis will need to be done later to determine the significance of these changes, starting with a visual approach will allow for immediate notice of trends over time. 
