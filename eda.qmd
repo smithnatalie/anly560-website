@@ -6,7 +6,7 @@ format:
     code-fold: true
 ---
 
-### **Precipitation: Exploring Florida's average monthly rainfall*
+### **Precipitation: Exploring Florida's average monthly rainfall**
 
 In this section, I want to perform exploratory data analysis on my precipitation dataset to answer the following questions listed out in the Guiding Questions for Analysis in my Introduction to this project:
 
@@ -52,7 +52,7 @@ rainfall.ts = ts(rainfall, frequency = 12, start = c(1895,1))
 autoplot(rainfall.ts, main = "Initial Rainfall Time Series (1895-2022)", xlab = "Year", ylab = "Rainfall (in)")
 ```
 
-#### Identifying time series components of Florida rainfall
+### Identifying time series components of Florida rainfall
 
 Because the initial time series plot above contains too many data points to legible, I am going to zoom in on the 1990 to 2022 time period to see if we can get a clearer visual to draw conclusions from.
 
@@ -67,7 +67,9 @@ rainfall2.ts = ts(rainfall_2, frequency = 12, start = c(1990,1))
 
 autoplot(rainfall2.ts, main = "Monthly Average Florida Rainfall (1990-2022)", xlab = "Year", ylab = "Rainfall (in)")
 ```
-#### Decomposition: Testing for additive and multiplicative seasonality
+
+
+### Decomposition: Testing for additive and multiplicative seasonality
 
 First, I will take an additive decomposition to separate the rainfall time series into its different components.
 
@@ -90,7 +92,7 @@ As seen below, the dataset is clearly seasonal, suggesting that rainfall in Flor
 autoplot(as.ts(decompose_rainfall$seasonal[0:50]), main = "Rainfall Decomposition: Seasonal Component")
 ```
 
-#### Detecting Lag: Is average Florida rainfall random or non-random?
+### Detecting Lag: Is average Florida rainfall random or non-random?
 
 Next, I will be creating a lag plot of my Florida rainfall dataset. The purpose of this portion of exploratory data analysis is to check for randomness or non-random structures in the dataset, outliers, potential model suitability, correlation, and seasonality.
 
@@ -101,7 +103,7 @@ gglagplot(rainfall2.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle(
 
 ```
 
-#### Autocorrelation: Is the dataset exhibiting stationarity?
+### Autocorrelation: Is the dataset exhibiting stationarity?
 
 The next important step of the EDA lag process is determining if the time series is stationary or non-stationary. In short, a stationary time series is one in which there is no trend, no seasonality, and constant variance over time. Seasonality is an important component of developing a predictive time series model, and non-stationary time series must be transformed to be stationary before proceeding to model development and fitting. 
 
@@ -117,14 +119,15 @@ ggPacf(rainfall.ts, 48, main = "PACF: Rainfall TS")
 
 ```
 
-#### Augmented Dickey-Fuller Test: Confirming lack of stationarity
+### Augmented Dickey-Fuller Test: Confirming lack of stationarity
 
 Below, we can see that the results of the ADF test seem to suggest stationarity with a small p-value. However, because of the results of the ACF plot, which is a more reliable measure of stationarity, we can conclude that the time series is not stationary.
 
 ```{r, warning=FALSE}
 tseries::adf.test(rainfall.ts)
 ```
-#### Differencing: Making the Rainfall Time Series Stationary 
+
+### Differencing: Making the Rainfall Time Series Stationary 
 
 Here, we can see that taking the first difference has improved the presence of seasonality, but it is still there, meaning that the data is not yet stationary.  
 

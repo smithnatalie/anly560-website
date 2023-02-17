@@ -201,7 +201,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#precipitation-exploring-floridas-average-monthly-rainfall" id="toc-precipitation-exploring-floridas-average-monthly-rainfall" class="nav-link active" data-scroll-target="#precipitation-exploring-floridas-average-monthly-rainfall">**Precipitation: Exploring Florida’s average monthly rainfall*</a></li>
+  <li><a href="#precipitation-exploring-floridas-average-monthly-rainfall" id="toc-precipitation-exploring-floridas-average-monthly-rainfall" class="nav-link active" data-scroll-target="#precipitation-exploring-floridas-average-monthly-rainfall"><strong>Precipitation: Exploring Florida’s average monthly rainfall</strong></a></li>
+  <li><a href="#identifying-time-series-components-of-florida-rainfall" id="toc-identifying-time-series-components-of-florida-rainfall" class="nav-link" data-scroll-target="#identifying-time-series-components-of-florida-rainfall">Identifying time series components of Florida rainfall</a></li>
+  <li><a href="#decomposition-testing-for-additive-and-multiplicative-seasonality" id="toc-decomposition-testing-for-additive-and-multiplicative-seasonality" class="nav-link" data-scroll-target="#decomposition-testing-for-additive-and-multiplicative-seasonality">Decomposition: Testing for additive and multiplicative seasonality</a></li>
+  <li><a href="#detecting-lag-is-average-florida-rainfall-random-or-non-random" id="toc-detecting-lag-is-average-florida-rainfall-random-or-non-random" class="nav-link" data-scroll-target="#detecting-lag-is-average-florida-rainfall-random-or-non-random">Detecting Lag: Is average Florida rainfall random or non-random?</a></li>
+  <li><a href="#autocorrelation-is-the-dataset-exhibiting-stationarity" id="toc-autocorrelation-is-the-dataset-exhibiting-stationarity" class="nav-link" data-scroll-target="#autocorrelation-is-the-dataset-exhibiting-stationarity">Autocorrelation: Is the dataset exhibiting stationarity?</a></li>
+  <li><a href="#augmented-dickey-fuller-test-confirming-lack-of-stationarity" id="toc-augmented-dickey-fuller-test-confirming-lack-of-stationarity" class="nav-link" data-scroll-target="#augmented-dickey-fuller-test-confirming-lack-of-stationarity">Augmented Dickey-Fuller Test: Confirming lack of stationarity</a></li>
+  <li><a href="#differencing-making-the-rainfall-time-series-stationary" id="toc-differencing-making-the-rainfall-time-series-stationary" class="nav-link" data-scroll-target="#differencing-making-the-rainfall-time-series-stationary">Differencing: Making the Rainfall Time Series Stationary</a></li>
   </ul>
 </nav>
     </div>
@@ -226,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <section id="precipitation-exploring-floridas-average-monthly-rainfall" class="level3">
-<h3 class="anchored" data-anchor-id="precipitation-exploring-floridas-average-monthly-rainfall">**Precipitation: Exploring Florida’s average monthly rainfall*</h3>
+<h3 class="anchored" data-anchor-id="precipitation-exploring-floridas-average-monthly-rainfall"><strong>Precipitation: Exploring Florida’s average monthly rainfall</strong></h3>
 <p>In this section, I want to perform exploratory data analysis on my precipitation dataset to answer the following questions listed out in the Guiding Questions for Analysis in my Introduction to this project:</p>
 <ol type="1">
 <li><p>Has precipitation in Florida changed over the last few decades? Is the state seeing increased, decreased, or relatively constant levels of rain year after year?</p></li>
@@ -277,8 +283,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="identifying-time-series-components-of-florida-rainfall" class="level4">
-<h4 class="anchored" data-anchor-id="identifying-time-series-components-of-florida-rainfall">Identifying time series components of Florida rainfall</h4>
+</section>
+<section id="identifying-time-series-components-of-florida-rainfall" class="level3">
+<h3 class="anchored" data-anchor-id="identifying-time-series-components-of-florida-rainfall">Identifying time series components of Florida rainfall</h3>
 <p>Because the initial time series plot above contains too many data points to legible, I am going to zoom in on the 1990 to 2022 time period to see if we can get a clearer visual to draw conclusions from.</p>
 <p>When looking at the new time series plot below, it does not seem like there are any observable upward or downward trends to suggest that rainfall in Florida has increased or decreased over the years. However, there is an observable high variation in rainfall and what looks to be apparent seasonality. Based on the visual alone, I would conclude that the seasonality is neither additive nor multiplicative, because it</p>
 <div class="cell">
@@ -297,8 +304,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="decomposition-testing-for-additive-and-multiplicative-seasonality" class="level4">
-<h4 class="anchored" data-anchor-id="decomposition-testing-for-additive-and-multiplicative-seasonality">Decomposition: Testing for additive and multiplicative seasonality</h4>
+<section id="decomposition-testing-for-additive-and-multiplicative-seasonality" class="level3">
+<h3 class="anchored" data-anchor-id="decomposition-testing-for-additive-and-multiplicative-seasonality">Decomposition: Testing for additive and multiplicative seasonality</h3>
 <p>First, I will take an additive decomposition to separate the rainfall time series into its different components.</p>
 <p>Below, we can see that there doesn’t seem to be much of trend, and that average rainfall in Florida since 1990 has remained relatively constant rather than increasing or decreasing. This can also be seen when extracting and plotting the trend component on its own.</p>
 <div class="cell">
@@ -333,8 +340,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="detecting-lag-is-average-florida-rainfall-random-or-non-random" class="level4">
-<h4 class="anchored" data-anchor-id="detecting-lag-is-average-florida-rainfall-random-or-non-random">Detecting Lag: Is average Florida rainfall random or non-random?</h4>
+<section id="detecting-lag-is-average-florida-rainfall-random-or-non-random" class="level3">
+<h3 class="anchored" data-anchor-id="detecting-lag-is-average-florida-rainfall-random-or-non-random">Detecting Lag: Is average Florida rainfall random or non-random?</h3>
 <p>Next, I will be creating a lag plot of my Florida rainfall dataset. The purpose of this portion of exploratory data analysis is to check for randomness or non-random structures in the dataset, outliers, potential model suitability, correlation, and seasonality.</p>
 <p>Below, we can clearly see that, for all lags 1 through 15, the dataset is exhibiting seasonal lag. We know this because months 1-3, months 4-6, months 7-9, and months 10-12 all exist in respective, separate clusters from each other.</p>
 <div class="cell">
@@ -347,8 +354,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="autocorrelation-is-the-dataset-exhibiting-stationarity" class="level4">
-<h4 class="anchored" data-anchor-id="autocorrelation-is-the-dataset-exhibiting-stationarity">Autocorrelation: Is the dataset exhibiting stationarity?</h4>
+<section id="autocorrelation-is-the-dataset-exhibiting-stationarity" class="level3">
+<h3 class="anchored" data-anchor-id="autocorrelation-is-the-dataset-exhibiting-stationarity">Autocorrelation: Is the dataset exhibiting stationarity?</h3>
 <p>The next important step of the EDA lag process is determining if the time series is stationary or non-stationary. In short, a stationary time series is one in which there is no trend, no seasonality, and constant variance over time. Seasonality is an important component of developing a predictive time series model, and non-stationary time series must be transformed to be stationary before proceeding to model development and fitting.</p>
 <p>We can determine if the dataset is stationary or not by looking at the ACF and PACF plots below.</p>
 <p>Below, we can see that there is clear seasonality in the ACF plot, with yearly lag peaks at 12, 24, 36, and 48. Visually, this means that the dataset is not stationary. To confirm the lack of stationarity, we will perform the Augmented Dickey-Fuller Test next.</p>
@@ -369,8 +376,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="augmented-dickey-fuller-test-confirming-lack-of-stationarity" class="level4">
-<h4 class="anchored" data-anchor-id="augmented-dickey-fuller-test-confirming-lack-of-stationarity">Augmented Dickey-Fuller Test: Confirming lack of stationarity</h4>
+<section id="augmented-dickey-fuller-test-confirming-lack-of-stationarity" class="level3">
+<h3 class="anchored" data-anchor-id="augmented-dickey-fuller-test-confirming-lack-of-stationarity">Augmented Dickey-Fuller Test: Confirming lack of stationarity</h3>
 <p>Below, we can see that the results of the ADF test seem to suggest stationarity with a small p-value. However, because of the results of the ACF plot, which is a more reliable measure of stationarity, we can conclude that the time series is not stationary.</p>
 <div class="cell">
 <details>
@@ -387,8 +394,8 @@ alternative hypothesis: stationary</code></pre>
 </div>
 </div>
 </section>
-<section id="differencing-making-the-rainfall-time-series-stationary" class="level4">
-<h4 class="anchored" data-anchor-id="differencing-making-the-rainfall-time-series-stationary">Differencing: Making the Rainfall Time Series Stationary</h4>
+<section id="differencing-making-the-rainfall-time-series-stationary" class="level3">
+<h3 class="anchored" data-anchor-id="differencing-making-the-rainfall-time-series-stationary">Differencing: Making the Rainfall Time Series Stationary</h3>
 <p>Here, we can see that taking the first difference has improved the presence of seasonality, but it is still there, meaning that the data is not yet stationary.</p>
 <div class="cell">
 <details>
@@ -423,7 +430,6 @@ alternative hypothesis: stationary</code></pre>
 </div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
