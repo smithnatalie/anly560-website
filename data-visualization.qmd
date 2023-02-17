@@ -162,7 +162,7 @@ jul.temp.combo$Minimum.Temperature = as.numeric(jul.temp.combo$Minimum.Temperatu
 
 ```
 
-The first ten values of the July temperatue dataframe can be seen below:
+The first ten values of the July temperature dataframe can be seen below:
 
 ```{r}
 kable(head(jul.temp.combo, 10), align = 'c') %>%
