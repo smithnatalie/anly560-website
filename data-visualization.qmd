@@ -108,238 +108,121 @@ figure
 
 Overall, it's a bit hard to tell from this data visualization alone whether or not December temperatures on average across Florida have risen significantly. What we can see, however, are years with especially cold or especially warm December in the state. For example, 1931 and 2015 have the two highest maximum, minimum, and average temperatures across the entire dataset, while the coldest December on record was actually in 2010, followed by 1903. 
 
-Interestingly enough, a quick search on Florida 2010 December yields a number of results, each reporting the year as the "Coldest December on Record", according to a report from NOAA's [2014 South Florida Weather Year in Review](https://www.weather.gov/media/mfl/news/2010WxSummary.pdf). In this report, they discuss that 2010 overall was a year of extremes, with the summer earlier in the year being recorded as the hottest summer in South Florida history. 
+Interestingly enough, a quick search on Florida 2010 December yields a number of results, each reporting the year as the "Coldest December on Record", according to a report from NOAA's [2014 South Florida Weather Year in Review](https://www.weather.gov/media/mfl/news/2010WxSummary.pdf). In this report, they discuss that 2010 overall was a year of extremes, with the summer earlier in the year being recorded as the hottest summer in South Florida history at that time. 
 
 
-::: {.border}
-:::
 
 
 #### Plotting July Temperature Data Using ggplot:
 
-Through using plotly 
+Through using plotly, I was able to learn a bit more about Florida's temperature and climate. Overall, it seems like the minimum, maximum, and average temperatures during the winter have not changed all that much since 1895. However, the plot encouraged some additional exploration into December 2010 in the state, after which I learned that the same year that saw record low temperatures during the winter also saw record high temperatures during the summer. This prompted further exploration into Florida's hottest month of the year, July, to answer my guiding questions for this project.
+
+As with the December temperature data before, the July temperature date must be cleaned and combined into something usable and clean for analysis. 
+
+```{r}
+#Reading in all three datasets:
+
+avg.jul.temp = read.csv("datasets/temperature/July_Avg_Temp_1895-2022.csv")
+min.jul.temp = read.csv("datasets/temperature/July_Min_Temp_1895_2022.csv")
+max.jul.temp = read.csv("datasets/temperature/July_Max_Temp_1895-2022.csv")
 
 
+#For each, remove the first three rows and the last column, as these are not useful for this analysis
+avg.jul.temp = avg.jul.temp[-(1:4),]
+avg.jul.temp = avg.jul.temp %>% select(-July)
+
+min.jul.temp = min.jul.temp[-(1:4),]
+min.jul.temp = min.jul.temp %>% select(-July)
+
+max.jul.temp = max.jul.temp[-(1:4),]
+max.jul.temp = max.jul.temp %>% select(-July)
+
+#Join all dataframes together 
+
+jul.temp.combo = list(avg.jul.temp, min.jul.temp, max.jul.temp)
+jul.temp.combo = jul.temp.combo %>% reduce(full_join, by='Florida')
+
+#Rename 'Florida' column as Date
+
+jul.temp.combo = jul.temp.combo %>% rename("Date" = "Florida")
+
+# Change Date from character to actual date-time structure
+
+#jul.temp.combo$Date = as.Date(paste0(as.character(jul.temp.combo$Date), '01'), format = '%Y%m%d')
+jul.temp.combo$Date = substr(jul.temp.combo$Date, 1,4)
 
 
+#Converting characters to numeric for use in ggplot
+jul.temp.combo$Date = as.numeric(jul.temp.combo$Date)
+jul.temp.combo$Average.Temperature = as.numeric(jul.temp.combo$Average.Temperature)
+jul.temp.combo$Maximum.Temperature = as.numeric(jul.temp.combo$Maximum.Temperature)
+jul.temp.combo$Minimum.Temperature = as.numeric(jul.temp.combo$Minimum.Temperature)
 
 
-### **Data Visualization with Stock Data**
-
-In this section, I am going to be taking a look at the stock prices for three different oil and gas corporations between 2012 and 2022. The corporations being analyzed are:
-
--   ExxonMobil (XOM)
--   Chevron (CVX)
--   Shell (SHEL)
-
-```{r ,echo=FALSE, message=FALSE, warning=FALSE}
-library(flipbookr)
-library(tidyverse)
-library(ggplot2)
-library(forecast)
-library(astsa) 
-library(xts)
-library(tseries)
-library(fpp2)
-library(fma)
-library(lubridate)
-library(tidyverse)
-library(TSstudio)
-library(quantmod)
-library(tidyquant)
-library(plotly)
-library(ggplot2)
-```
-
-Below, the head of the data can be seen, which shows the first week of stock prices being analyzed for each of the three corporations.
-
-```{r, echo=FALSE}
-
-options("getSymbols.warning4.0"=FALSE)
-options("getSymbols.yahoo.warning"=FALSE)
-
-tickers = c("XOM","CVX","SHEL")
-for (i in tickers){
-  getSymbols(i,
-             from = "2012-10-01",
-             to = "2022-12-01")}
-
-x <- list(
-  title = "date"
-)
-y <- list(
-  title = "value"
-)
-
-stock <- data.frame(XOM$XOM.Adjusted,
-                    CVX$CVX.Adjusted,
-                    SHEL$SHEL.Adjusted)
-
-
-stock <- data.frame(stock,rownames(stock))
-colnames(stock) <- append(tickers,'Dates')
-
-stock$date<-as.Date(stock$Dates,"%Y-%m-%d")
-head(stock)
-```
-
-The time series plot below shows how each of the three stocks have changed between 2012 and 2022. Chevron appears to be the clear winner, with significantly higher closing prices compared to Shell and ExxonMobil.
-
-```{r, echo=FALSE}
-ggplot(stock, aes(x=date)) +
-  geom_line(aes(y=XOM, colour="XOM"))+
-  geom_line(aes(y=CVX, colour="CVX"))+
-  geom_line(aes(y=SHEL, colour="SHEL"))+
-   labs(
-    title = "Stock Prices for Oil and Gas Corporations",
-    subtitle = "From 2012-2022",
-    x = "Date",
-    y = "Adjusted Closing Prices (USD)")+
-    theme(panel.background = element_rect(fill = "white", colour = "grey50"))+ theme(plot.title=element_text(hjust = 0.5))+theme(plot.subtitle=element_text(hjust = 0.5))+
-    guides(colour=guide_legend(title="Oil and Gas Companies"))
 
 ```
 
-In the next time interactive series plot, we can hover over different points in time to get more in depth information about the specific closing prices for each of the three corporations on specific dates.
+The first ten values of the July temperatue dataframe can be seen below:
 
-One of the clearest takeaways from this plot is the nosedive in closing prices for all three corporations on March 20th, 2020, which is right around when the COVID-19 pandemic began in the United States.
-
-```{r, echo=FALSE}
-g4<- ggplot(stock, aes(x=date)) +
-  geom_line(aes(y=XOM, colour="XOM"))+
-  geom_line(aes(y=CVX, colour="CVX"))+
-  geom_line(aes(y=SHEL, colour="SHEL"))+
-   labs(
-    title = "Stock Prices for Oil and Gas Companies",
-    subtitle = "From 2012-2022",
-    x = "Date",
-    y = "Adjusted Closing Prices (USD)")+
-    guides(colour=guide_legend(title="Stock Prices for Oil and Gas Companies")) 
-
-
-ggplotly(g4) %>%
-  layout(hovermode = "x")
-```
-
-### **Bitcoin Plot Using plotly**
-
-Here, I will take a look at a single stock price for Bitcoin. The head of the data is seen below.
-
-```{r, echo=FALSE}
-#bitc_ALL <- getSymbols("BTC",auto.assign = FALSE, from = "2020-10-01",src="yahoo")
-bitc <- getSymbols("BTC",auto.assign = FALSE, from = "2021-09-15",src="yahoo") 
-head(bitc)
-```
-
-The intial date I am looking at is seen below.
-
-```{r, echo=FALSE}
-start(bitc)
-```
-
-The final date I am looking at is also seen below.
-
-```{r, echo=FALSE}
-end(bitc)
-```
-
-More information on the Bitcoin data analyzed during the set time period can be seen below.
-```{r, echo=FALSE}
-bitc=data.frame(bitc)
-bitc <- data.frame(bitc,rownames(bitc))
-head(bitc)
-
-colnames(bitc)[7] = "date"
-head(bitc)
-
-bitc$date<-as.Date(bitc$date,"%Y-%m-%d")
-str(bitc)
-```
-
-In the following two plots, one static and one interactive, we can see how the stock price of Bitcoin has decreased since September of 2021. Although it appears to be making a recovery, it is still far from where it was in 2021.
-
-```{r, echo=FALSE}
-## ggplot
-bitc %>%
-  ggplot()+
-  geom_line(aes(y=BTC.Adjusted,x=date),color="blue")+   labs(
-    title = "Stock Price of Bitcoin",
-    subtitle = "From 2021-2023",
-    x = "Date",
-    y = "Adjusted Closing Prices")+theme(plot.title=element_text(hjust = 0.5))+theme(plot.subtitle=element_text(hjust = 0.5))
-
-## plotly
-fig <- plot_ly(bitc, x = ~date, y = ~BTC.Adjusted, type = 'scatter', mode = 'lines')
-
-fig <- fig %>% layout(title = "Stock Price of Bitcoin")
-fig
-```
-
-The following plot is a basic candlestick chart showing the last 30 opening and closing prices for Bitcoin, beginning in December 2022 and ending mid-January of 2023. 
-
-```{r, echo=FALSE}
-#plotly
-# candlestick plot
-
-df <- tail(bitc, 30)
-
-figc <- df %>% plot_ly(x = ~date, type="candlestick",
-          open = ~BTC.Open, close = ~BTC.Close,
-          high = ~BTC.High, low = ~BTC.Low) 
-figc <- figc %>% layout(title = "Stock Price of Bitcoin")
-
-figc
-```
-
-### **Plotting Climate Data Using plotly**
-
-In the following plots, I will be taking a look at climate data in the Washington D.C. area for year of 2021. 
-
-First, I will take a look at the changing precipitation levels in the area throughout the year as reported by the seven different stations across the DC area.
-
-The stations are:
-
-```{r, echo=FALSE}
-climate = read.csv("datasets/climate.csv")
+```{r}
+kable(head(jul.temp.combo, 10), align = 'c') %>%
+  kable_styling(font_size = 13) %>%
+    row_spec(0, bold = TRUE, color = "black", background = "darkorange")
+  
 ```
 
 ```{r, echo=FALSE}
-library(tidyquant)
-library(plotly)
-library(RColorBrewer)
-```
-```{r, echo=FALSE}
-unique(climate[c("STATION", "NAME")])
-```
-In the scatter plot below, the levels of precipitation across the year can be seen.
+library(scales)
+july = ggplot(jul.temp.combo, aes(x=Date))+
 
-Here, we can see that snow only fell in the DC area between January and February of 2021, with a peak of 2 inches on February 2nd.
+  geom_line(aes(y=Maximum.Temperature, colour = "Maximum Temperature"))+
+  geom_line(aes(y=Average.Temperature, colour = "Average Temperature"))+
+  geom_line(aes(y=Minimum.Temperature, colour = "Minimum Temperature"))+
+  
+  scale_x_continuous(breaks = scales::pretty_breaks(n=10))+
+  scale_color_manual(name = "Temperatures", values = c("Maximum Temperature" = "red", "Average Temperature" = "orange",
+                                                       "Minimum Temperature" = "gold"))+
+  ylab("Temperature (F)")+xlab("Year")+ggtitle("July Temperatures in Florida (1895-2022)")+
+  theme(plot.title = element_text(hjust = 0.5))
+  
 
-Rain, as expected, fell in the area during every month of the year, with a peak of about 3.8 inches on August 20th.
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-figx = plot_ly(climate, type = "scatter", mode = "markers")%>%
-  add_trace(x = ~DATE, y = ~PRCP, name = "Rain", marker = list(color = '#1969B1', line=list(color='#000000', width= 1)))%>%
-  add_trace(x = ~DATE, y = ~SNOW, name = "Snow", marker = list(color = '#C6EEFC', line=list(color='#000000', width= 1)))%>%
-  layout(showlegend=T)
 
-figx = figx %>% layout(
-        title = "Rain vs Snow in Washington DC (2021)",
-        xaxis = list(zerolinecolor = '#ffffff',
-                      zerolinewidth = 2,
-                      gridcolor = 'ffffff',
-                      title="Date"),
-         yaxis = list(zerolinecolor = '#ffffff',
-                      zerolinewidth = 2,
-                      gridcolor = 'ffffff',
-                      title="Precipitation (Inches)",
-                      range=c(0.01, 4)),
-         plot_bgcolor='#eff4f7', width = 700
-)
-
-figx
+july
 ```
 
+When plotting all three lines together as seen above, it's a bit hard to notice any clear increases or decreases. At first glance it seems that the maximum temperature each July has not changed all that much, while the average temperature has change slightly, and the minimum temperature appears to be increasing since around the 1980s. To be certain, I want to plot each temperature series as a separate scatter plot, and then use a trend line to determine for sure how the temperature has changed since 1895. The following trend lines are calculated using LOESS, or locally estimated scatterplot smoothing. 
+
+Looking at the three plots below, we can see that the maximum, average, and minimum temperatures have all increased over time. The most drastic increase is the minimum July temperature, which seems to have increased drastically since the 1980s. 
+
+
+```{r, message=FALSE}
+scatter1 = ggplot() +
+  ggtitle("Maximum July Temperatures (1895-2022)")+
+  geom_point(data=jul.temp.combo, aes(x=Date, y=Maximum.Temperature), color = "red")+
+  geom_smooth(data=jul.temp.combo, aes(x=Date,y=Maximum.Temperature), color = "black")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n=5))+scale_y_continuous(breaks=scales::pretty_breaks(n=10))+
+  xlab("Year") + ylab("Temperature (F)") + theme(plot.title = element_text(hjust = 0.5))
+  
+  
+scatter2 = ggplot()+
+  ggtitle("Average July Temperatures (1895-2022)")+
+  geom_point(data=jul.temp.combo, aes(x=Date, y=Average.Temperature), color = "orange")+
+  geom_smooth(data=jul.temp.combo, aes(x=Date,y=Average.Temperature), color = "black")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n=5))+scale_y_continuous(breaks=scales::pretty_breaks(n=10))+
+  xlab("Year") + ylab("Temperature (F)") + theme(plot.title = element_text(hjust = 0.5))
+
+scatter3 = ggplot()+
+  ggtitle("Minimum July Temperatures (1895-2022)")+
+  geom_point(data=jul.temp.combo, aes(x=Date, y=Minimum.Temperature), color = "gold")+
+    geom_smooth(data=jul.temp.combo, aes(x=Date,y=Minimum.Temperature), color = "black")+
+  scale_x_continuous(breaks = scales::pretty_breaks(n=5))+scale_y_continuous(breaks=scales::pretty_breaks(n=10))+
+  xlab("Year") + ylab("Temperature (F)") + theme(plot.title = element_text(hjust = 0.5))
+
+scatter1
+scatter2
+scatter3
+```
 
 
 
