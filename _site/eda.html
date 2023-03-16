@@ -203,10 +203,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#dataset-1-out-of-pocket-prescription-drug-costs" id="toc-dataset-1-out-of-pocket-prescription-drug-costs" class="nav-link active" data-scroll-target="#dataset-1-out-of-pocket-prescription-drug-costs"><strong>Dataset 1: Out-of-pocket prescription drug costs</strong></a>
   <ul class="collapse">
-  <li><a href="#decomposition-testing-for-additive-and-multiplicative-seasonality" id="toc-decomposition-testing-for-additive-and-multiplicative-seasonality" class="nav-link" data-scroll-target="#decomposition-testing-for-additive-and-multiplicative-seasonality">Decomposition: Testing for additive and multiplicative seasonality</a></li>
+  <li><a href="#decomposition-observing-trends-and-seasonality" id="toc-decomposition-observing-trends-and-seasonality" class="nav-link" data-scroll-target="#decomposition-observing-trends-and-seasonality">Decomposition: Observing trends and seasonality</a></li>
   <li><a href="#detecting-lag-are-yearly-out-of-pocket-prescription-drug-costs-random-or-non-random" id="toc-detecting-lag-are-yearly-out-of-pocket-prescription-drug-costs-random-or-non-random" class="nav-link" data-scroll-target="#detecting-lag-are-yearly-out-of-pocket-prescription-drug-costs-random-or-non-random">Detecting Lag: Are yearly out-of-pocket prescription drug costs random or non-random?</a></li>
   <li><a href="#autocorrelation-is-the-out-of-pocket-prescription-drug-cost-dataset-exhibiting-stationarity" id="toc-autocorrelation-is-the-out-of-pocket-prescription-drug-cost-dataset-exhibiting-stationarity" class="nav-link" data-scroll-target="#autocorrelation-is-the-out-of-pocket-prescription-drug-cost-dataset-exhibiting-stationarity">Autocorrelation: Is the out-of-pocket prescription drug cost dataset exhibiting stationarity?</a></li>
   <li><a href="#augmented-dickey-fuller-test-confirming-lack-of-stationarity" id="toc-augmented-dickey-fuller-test-confirming-lack-of-stationarity" class="nav-link" data-scroll-target="#augmented-dickey-fuller-test-confirming-lack-of-stationarity">Augmented Dickey-Fuller Test: Confirming lack of stationarity</a></li>
+  </ul></li>
+  <li><a href="#dataset-2-monthly-performance-of-u.s.-pharmaceutical-companies-etf-stock" id="toc-dataset-2-monthly-performance-of-u.s.-pharmaceutical-companies-etf-stock" class="nav-link" data-scroll-target="#dataset-2-monthly-performance-of-u.s.-pharmaceutical-companies-etf-stock"><strong>Dataset 2: Monthly Performance of U.S. Pharmaceutical Companies ETF Stock</strong></a>
+  <ul class="collapse">
+  <li><a href="#decomposition-observing-trends-and-seasonality-1" id="toc-decomposition-observing-trends-and-seasonality-1" class="nav-link" data-scroll-target="#decomposition-observing-trends-and-seasonality-1">Decomposition: Observing trends and seasonality</a></li>
+  <li><a href="#detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random" id="toc-detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random" class="nav-link" data-scroll-target="#detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random">Detecting Lag: Are the adjusted closing prices of the IHE ETF random or non-random?</a></li>
+  <li><a href="#autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity" id="toc-autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity" class="nav-link" data-scroll-target="#autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity">Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?</a></li>
+  <li><a href="#augmented-dickey-fuller-test-confirming-lack-of-stationarity-1" id="toc-augmented-dickey-fuller-test-confirming-lack-of-stationarity-1" class="nav-link" data-scroll-target="#augmented-dickey-fuller-test-confirming-lack-of-stationarity-1">Augmented Dickey-Fuller Test: Confirming lack of stationarity</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -305,10 +312,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>drug, <span class="fu">aes</span>(<span class="at">x=</span>Year, <span class="at">y=</span>Out.of.Pocket))<span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>drug.plot <span class="ot">=</span> <span class="fu">ggplot</span>(<span class="at">data=</span>drug, <span class="fu">aes</span>(<span class="at">x=</span>Year, <span class="at">y=</span>Out.of.Pocket))<span class="sc">+</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Out of Pocket Cost (Millions of USD)"</span>)<span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>drug.plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
@@ -353,8 +361,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<section id="decomposition-testing-for-additive-and-multiplicative-seasonality" class="level3">
-<h3 class="anchored" data-anchor-id="decomposition-testing-for-additive-and-multiplicative-seasonality">Decomposition: Testing for additive and multiplicative seasonality</h3>
+<section id="decomposition-observing-trends-and-seasonality" class="level3">
+<h3 class="anchored" data-anchor-id="decomposition-observing-trends-and-seasonality">Decomposition: Observing trends and seasonality</h3>
 <p>First, I will take an additive decomposition to separate the out-of-pocket prescription drug costs time series into its different components.</p>
 <p>Below, we can see that while there isn’t a seasonal component, there is absolutely an upward trend present over time in this data.</p>
 <div class="cell">
@@ -439,6 +447,145 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 data:  drug.ts
 Dickey-Fuller = -2.5484, Lag order = 3, p-value = 0.353
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="dataset-2-monthly-performance-of-u.s.-pharmaceutical-companies-etf-stock" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-2-monthly-performance-of-u.s.-pharmaceutical-companies-etf-stock"><strong>Dataset 2: Monthly Performance of U.S. Pharmaceutical Companies ETF Stock</strong></h2>
+<p>Although this dataset is very clean already, there are a few things to do to ensure it is in the correct format for analysis.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pharma <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"datasets/IHE.csv"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pharma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Date  Open  High   Low Close Adj.Close Volume
+1 2007-01-01 53.33 55.65 53.00 55.60  44.05783 281100
+2 2007-02-01 55.79 56.06 53.51 54.00  42.78997 495100
+3 2007-03-01 53.10 54.10 51.99 53.64  42.50471 492400
+4 2007-04-01 53.97 60.00 53.81 57.69  45.84257 250300
+5 2007-05-01 57.57 59.15 57.23 58.54  46.51800 275100
+6 2007-06-01 58.52 58.71 55.61 55.99  44.49168 318000</code></pre>
+</div>
+</div>
+<p>Now that the data is read in, I will convert the “Date” variable to a date-type object and then use the monthly average adjusted closing price as my variable of interest for time series analysis and modeling.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pharma<span class="sc">$</span>Date <span class="ot">=</span> <span class="fu">as.Date</span>(pharma<span class="sc">$</span>Date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Below, we can see the initial line plot of the changes in the adjusted closing price of the IHE pharmaceutical stock ETF since its creation in 2007.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pharm.plot <span class="ot">=</span> <span class="fu">ggplot</span>(pharma, <span class="fu">aes</span>(<span class="at">x=</span>Date))<span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Adj.Close))<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Adjusted Closing Price"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>pharm.plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Next, I will turn this stock price dataset into a time series format for the remainder of the analysis.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pharma.ts <span class="ot">=</span> <span class="fu">subset</span>(pharma, <span class="at">select =</span> Adj.Close)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>pharma.ts <span class="ot">=</span> <span class="fu">ts</span>(pharma.ts, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2007</span>,<span class="dv">1</span>),<span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(pharma.ts, <span class="at">main =</span> <span class="st">"U.S. Pharmaceuticals ETF (IHE) Performance (2007-2022)"</span>, <span class="at">xlab =</span> <span class="st">"Date"</span>, <span class="at">ylab =</span> <span class="st">"Adjusted Closing Price"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="decomposition-observing-trends-and-seasonality-1" class="level3">
+<h3 class="anchored" data-anchor-id="decomposition-observing-trends-and-seasonality-1">Decomposition: Observing trends and seasonality</h3>
+<p>As with the previous dataset, I will take an additive decomposition to separate the IHE ETF closing price time series into its different components.</p>
+<p>Although we see a clear upward trend, there doesn’t really appear to be any seasonality in the adjusted closing prices of the ETF stock.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>add_pharma <span class="ot">=</span> <span class="fu">ts</span>(pharma.ts, <span class="at">frequency =</span> <span class="dv">4</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>decompose_pharma <span class="ot">=</span> <span class="fu">decompose</span>(add_pharma, <span class="st">"additive"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decompose_pharma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">as.ts</span>(decompose_pharma<span class="sc">$</span>trend), <span class="at">main =</span> <span class="st">"IHE ETF Closing Price Decomposition: Trend Component"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">as.ts</span>(decompose_pharma<span class="sc">$</span>seasonal), <span class="at">main =</span> <span class="st">"IHE ETF Closing Price Decomposition: Seasonal Component"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random" class="level3">
+<h3 class="anchored" data-anchor-id="detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random">Detecting Lag: Are the adjusted closing prices of the IHE ETF random or non-random?</h3>
+<p>Next, I will be creating another lag plot for my IHE ETF closing prices dataset to determine if any autocorrelation is present that may have impacts to stationarity.</p>
+<p>As can be seen below, there is very high positve autocorrelation present in these lag plots. Even though the correlation becomes weaker as the number of lags observed increases, even lags as high as lag 16 are showing a positive linear pattern suggesting high autocorrelation.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gglagplot</span>(pharma.ts, <span class="at">do.lines =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Lags"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Yi"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Lag Plot: IHE ETF Adjust Closing Prices"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity" class="level3">
+<h3 class="anchored" data-anchor-id="autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity">Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?</h3>
+<p>To confirm what appears to be a clear lack of stationarity present in the lag plot above, we can plot the ACF and PACF of the time series dataset.</p>
+<p>As expected, the results of the ACF plot show a very clear lack of stationarity in the data, seen by the fact that all lags fall outside of the boundaries even as they are decreasing. As with the prescription drug cost dataset, this means that the data will need to be transformed with detrending or differencing before modeling can be done on the data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"PACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="augmented-dickey-fuller-test-confirming-lack-of-stationarity-1" class="level3">
+<h3 class="anchored" data-anchor-id="augmented-dickey-fuller-test-confirming-lack-of-stationarity-1">Augmented Dickey-Fuller Test: Confirming lack of stationarity</h3>
+<p>Although the ACF plot is the authority when it comes to determining stationarity or lack thereof, the results of the ADF test below also prove that the IHE ETF dataset is not stationary, as the null hypothesis of non-stationarity cannot be rejected due to a high p-value.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>tseries<span class="sc">::</span><span class="fu">adf.test</span>(pharma.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  pharma.ts
+Dickey-Fuller = -2.1149, Lag order = 5, p-value = 0.528
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
