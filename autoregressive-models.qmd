@@ -5,4 +5,83 @@ format:
     theme: lux
 ---
 
-Add ARMA/ARIMA/SARIMA Models section here!
+```{r, message=FALSE, include=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+library(dplyr)
+
+drug = read.csv("datasets/nhe_drug.csv")
+drug = head(drug, -10)
+
+drug$Total.Expenditures = as.numeric(gsub(",","",drug$Total.Expenditures))
+drug$Out.of.Pocket = as.numeric(gsub(",","",drug$Out.of.Pocket))
+drug$Health.Insurance = as.numeric(gsub(",","",drug$Health.Insurance))
+drug$Private.Health.Insurance = as.numeric(gsub(",","",drug$Private.Health.Insurance))
+drug$Medicare = as.numeric(gsub(",","",drug$Medicare))
+drug$Medicaid..Title.XIX. = as.numeric(gsub(",","",drug$Medicaid..Title.XIX.))
+drug$Other.Health.Insurance = as.numeric(gsub(",","",drug$Other.Health.Insurance))
+drug$Other.Third.Party.Payers.and.Programs = as.numeric(gsub(",","",drug$Other.Third.Party.Payers.and.Programs))
+
+drug$Year = as.Date(paste0(drug$Year, "-12-31"))
+
+drug.ts = subset(drug, select = Out.of.Pocket)
+
+drug.ts = ts(drug.ts, start=1960, frequency = 1)
+```
+
+### EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost Dataset
+
+To review, we learned in the EDA tab that the prescription drug cost data is non-stationary based on the results of the ACF plot and the Augmented Dickey-Fuller test, seen below.
+
+```{r, warning=FALSE}
+ggAcf(drug.ts, 48, main = "ACF: Prescription Drug Cost TS")
+
+ggPacf(drug.ts, 48, main = "PACF: Prescription Drug Cost TS")
+
+```
+
+```{r, warning=FALSE}
+tseries::adf.test(drug.ts)
+```
+
+### Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary 
+
+Before moving onto modeling, it is necessary to transform the dataset so that it is at least weakly stationary. 
+
+```{r}
+require(gridExtra)
+
+drug.fit = lm(drug.ts~time(drug.ts), na.action = NULL)
+
+plot1<-autoplot(resid(drug.fit), main="Drug Cost: Detrended") 
+plot2<-autoplot(diff(drug.ts), main="Drug Cost: First Difference") 
+
+grid.arrange(plot1, plot2,nrow=2)
+```
+
+Next, we can look at the ACF plots to compare the detrended dataset and the differenced dataset. Both detrending and first-order differencing are pretty successful in making the data more stationary. Because the differencing is a bit more successful at 
+
+```{r}
+require(gridExtra)
+
+# plot1 = ggAcf(drug.ts, 48, main="Original Data: Drug Cost")
+plot2 = ggAcf(resid(drug.fit), 48, main="Detrended Data: Drug Cost")
+plot3 = ggAcf(diff(drug.ts), 48, main="First Differenced Data: Drug Cost")
+
+grid.arrange(plot2, plot3,nrow=2)
+```
+
+
+
+
+
+
+
