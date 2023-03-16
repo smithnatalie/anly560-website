@@ -201,8 +201,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#eda-review-determining-stationarity-of-out-of-pocket-drug-cost-dataset" id="toc-eda-review-determining-stationarity-of-out-of-pocket-drug-cost-dataset" class="nav-link active" data-scroll-target="#eda-review-determining-stationarity-of-out-of-pocket-drug-cost-dataset">EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost Dataset</a></li>
+  <li><a href="#eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets" id="toc-eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets" class="nav-link active" data-scroll-target="#eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets">EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost and U.S. Pharmaceutical ETF Datasets</a></li>
   <li><a href="#detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary" id="toc-detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary" class="nav-link" data-scroll-target="#detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary">Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary</a></li>
+  <li><a href="#arimapdq-modeling-out-of-pocket-prescription-drug-cost" id="toc-arimapdq-modeling-out-of-pocket-prescription-drug-cost" class="nav-link" data-scroll-target="#arimapdq-modeling-out-of-pocket-prescription-drug-cost">ARIMA(p,d,q) Modeling: Out-of-Pocket Prescription Drug Cost</a></li>
   </ul>
 </nav>
     </div>
@@ -226,8 +227,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="eda-review-determining-stationarity-of-out-of-pocket-drug-cost-dataset" class="level3">
-<h3 class="anchored" data-anchor-id="eda-review-determining-stationarity-of-out-of-pocket-drug-cost-dataset">EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost Dataset</h3>
+<section id="eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets">EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost and U.S. Pharmaceutical ETF Datasets</h3>
 <p>To review, we learned in the EDA tab that the prescription drug cost data is non-stationary based on the results of the ACF plot and the Augmented Dickey-Fuller test, seen below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(drug.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: Prescription Drug Cost TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -250,12 +251,34 @@ Dickey-Fuller = -2.5484, Lag order = 3, p-value = 0.353
 alternative hypothesis: stationary</code></pre>
 </div>
 </div>
+<p>Additionally, we also learned that the U.S. Pharmaceutical ETF closing prices dataset was non-stationary, as seen below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"PACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tseries<span class="sc">::</span><span class="fu">adf.test</span>(pharma.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  pharma.ts
+Dickey-Fuller = -2.1149, Lag order = 5, p-value = 0.528
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
 </section>
 <section id="detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary" class="level3">
 <h3 class="anchored" data-anchor-id="detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary">Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary</h3>
-<p>Before moving onto modeling, it is necessary to transform the dataset so that it is at least weakly stationary.</p>
+<p>As seen in the last section, we can confirm that both datasets in this study are non-stationary. So, before moving on to ARIMA modeling, it is necessary to transform the dataset so that it is at least weakly stationary.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: gridExtra</code></pre>
 </div>
@@ -268,36 +291,313 @@ Attaching package: 'gridExtra'</code></pre>
 
     combine</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>drug.fit <span class="ot">=</span> <span class="fu">lm</span>(drug.ts<span class="sc">~</span><span class="fu">time</span>(drug.ts), <span class="at">na.action =</span> <span class="cn">NULL</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plot1<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">resid</span>(drug.fit), <span class="at">main=</span><span class="st">"Drug Cost: Detrended"</span>) </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plot2<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">diff</span>(drug.ts), <span class="at">main=</span><span class="st">"Drug Cost: First Difference"</span>) </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>drug.fit <span class="ot">=</span> <span class="fu">lm</span>(drug.ts<span class="sc">~</span><span class="fu">time</span>(drug.ts), <span class="at">na.action =</span> <span class="cn">NULL</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plot1<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">resid</span>(drug.fit), <span class="at">main=</span><span class="st">"Drug Cost: Detrended"</span>) </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plot2<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">diff</span>(drug.ts), <span class="at">main=</span><span class="st">"Drug Cost: First Difference"</span>) </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Next, we can look at the ACF plots to compare the detrended dataset and the differenced dataset. Both detrending and first-order differencing are pretty successful in making the data more stationary. Because the differencing is a bit more successful at</p>
+<p>Next, we can look at the ACF plots to compare the detrended dataset and the differenced dataset. Both detrending and first-order differencing are pretty successful in making the data more stationary. Because the differencing is a bit more successful at making the dataset stationary, I will proceed with that first-order differenced dataset for modeling.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot1 = ggAcf(drug.ts, 48, main="Original Data: Drug Cost")</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">resid</span>(drug.fit), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"Detrended Data: Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot1 = ggAcf(drug.ts, 48, main="Original Data: Drug Cost")</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">resid</span>(drug.fit), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"Detrended Data: Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Ignoring unknown parameters: main</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(drug.ts), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"First Differenced Data: Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(drug.ts), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"First Differenced Data: Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Ignoring unknown parameters: main</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot2, plot3,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot2, plot3,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="ot">=</span> <span class="fu">diff</span>(drug.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="arimapdq-modeling-out-of-pocket-prescription-drug-cost" class="level3">
+<h3 class="anchored" data-anchor-id="arimapdq-modeling-out-of-pocket-prescription-drug-cost">ARIMA(p,d,q) Modeling: Out-of-Pocket Prescription Drug Cost</h3>
+<section id="manual-parameter-selection" class="level4">
+<h4 class="anchored" data-anchor-id="manual-parameter-selection">Manual Parameter Selection</h4>
+<p>To determine the p,d, and q parameters for ARIMA, we need to take another look at the ACF and PACF plots.</p>
+<p>Because the data was differenced one time, we can say that d will be equal to 1.</p>
+<p>There are 3 significant lag terms in the ACF, meaning that the initial q value will be equal to 3. There is 1 significant lag term in the PACF, so the initial p value will be equal to three.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(drug.diff, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF: Differenced Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(drug.diff, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF: Differenced Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can now proceed with the ARIMA(1,1,3) model.</p>
+<p>As seen below, the p-values in the Ljung-Box statistic are very small in most cases, suggesting that the values might be showing some dependence on each other.</p>
+<p>The AIC and BIC are 17.6 and 17.8, respectively.</p>
+<p>Additionally, we can see that the only the AR(1) and MA(1) coefficients have small enough values to be significant in the model. This means that MA(2) and MA(3) are insignificant, and that removing the second and third MA parameters from the model may improve its performance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>drug.arima113 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima113[<span class="dv">142</span><span class="sc">:</span><span class="dv">168</span>], drug.arima113[<span class="fu">length</span>(drug.arima113)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefficients:
+         ar1      ma1      ma2     ma3  constant
+      0.7113  -0.8990  -0.2796  0.1785   -7.3396
+s.e.  0.1828   0.2181   0.2209  0.1857   30.2138
+
+sigma^2 estimated as 1963201:  log likelihood = -512.47,  aic = 1036.94
+
+$degrees_of_freedom
+[1] 54
+
+$ttable
+         Estimate      SE t.value p.value
+ar1        0.7113  0.1828  3.8907  0.0003
+ma1       -0.8990  0.2181 -4.1218  0.0001
+ma2       -0.2796  0.2209 -1.2657  0.2110
+ma3        0.1785  0.1857  0.9615  0.3406
+constant  -7.3396 30.2138 -0.2429  0.8090
+
+$AIC
+[1] 17.57523
+
+$AICc
+[1] 17.59442
+
+$BIC
+[1] 17.78651</code></pre>
+</div>
+</div>
+<p>Because MA2 and MA3 are insignificant in the model above, I am going to test ARIMA(1,1,1) to see if this improves model performance and reduces error.</p>
+<p>Overall, this model seems to perform a bit better than ARIMA(1,1,3). The p-values for Ljung-Box are larger across the board, and the AIC and BIC error have decreased slightly to 17.5 and 17.7, respectively. Additionally, we can see that all coefficients in the model are significant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>drug.arima111 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima111[<span class="dv">72</span><span class="sc">:</span><span class="dv">96</span>], drug.arima111[<span class="fu">length</span>(drug.arima111)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefficients:
+        ar1      ma1  constant
+      0.689  -0.9998   -7.2324
+s.e.  0.102   0.0547   30.7778
+
+sigma^2 estimated as 2024579:  log likelihood = -513.31,  aic = 1034.63
+
+$degrees_of_freedom
+[1] 56
+
+$ttable
+         Estimate      SE  t.value p.value
+ar1        0.6890  0.1020   6.7567  0.0000
+ma1       -0.9998  0.0547 -18.2728  0.0000
+constant  -7.2324 30.7778  -0.2350  0.8151
+
+$AIC
+[1] 17.53608
+
+$AICc
+[1] 17.54348
+
+$BIC
+[1] 17.67693</code></pre>
+</div>
+</div>
+<p>As a result, I will be proceeding with ARIMA(1,1,1) as my manually-selected ARIMA model for this dataset.</p>
+</section>
+<section id="fitting-with-auto.arima" class="level4">
+<h4 class="anchored" data-anchor-id="fitting-with-auto.arima">Fitting with auto.arima()</h4>
+<p>In R, auto.arima() is a function that automatically selects ARIMA parameters when fed a set of time-series data.</p>
+<p>Using the function with the differenced out-of-pocket prescription drug cost dataset, we get:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auto.arima</span>(drug.diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: drug.diff 
+ARIMA(1,0,0) with zero mean 
+
+Coefficients:
+         ar1
+      0.7006
+s.e.  0.0900
+
+sigma^2 = 2063958:  log likelihood = -521.17
+AIC=1046.35   AICc=1046.56   BIC=1050.54</code></pre>
+</div>
+</div>
+<p>The auto.arima() function suggests that an ARIMA(1,0,0), or AR(1), model is this best for the differenced time series dataset.</p>
+<p>Although I was initially suspicious of how this would perform, this model does in fact appear to be a slightly better fit than my previous models. Not only is the coefficient significant, but the Ljung-Box p-values are all significantly different from zero. Additionally, the AIC and BIC have decreased further to 17.4 and 17.5, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>drug.arima100 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima100[<span class="dv">28</span><span class="sc">:</span><span class="dv">50</span>], drug.arima100[<span class="fu">length</span>(drug.arima100)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Coefficients:
+        ar1     xmean
+      0.660  625.6818
+s.e.  0.097  521.0468
+
+sigma^2 estimated as 1991712:  log likelihood = -520.56,  aic = 1047.11
+
+$degrees_of_freedom
+[1] 58
+
+$ttable
+      Estimate       SE t.value p.value
+ar1     0.6600   0.0970  6.8022  0.0000
+xmean 625.6818 521.0468  1.2008  0.2347
+
+$AIC
+[1] 17.45191
+
+$AICc
+[1] 17.45542
+
+$BIC
+[1] 17.55663</code></pre>
+</div>
+</div>
+<p>As seen above, the auto.arima() selection is different than my manually chosen model of ARIMA(1,1,1). I am not exactly sure why this is the case, but it may have something to do with the auto.arima() function prioritizing a lower number of parameters when there is little performance improvement from adding additional parameters.</p>
+</section>
+<section id="forecasting" class="level4">
+<h4 class="anchored" data-anchor-id="forecasting">Forecasting</h4>
+<p>Next, I want to forecast the next ten years of out-of-pocket drug costs for both my manually-selected ARIMA(1,1,1) model and the auto.arima() selected ARIMA(1,0,0) model.</p>
+<p>As can be seen below, there is practically no difference between the two selected models when it comes to forecasting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-pocket Drug Cost Predictions"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-pocket Drug Cost Predictions"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="comparing-benchmark-methods" class="level4">
+<h4 class="anchored" data-anchor-id="comparing-benchmark-methods">Comparing Benchmark Methods</h4>
+<p>Finally, I am going to compare my chosen ARIMA model to some simple benchmark models to prove its comparative forecasting power. To do this, I will test the three methods: mean forecasting, naive forecasting, and my ARIMA(1,0,0) and see their ability to predict the ten-year interval from 1995 to 2005.</p>
+<p>As a reminder, here is the time series plot for the first-order differenced data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Selecting only the the window of interesting, the plot looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>drug.diff2 <span class="ot">=</span> <span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">1995</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in window.default(x, ...): 'start' value not changed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><em>Mean</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>drug.mean <span class="ot">=</span> <span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(drug.mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Ljung-Box test
+
+data:  Residuals from Mean
+Q* = 37.841, df = 6, p-value = 1.207e-06
+
+Model df: 1.   Total lags used: 7</code></pre>
+</div>
+</div>
+<p><em>Naive Method</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>drug.naive <span class="ot">=</span> <span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(drug.naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Ljung-Box test
+
+data:  Residuals from Naive method
+Q* = 19.811, df = 7, p-value = 0.005992
+
+Model df: 0.   Total lags used: 7</code></pre>
+</div>
+</div>
+<p>Now, I will plot all forecasts together:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2) <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  drug.diff2 <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When compared to the original data, it is clear that the ARIMA model does a better job of forecasting that the mean and naive methods. That being said, none of the models are able to forecast the incredibly steep spike in out-of-pocket prescription drug costs beginning in 1994.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>drug.diff3<span class="ot">=</span><span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">2005</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in window.default(x, ...): 'start' value not changed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff3) <span class="sc">+</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  drug.diff2 <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Forecasting Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
