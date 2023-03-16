@@ -3,6 +3,7 @@ title: "ARMA/ARIMA/SARIMA Models"
 format: 
   html:
     theme: lux
+    code-fold: true
 ---
 
 ```{r, message=FALSE, include=FALSE}
