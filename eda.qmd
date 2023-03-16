@@ -57,14 +57,14 @@ GGPlot2 Line and Column Charts:
 ```{r}
 drug.plot = ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
   geom_line()+
-  xlab("Year") + ylab("Out of Pocket Cost (Millions of USD)")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
   theme_minimal()
 drug.plot
 ```
 ```{r}
 ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
   geom_col()+
-  xlab("Year") + ylab("Out of Pocket Cost (Millions of USD)")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
   theme_minimal()
 ```
 Next, I want to turn the data a time series object for further analysis, using the "Year" variable as the time-step and "Out of Pocket" costs as the variable we are taking a look at. 
@@ -122,6 +122,56 @@ Overall, the data shows a positive linear pattern, suggesting positive autocorre
 
 ```{r}
 gglagplot(drug.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag Plot: Out-of-Pocket Drug Costs") + theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+```
+
+### Moving Average Smoothing
+
+In this section, I will be looking at three distinct moving average windows, from smallest to largest. This will allow us to see even clearer trends in the data:
+
+- 3-period moving average
+- 7-period moving average
+- 12-period moving average
+- 16-period moving average
+
+
+```{r, message=FALSE, warning=FALSE}
+require(gridExtra)
+library(smooth)
+
+ma3 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 3), series = "3-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "3-MA" = "blue"),
+                      breaks = c("Drug Cost", "3-MA"))
+
+ma7 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 7), series = "7-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "7-MA" = "blue"),
+                      breaks = c("Drug Cost", "7-MA"))
+  
+ma12 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 12), series = "12-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "12-MA" = "blue"),
+                      breaks = c("Drug Cost", "12-MA"))
+
+
+ma16 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 16), series = "16-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "16-MA" = "blue"),
+                      breaks = c("Drug Cost", "16-MA"))
+
+ma3
+ma7
+ma12
+ma16
 
 ```
 

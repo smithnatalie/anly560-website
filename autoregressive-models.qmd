@@ -18,6 +18,7 @@ library(plotly)
 library(kableExtra)
 library(dplyr)
 
+#prescription drug costs
 drug = read.csv("datasets/nhe_drug.csv")
 drug = head(drug, -10)
 
@@ -29,15 +30,19 @@ drug$Medicare = as.numeric(gsub(",","",drug$Medicare))
 drug$Medicaid..Title.XIX. = as.numeric(gsub(",","",drug$Medicaid..Title.XIX.))
 drug$Other.Health.Insurance = as.numeric(gsub(",","",drug$Other.Health.Insurance))
 drug$Other.Third.Party.Payers.and.Programs = as.numeric(gsub(",","",drug$Other.Third.Party.Payers.and.Programs))
-
 drug$Year = as.Date(paste0(drug$Year, "-12-31"))
-
 drug.ts = subset(drug, select = Out.of.Pocket)
-
 drug.ts = ts(drug.ts, start=1960, frequency = 1)
+
+#us pharma etf
+pharma = read.csv("datasets/IHE.csv")
+pharma$Date = as.Date(pharma$Date)
+pharma.ts = subset(pharma, select = Adj.Close)
+pharma.ts = ts(pharma.ts, start=c(2007,1),frequency = 12)
+
 ```
 
-### EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost Dataset
+### EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost and U.S. Pharmaceutical ETF Datasets
 
 To review, we learned in the EDA tab that the prescription drug cost data is non-stationary based on the results of the ACF plot and the Augmented Dickey-Fuller test, seen below.
 
@@ -50,6 +55,19 @@ ggPacf(drug.ts, 48, main = "PACF: Prescription Drug Cost TS")
 
 ```{r, warning=FALSE}
 tseries::adf.test(drug.ts)
+```
+
+Additionally, we also learned that the U.S. Pharmaceutical ETF closing prices dataset was non-stationary, as seen below.
+
+```{r, warning=FALSE}
+ggAcf(pharma.ts, 48, main = "ACF: IHE ETF TS")
+
+ggPacf(pharma.ts, 48, main = "PACF: IHE ETF TS")
+
+```
+
+```{r, warning=FALSE}
+tseries::adf.test(pharma.ts)
 ```
 
 ### Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary 
