@@ -127,7 +127,7 @@ gglagplot(drug.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag 
 
 ### Moving Average Smoothing
 
-In this section, I will be looking at three distinct moving average windows, from smallest to largest. This will allow us to see even clearer trends in the data:
+In this section, I will be looking at four distinct moving average windows, from smallest to largest. This will allow us to see even clearer trends in the data:
 
 - 3-period moving average
 - 7-period moving average
@@ -260,6 +260,55 @@ As can be seen below, there is very high positve autocorrelation present in thes
 ```{r}
 gglagplot(pharma.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag Plot: IHE ETF Adjust Closing Prices") + theme(axis.text.x = element_text(angle=45, hjust = 1))
 
+```
+
+### Moving Average Smoothing
+
+As with before, I will be looking at four distinct moving average windows, from smallest to largest. This will allow us to see the trends in the data more clearly:
+
+- 6-period moving average
+- 12-period moving average
+- 18-period moving average
+- 24-period moving average
+
+
+```{r, message=FALSE, warning=FALSE}
+require(gridExtra)
+library(smooth)
+
+ma6 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 6), series = "6-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+  scale_colour_manual(values=c("IHE Closing Price" = "gray", "6-MA" = "green"),
+                      breaks = c("IHE Closing Price", "6-MA"))
+
+ma12 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 12), series = "12-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+  scale_colour_manual(values=c("IHE Closing Price" = "gray", "12-MA" = "green"),
+                      breaks = c("IHE Closing Price", "12-MA"))
+  
+ma18 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 18), series = "18-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+  scale_colour_manual(values=c("IHE Closing Price" = "gray", "18-MA" = "green"),
+                      breaks = c("IHE Closing Price", "18-MA"))
+
+
+ma24 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 24), series = "24-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+   scale_colour_manual(values=c("IHE Closing Price" = "gray", "24-MA" = "green"),
+                      breaks = c("IHE Closing Price", "24-MA"))
+
+ma6
+ma12
+ma18
+ma24
 ```
 
 ### Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?

@@ -213,6 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#decomposition-observing-trends-and-seasonality-1" id="toc-decomposition-observing-trends-and-seasonality-1" class="nav-link" data-scroll-target="#decomposition-observing-trends-and-seasonality-1">Decomposition: Observing trends and seasonality</a></li>
   <li><a href="#detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random" id="toc-detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random" class="nav-link" data-scroll-target="#detecting-lag-are-the-adjusted-closing-prices-of-the-ihe-etf-random-or-non-random">Detecting Lag: Are the adjusted closing prices of the IHE ETF random or non-random?</a></li>
+  <li><a href="#moving-average-smoothing-1" id="toc-moving-average-smoothing-1" class="nav-link" data-scroll-target="#moving-average-smoothing-1">Moving Average Smoothing</a></li>
   <li><a href="#autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity" id="toc-autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity" class="nav-link" data-scroll-target="#autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity">Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?</a></li>
   <li><a href="#augmented-dickey-fuller-test-confirming-lack-of-stationarity-1" id="toc-augmented-dickey-fuller-test-confirming-lack-of-stationarity-1" class="nav-link" data-scroll-target="#augmented-dickey-fuller-test-confirming-lack-of-stationarity-1">Augmented Dickey-Fuller Test: Confirming lack of stationarity</a></li>
   </ul></li>
@@ -414,7 +415,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="moving-average-smoothing" class="level3">
 <h3 class="anchored" data-anchor-id="moving-average-smoothing">Moving Average Smoothing</h3>
-<p>In this section, I will be looking at three distinct moving average windows, from smallest to largest. This will allow us to see even clearer trends in the data:</p>
+<p>In this section, I will be looking at four distinct moving average windows, from smallest to largest. This will allow us to see even clearer trends in the data:</p>
 <ul>
 <li>3-period moving average</li>
 <li>7-period moving average</li>
@@ -624,6 +625,78 @@ alternative hypothesis: stationary</code></pre>
 </div>
 </div>
 </section>
+<section id="moving-average-smoothing-1" class="level3">
+<h3 class="anchored" data-anchor-id="moving-average-smoothing-1">Moving Average Smoothing</h3>
+<p>As with before, I will be looking at four distinct moving average windows, from smallest to largest. This will allow us to see the trends in the data more clearly:</p>
+<ul>
+<li>6-period moving average</li>
+<li>12-period moving average</li>
+<li>18-period moving average</li>
+<li>24-period moving average</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(smooth)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>ma6 <span class="ot">=</span> <span class="fu">autoplot</span>(pharma.ts, <span class="at">series =</span> <span class="st">"IHE Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">ma</span>(pharma.ts, <span class="dv">6</span>), <span class="at">series =</span> <span class="st">"6-MA"</span>)<span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Adjusted Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"IHE ETF Adjusted Closing Prices (2007-2022)"</span>)<span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"IHE Closing Price"</span> <span class="ot">=</span> <span class="st">"gray"</span>, <span class="st">"6-MA"</span> <span class="ot">=</span> <span class="st">"green"</span>),</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"IHE Closing Price"</span>, <span class="st">"6-MA"</span>))</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>ma12 <span class="ot">=</span> <span class="fu">autoplot</span>(pharma.ts, <span class="at">series =</span> <span class="st">"IHE Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">ma</span>(pharma.ts, <span class="dv">12</span>), <span class="at">series =</span> <span class="st">"12-MA"</span>)<span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Adjusted Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"IHE ETF Adjusted Closing Prices (2007-2022)"</span>)<span class="sc">+</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"IHE Closing Price"</span> <span class="ot">=</span> <span class="st">"gray"</span>, <span class="st">"12-MA"</span> <span class="ot">=</span> <span class="st">"green"</span>),</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>                      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"IHE Closing Price"</span>, <span class="st">"12-MA"</span>))</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>ma18 <span class="ot">=</span> <span class="fu">autoplot</span>(pharma.ts, <span class="at">series =</span> <span class="st">"IHE Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">ma</span>(pharma.ts, <span class="dv">18</span>), <span class="at">series =</span> <span class="st">"18-MA"</span>)<span class="sc">+</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Adjusted Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"IHE ETF Adjusted Closing Prices (2007-2022)"</span>)<span class="sc">+</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"IHE Closing Price"</span> <span class="ot">=</span> <span class="st">"gray"</span>, <span class="st">"18-MA"</span> <span class="ot">=</span> <span class="st">"green"</span>),</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>                      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"IHE Closing Price"</span>, <span class="st">"18-MA"</span>))</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>ma24 <span class="ot">=</span> <span class="fu">autoplot</span>(pharma.ts, <span class="at">series =</span> <span class="st">"IHE Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">ma</span>(pharma.ts, <span class="dv">24</span>), <span class="at">series =</span> <span class="st">"24-MA"</span>)<span class="sc">+</span></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Adjusted Closing Price"</span>)<span class="sc">+</span></span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"IHE ETF Adjusted Closing Prices (2007-2022)"</span>)<span class="sc">+</span></span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"IHE Closing Price"</span> <span class="ot">=</span> <span class="st">"gray"</span>, <span class="st">"24-MA"</span> <span class="ot">=</span> <span class="st">"green"</span>),</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>                      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"IHE Closing Price"</span>, <span class="st">"24-MA"</span>))</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>ma6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ma12</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ma18</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ma24</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-22-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 <section id="autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity" class="level3">
 <h3 class="anchored" data-anchor-id="autocorrelation-is-the-ihe-etf-closing-price-dataset-exhibiting-stationarity">Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?</h3>
 <p>To confirm what appears to be a clear lack of stationarity present in the lag plot above, we can plot the ACF and PACF of the time series dataset.</p>
@@ -631,17 +704,17 @@ alternative hypothesis: stationary</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"ACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"PACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(pharma.ts, <span class="dv">48</span>, <span class="at">main =</span> <span class="st">"PACF: IHE ETF TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -651,7 +724,7 @@ alternative hypothesis: stationary</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>tseries<span class="sc">::</span><span class="fu">adf.test</span>(pharma.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tseries<span class="sc">::</span><span class="fu">adf.test</span>(pharma.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
