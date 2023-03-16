@@ -55,10 +55,11 @@ Before turning the dataset into a time series object, I want to create some basi
 
 GGPlot2 Line and Column Charts:
 ```{r}
-ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
+drug.plot = ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
   geom_line()+
   xlab("Year") + ylab("Out of Pocket Cost (Millions of USD)")+
   theme_minimal()
+drug.plot
 ```
 ```{r}
 ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
@@ -88,7 +89,7 @@ autoplot(drug.ts, main = "Consumer Out-of-Pocket Prescription Drug Costs (1960-2
 
 ```
 
-### Decomposition: Testing for additive and multiplicative seasonality
+### Decomposition: Observing trends and seasonality
 
 First, I will take an additive decomposition to separate the out-of-pocket prescription drug costs time series into its different components.
 
@@ -148,11 +149,86 @@ Below, we can see that the results of the ADF test confirm a lack of stationarit
 tseries::adf.test(drug.ts)
 ```
 
+## **Dataset 2: Monthly Performance of U.S. Pharmaceutical Companies ETF Stock**
+
+Although this dataset is very clean already, there are a few things to do to ensure it is in the correct format for analysis. 
+
+```{r}
+pharma = read.csv("datasets/IHE.csv")
+head(pharma)
+```
+Now that the data is read in, I will convert the "Date" variable to a date-type object and then use the monthly average adjusted closing price as my variable of interest for time series analysis and modeling. 
+
+```{r}
+pharma$Date = as.Date(pharma$Date)
+
+```
+
+Below, we can see the initial line plot of the changes in the adjusted closing price of the IHE pharmaceutical stock ETF since its creation in 2007. 
+
+```{r}
+pharm.plot = ggplot(pharma, aes(x=Date))+
+  geom_line(aes(y=Adj.Close))+xlab("Year")+ylab("Adjusted Closing Price")+theme_minimal()
+
+pharm.plot
+```
+Next, I will turn this stock price dataset into a time series format for the remainder of the analysis.
+
+```{r}
+pharma.ts = subset(pharma, select = Adj.Close)
+
+pharma.ts = ts(pharma.ts, start=c(2007,1),frequency = 12)
+
+autoplot(pharma.ts, main = "U.S. Pharmaceuticals ETF (IHE) Performance (2007-2022)", xlab = "Date", ylab = "Adjusted Closing Price")
+
+```
+
+### Decomposition: Observing trends and seasonality
+
+As with the previous dataset, I will take an additive decomposition to separate the IHE ETF closing price time series into its different components.
+
+Although we see a clear upward trend, there doesn't really appear to be any seasonality in the adjusted closing prices of the ETF stock.
+
+```{r}
+add_pharma = ts(pharma.ts, frequency = 4)
+decompose_pharma = decompose(add_pharma, "additive")
+autoplot(decompose_pharma)
+```
+
+```{r}
+autoplot(as.ts(decompose_pharma$trend), main = "IHE ETF Closing Price Decomposition: Trend Component")
+autoplot(as.ts(decompose_pharma$seasonal), main = "IHE ETF Closing Price Decomposition: Seasonal Component")
+```
+
+### Detecting Lag: Are the adjusted closing prices of the IHE ETF random or non-random?
+
+Next, I will be creating another lag plot for my IHE ETF closing prices dataset to determine if any autocorrelation is present that may have impacts to stationarity.
+
+As can be seen below, there is very high positve autocorrelation present in these lag plots. Even though the correlation becomes weaker as the number of lags observed increases, even lags as high as lag 16 are showing a positive linear pattern suggesting high autocorrelation. 
 
 
+```{r}
+gglagplot(pharma.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag Plot: IHE ETF Adjust Closing Prices") + theme(axis.text.x = element_text(angle=45, hjust = 1))
 
+```
 
+### Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?
 
+To confirm what appears to be a clear lack of stationarity present in the lag plot above, we can plot the ACF and PACF of the time series dataset.
 
+As expected, the results of the ACF plot show a very clear lack of stationarity in the data, seen by the fact that all lags fall outside of the boundaries even as they are decreasing. As with the prescription drug cost dataset, this means that the data will need to be transformed with detrending or differencing before modeling can be done on the data. 
 
+```{r, warning=FALSE}
+ggAcf(pharma.ts, 48, main = "ACF: IHE ETF TS")
 
+ggPacf(pharma.ts, 48, main = "PACF: IHE ETF TS")
+
+```
+
+### Augmented Dickey-Fuller Test: Confirming lack of stationarity
+
+Although the ACF plot is the authority when it comes to determining stationarity or lack thereof, the results of the ADF test below also prove that the IHE ETF dataset is not stationary, as the null hypothesis of non-stationarity cannot be rejected due to a high p-value. 
+
+```{r, warning=FALSE}
+tseries::adf.test(pharma.ts)
+```
