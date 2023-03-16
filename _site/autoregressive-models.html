@@ -298,28 +298,14 @@ alternative hypothesis: stationary</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: gridExtra</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'gridExtra'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:dplyr':
-
-    combine</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>drug.fit <span class="ot">=</span> <span class="fu">lm</span>(drug.ts<span class="sc">~</span><span class="fu">time</span>(drug.ts), <span class="at">na.action =</span> <span class="cn">NULL</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plot1<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">resid</span>(drug.fit), <span class="at">main=</span><span class="st">"Drug Cost: Detrended"</span>) </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plot2<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">diff</span>(drug.ts), <span class="at">main=</span><span class="st">"Drug Cost: First Difference"</span>) </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>drug.fit <span class="ot">=</span> <span class="fu">lm</span>(drug.ts<span class="sc">~</span><span class="fu">time</span>(drug.ts), <span class="at">na.action =</span> <span class="cn">NULL</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plot1<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">resid</span>(drug.fit), <span class="at">main=</span><span class="st">"Drug Cost: Detrended"</span>) </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plot2<span class="ot">&lt;-</span><span class="fu">autoplot</span>(<span class="fu">diff</span>(drug.ts), <span class="at">main=</span><span class="st">"Drug Cost: First Difference"</span>) </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
@@ -329,24 +315,13 @@ Attaching package: 'gridExtra'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot1 = ggAcf(drug.ts, 48, main="Original Data: Drug Cost")</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">resid</span>(drug.fit), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"Detrended Data: Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Ignoring unknown parameters: main</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(drug.ts), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"First Differenced Data: Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Ignoring unknown parameters: main</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot2, plot3,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(gridExtra)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot1 = ggAcf(drug.ts, 48, main="Original Data: Drug Cost")</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">resid</span>(drug.fit), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"Detrended Data: Drug Cost"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">=</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(drug.ts), <span class="dv">48</span>, <span class="at">main=</span><span class="st">"First Differenced Data: Drug Cost"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot2, plot3,<span class="at">nrow=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
@@ -355,7 +330,7 @@ Attaching package: 'gridExtra'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="ot">=</span> <span class="fu">diff</span>(drug.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="ot">=</span> <span class="fu">diff</span>(drug.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -369,14 +344,14 @@ Attaching package: 'gridExtra'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(drug.diff, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF: Differenced Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(drug.diff, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"ACF: Differenced Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(drug.diff, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF: Differenced Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(drug.diff, <span class="dv">48</span>, <span class="at">main=</span><span class="st">"PACF: Differenced Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
@@ -389,9 +364,9 @@ Attaching package: 'gridExtra'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>drug.arima113 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>drug.arima113 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
@@ -400,7 +375,7 @@ Attaching package: 'gridExtra'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima113[<span class="dv">142</span><span class="sc">:</span><span class="dv">168</span>], drug.arima113[<span class="fu">length</span>(drug.arima113)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima113[<span class="dv">142</span><span class="sc">:</span><span class="dv">168</span>], drug.arima113[<span class="fu">length</span>(drug.arima113)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -437,9 +412,9 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>drug.arima111 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">73</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>drug.arima111 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
@@ -448,7 +423,7 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima111[<span class="dv">72</span><span class="sc">:</span><span class="dv">96</span>], drug.arima111[<span class="fu">length</span>(drug.arima111)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima111[<span class="dv">72</span><span class="sc">:</span><span class="dv">96</span>], drug.arima111[<span class="fu">length</span>(drug.arima111)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -487,7 +462,7 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auto.arima</span>(drug.diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auto.arima</span>(drug.diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: drug.diff 
@@ -507,7 +482,7 @@ AIC=1046.35   AICc=1046.56   BIC=1050.54</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>drug.arima100 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>drug.arima100 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(drug.diff, <span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
@@ -516,7 +491,7 @@ AIC=1046.35   AICc=1046.56   BIC=1050.54</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima100[<span class="dv">28</span><span class="sc">:</span><span class="dv">50</span>], drug.arima100[<span class="fu">length</span>(drug.arima100)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(drug.arima100[<span class="dv">28</span><span class="sc">:</span><span class="dv">50</span>], drug.arima100[<span class="fu">length</span>(drug.arima100)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Coefficients:
@@ -553,10 +528,10 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-pocket Drug Cost Predictions"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-pocket Drug Cost Predictions"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
@@ -565,10 +540,10 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-pocket Drug Cost Predictions"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>drug.diff <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Out-of-pocket Drug Cost Predictions"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
@@ -582,7 +557,7 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
@@ -592,14 +567,8 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>drug.diff2 <span class="ot">=</span> <span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">1995</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in window.default(x, ...): 'start' value not changed</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>drug.diff2 <span class="ot">=</span> <span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">1995</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
@@ -609,8 +578,8 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>drug.mean <span class="ot">=</span> <span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(drug.mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>drug.mean <span class="ot">=</span> <span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(drug.mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
@@ -629,8 +598,8 @@ Model df: 1.   Total lags used: 7</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>drug.naive <span class="ot">=</span> <span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(drug.naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>drug.naive <span class="ot">=</span> <span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(drug.naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
@@ -649,15 +618,15 @@ Model df: 0.   Total lags used: 7</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2) <span class="sc">+</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  drug.diff2 <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  drug.diff2 <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
@@ -667,22 +636,16 @@ Model df: 0.   Total lags used: 7</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>drug.diff3<span class="ot">=</span><span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">2005</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in window.default(x, ...): 'start' value not changed</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff3) <span class="sc">+</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  drug.diff2 <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Forecasting Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>drug.diff3<span class="ot">=</span><span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">2005</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff3) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(drug.diff2, <span class="at">h=</span><span class="dv">10</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  drug.diff2 <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.drift =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Forecasting Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>

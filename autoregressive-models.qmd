@@ -75,7 +75,7 @@ tseries::adf.test(pharma.ts)
 
 As seen in the last section, we can confirm that both datasets in this study are non-stationary. So, before moving on to ARIMA modeling, it is necessary to transform the dataset so that it is at least weakly stationary. 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 require(gridExtra)
 
 drug.fit = lm(drug.ts~time(drug.ts), na.action = NULL)
@@ -88,7 +88,7 @@ grid.arrange(plot1, plot2,nrow=2)
 
 Next, we can look at the ACF plots to compare the detrended dataset and the differenced dataset. Both detrending and first-order differencing are pretty successful in making the data more stationary. Because the differencing is a bit more successful at making the dataset stationary, I will proceed with that first-order differenced dataset for modeling.
 
-```{r}
+```{r, warning=FALSE}
 require(gridExtra)
 
 # plot1 = ggAcf(drug.ts, 48, main="Original Data: Drug Cost")
@@ -97,7 +97,7 @@ plot3 = ggAcf(diff(drug.ts), 48, main="First Differenced Data: Drug Cost")
 
 grid.arrange(plot2, plot3,nrow=2)
 ```
-```{r}
+```{r, warning=FALSE}
 drug.diff = diff(drug.ts)
 ```
 
@@ -197,13 +197,13 @@ Finally, I am going to compare my chosen ARIMA model to some simple benchmark mo
 
 As a reminder, here is the time series plot for the first-order differenced data.
 
-```{r}
+```{r, warning=FALSE}
 autoplot(drug.diff)+ggtitle("Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")
 ```
 
 Selecting only the the window of interesting, the plot looks like:
 
-```{r}
+```{r, warning=FALSE}
 drug.diff2 = window(drug.diff, start=1960, end=1995)
 autoplot(drug.diff2)+ggtitle("Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")
 ```
@@ -211,21 +211,21 @@ autoplot(drug.diff2)+ggtitle("Out-of-Pocket Drug Costs (1960-1995) (1st-order di
 
 *Mean*
 
-```{r}
+```{r, warning=FALSE}
 drug.mean = meanf(drug.diff2, h=10)
 checkresiduals(drug.mean)
 ```
 
 *Naive Method*
 
-```{r}
+```{r, warning=FALSE}
 drug.naive = naive(drug.diff2, h=10)
 checkresiduals(drug.naive)
 ```
 
 Now, I will plot all forecasts together:
 
-```{r}
+```{r, warning=FALSE}
 autoplot(drug.diff2) +
   autolayer(meanf(drug.diff2, h=10), series = "Mean", PI=FALSE)+
   autolayer(naive(drug.diff2, h=10), series = "Naive", PI=FALSE)+
@@ -239,7 +239,7 @@ autoplot(drug.diff2) +
 
 When compared to the original data, it is clear that the ARIMA model does a better job of forecasting that the mean and naive methods. That being said, none of the models are able to forecast the incredibly steep spike in out-of-pocket prescription drug costs beginning in 1994.
 
-```{r}
+```{r, warning=FALSE}
 drug.diff3=window(drug.diff, start=1960, end=2005)
 autoplot(drug.diff3) +
   autolayer(meanf(drug.diff2, h=10), series = "Mean", PI=FALSE)+
