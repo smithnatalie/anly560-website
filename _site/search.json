@@ -46,11 +46,11 @@
     "text": "Add ARMA/ARIMA/SARIMA Models section here!"
   },
   {
-    "objectID": "spectral.html",
-    "href": "spectral.html",
-    "title": "Spectral Analysis and Filtering",
+    "objectID": "arimax.html",
+    "href": "arimax.html",
+    "title": "ARIMAX/SARIMAX/VAR Models",
     "section": "",
-    "text": "Add Spectral Analysis and Filtering section here!"
+    "text": "ARIMAX/SARIMAX/VAR Models here!"
   },
   {
     "objectID": "financial-models.html",
