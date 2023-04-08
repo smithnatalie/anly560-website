@@ -1,8 +1,6 @@
 ---
-title: "Spectral Analysis and Filtering"
+title: "ARIMAX/SARIMAX/VAR"
 format: 
   html:
     theme: lux
 ---
-
-Add Spectral Analysis and Filtering section here!
