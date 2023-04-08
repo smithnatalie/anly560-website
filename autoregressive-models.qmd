@@ -480,8 +480,8 @@ st = tsp(flu.ts)[1]+(k-2)/52
 for(i in 1:(n-k))
 {
   #xtrain <- window(a10, start=st+(i-k+1)/12, end=st+i/12)
-  xtrain <- window(flu.ts, end=st + i/52)
-  xtest <- window(flu.ts, start=st + (i+1)/52, end=st + (i+52)/52)
+  xtrain <- window(flu.ts, end=st + i-1)
+  xtest <- window(flu.ts, start=st + (i-1) + 1/52, end=st + i)
   
   fit <- Arima(xtrain, order=c(2,1,1), seasonal=list(order=c(0,1,1), period=52),
                 lambda=0, method="ML")
