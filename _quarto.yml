@@ -12,7 +12,7 @@ website:
       - data-visualization.qmd
       - eda.qmd
       - autoregressive-models.qmd
-      - spectral.qmd
+      - arimax.qmd
       - financial-models.qmd
       - deep-learning.qmd
       - conclusions.qmd
