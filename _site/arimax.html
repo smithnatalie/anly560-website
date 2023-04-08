@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series - Natalie Smith - Introduction</title>
+<title>Time Series - Natalie Smith - ARIMAX/SARIMAX/VAR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -84,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./introduction.html" aria-current="page">
+    <a class="nav-link" href="./introduction.html">
  <span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item">
@@ -103,10 +103,8 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./autoregressive-models.html">
  <span class="menu-text">ARMA/ARIMA/SARIMA Models</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./arimax.html">
- <span class="menu-text">ARIMAX/SARIMAX/VAR Models</span></a>
-  </li>  
+  <li class="dropdown-header">
+ <span class="menu-text">spectral.qmd</span></li>
   <li class="nav-item">
     <a class="nav-link" href="./financial-models.html">
  <span class="menu-text">Financial Time Series Models</span></a>
@@ -134,21 +132,14 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background"><strong>Background</strong></a></li>
-  <li><a href="#guiding-questions-for-analysis" id="toc-guiding-questions-for-analysis" class="nav-link" data-scroll-target="#guiding-questions-for-analysis"><strong>Guiding Questions for Analysis</strong></a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Introduction</h1>
+<h1 class="title">ARIMAX/SARIMAX/VAR</h1>
 </div>
 
 
@@ -163,41 +154,8 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="background" class="level3">
-<h3 class="anchored" data-anchor-id="background"><strong>Background</strong></h3>
-<p>Over the last 100 years, the impact of climate change on the world’s ecosystem has been observed in a variety of different areas, including new record-high temperature increases year after year, droughts, loss of wildlife habitats and resources, more frequent and severe natural disasters and storms, worsening air quality, and more, much of which is still yet to seen in the coming decades.</p>
-<p>In the United States, scientists are often looking at Florida when observing both current and future consequences of climate change, most notably rapid sea level rise and increased flooding that make the southern, peninsular state particularly vulnerable. Many areas of southern Florida, especially extremely popular and historic cities like Miami Beach and landmarks like the Florida Keys, are even theorized to be partially or completely submerged underwater within decades without human intervention to rapidly protect infrastructure [1].</p>
-</section>
-<section id="guiding-questions-for-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="guiding-questions-for-analysis"><strong>Guiding Questions for Analysis</strong></h3>
-<p>In this project, I will be using time series analysis to study the the current consequences of climate change and predict its potential impacts on the future by zooming in on the state of Florida and answering the following questions:</p>
-<ol type="1">
-<li><p>How has Florida’s temperature changed over the last few decades?</p>
-<ol type="i">
-<li>Have averages temperatures continued to trend upwards?</li>
-<li>Is Florida experiencing consistent record-high temperatures in the summer year after year?</li>
-</ol></li>
-<li><p>Is Florida seeing consistent temperature increases in every season compared to previous years?</p>
-<ol type="i">
-<li>For example, are winters in Florida in the 2010s and 2020s consistently hotter than the Florida winters of previous decades?</li>
-</ol></li>
-<li><p>Can current climate data be used to predict future temperature trends in Florida in the coming decades?</p></li>
-<li><p>Has precipitation in Florida changed over the last few decades? Is the state seeing increased, decreased, or relatively constant levels of rain year after year?</p></li>
-<li><p>Is precipitation in Florida more common in some months than others?</p></li>
-<li><p>Have the number hurricanes and tropical storms affecting the state changed over the last few decades?</p></li>
-<li><p>Has the intensity and damage caused by major storms (particularly hurricanes and tropical storms) affecting the state increased?</p></li>
-<li><p>Has flooding overall in coastal Floridian cities and town changed over the years?</p></li>
-<li><p>Has the cost of repairing damage done by major storms, storm surge, and flooding increased over the last few decades?</p></li>
-<li><p>How has climate change affected the cost of homes, home insurance, and/or flood insurance in coastal Floridian cities and towns?</p></li>
-<li><p>What is the extent to which Florida’s coastline has receded over the decades?</p>
-<ol type="i">
-<li>Is the state experiencing coastal erosion at a faster pace than in previous decades?</li>
-<li>How rapidly are local sea levels rising?</li>
-</ol></li>
-</ol>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
