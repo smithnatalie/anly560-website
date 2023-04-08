@@ -122,6 +122,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -204,6 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets" id="toc-eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets" class="nav-link active" data-scroll-target="#eda-review-determining-stationarity-of-out-of-pocket-drug-cost-and-u.s.-pharmaceutical-etf-datasets">EDA Review: Determining Stationarity of Out-of-Pocket Drug Cost and U.S. Pharmaceutical ETF Datasets</a></li>
   <li><a href="#detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary" id="toc-detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary" class="nav-link" data-scroll-target="#detrending-and-differencing-making-the-out-of-pocket-drug-cost-time-series-stationary">Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary</a></li>
   <li><a href="#arimapdq-modeling-out-of-pocket-prescription-drug-cost" id="toc-arimapdq-modeling-out-of-pocket-prescription-drug-cost" class="nav-link" data-scroll-target="#arimapdq-modeling-out-of-pocket-prescription-drug-cost">ARIMA(p,d,q) Modeling: Out-of-Pocket Prescription Drug Cost</a></li>
+  <li><a href="#sarima-weekly-influenza-deaths-and-the-prescription-drug-market" id="toc-sarima-weekly-influenza-deaths-and-the-prescription-drug-market" class="nav-link" data-scroll-target="#sarima-weekly-influenza-deaths-and-the-prescription-drug-market">SARIMA: Weekly Influenza Deaths and the Prescription Drug Market</a></li>
   </ul>
 </nav>
     </div>
@@ -557,7 +559,7 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
@@ -568,7 +570,7 @@ $BIC
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>drug.diff2 <span class="ot">=</span> <span class="fu">window</span>(drug.diff, <span class="at">start=</span><span class="dv">1960</span>, <span class="at">end=</span><span class="dv">1995</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(drug.diff2)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
@@ -626,7 +628,7 @@ Model df: 0.   Total lags used: 7</code></pre>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
 <span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
@@ -645,10 +647,391 @@ Model df: 0.   Total lags used: 7</code></pre>
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
 <span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"ARIMA(1,0,0)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
 <span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Forecasting Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Forecasting Out-of-Pocket Drug Costs"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Out-of-Pocket Cost (Differenced)"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"10-Yr Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="sarima-weekly-influenza-deaths-and-the-prescription-drug-market" class="level3">
+<h3 class="anchored" data-anchor-id="sarima-weekly-influenza-deaths-and-the-prescription-drug-market">SARIMA: Weekly Influenza Deaths and the Prescription Drug Market</h3>
+<section id="determining-seasonality" class="level4">
+<h4 class="anchored" data-anchor-id="determining-seasonality">Determining Seasonality</h4>
+<p>To analyze seasonal data as it relates to this topic, I want to take a look at the year over year weekly flu deaths in the United States to determine if it is in fact seasonal and if flu deaths can be predicted.</p>
+<p>The purpose of including this ties into the time series data on out-of-pocket prescription drug costs. Although it difficult to find time series data on illnesses that often require high-cost prescription drugs like chronic pain, diabetes, depression, and so on, there is a wealth of collected influenza data that can be converted into a time series format.</p>
+<p><a href="https://www.tamiflu.com/">Tamiflu</a> is an antiviral drug often prescribed by doctors to treat the flu by preventing it from multiplying further in the body as well as curbing severe flu symptoms. It along with vaccines is one of the many reasons why the once deadly common flu is less dangerous today than it was in decades past.</p>
+<p>Although it is not a perfect comparison to other high-cost drugs, the current price of Tamiflu as of April 2023 can range anywhere from $156 USD to $169 USD for a 10-capsule supply for those without insurance. If we can confirm seasonality of flu deaths, we confirm that there are times of the year in which pharmaceutical companies like Genetech, the maker of Tamiflu, made high profits at what may be an unreasonably high cost to lower-income consumers.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>flu <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">'datasets/flu_deaths.csv'</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>flu<span class="sc">$</span>Date <span class="ot">=</span> <span class="fu">as.Date</span>(flu<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>flu<span class="sc">$</span>Date <span class="ot">=</span> <span class="fu">format</span>(flu<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="ot">=</span> <span class="fu">subset</span>(flu, <span class="at">select =</span> Influenza.Deaths)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="ot">=</span> <span class="fu">ts</span>(flu.ts, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2014</span>,<span class="dv">52</span>),<span class="at">frequency =</span> <span class="dv">52</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts, <span class="at">main =</span> <span class="st">"Weekly Influenza Deaths in the U.S. (2015-2023)"</span>, <span class="at">ylab =</span> <span class="st">"Influenza Deaths"</span>, <span class="at">xlab =</span> <span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Looking at the decomposition below, we can see evidence of what looks like seasonality in the data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add_fluts = ts(flu.ts, frequency = 4)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>decompose_flu <span class="ot">=</span> <span class="fu">decompose</span>(flu.ts)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(decompose_flu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Looking at the lag and ACF plots below as well, we can see what looks like further confirmation of seasonality.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gglagplot</span>(flu.ts, <span class="at">do.lines =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Lags"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Yi"</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Lag Plot: Influenza Deaths"</span>) <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu.ts, <span class="at">main =</span> <span class="st">"ACF: Influenza Deaths TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>To ensure this is is the case, I will perform the Ljung-Box on the residuals of the influenza deaths time series data.</p>
+<p>The extremely small p-value means that the null hypothesis of independently distributed residuals can be rejected, indicating seasonality of the data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> flu.ts <span class="sc">-</span> decompose_flu<span class="sc">$</span>trend <span class="sc">-</span> decompose_flu<span class="sc">$</span>seasonal</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Box.test</span>(residuals, <span class="at">type=</span><span class="st">"Ljung-Box"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Box-Ljung test
+
+data:  residuals
+X-squared = 349.15, df = 1, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="seasonal-differencing" class="level4">
+<h4 class="anchored" data-anchor-id="seasonal-differencing">Seasonal Differencing</h4>
+<p>Now that the seasonality of the influenza data has been confirmed, differencing needs to be performed before SARIMA modeling can occur.</p>
+<p>To recap, by looking at the ACF plot for this data set we can confirm that the data is not stationary and follows a clearly seasonal pattern.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu.ts, <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"ACF: Influenza Deaths TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>To make the data stationary, I will perform both regular, first-order differencing on the data as well as seasonal differencing. The resulting ACF plot following this differencing is below.</p>
+<p>At first glance, it is hard to determine if it is stationary for sure. The lag decreases quickly over time, but to be sure, I will perform an Augmented Dickey-Fuller test with an <span class="math inline">\(\alpha = 0.05\)</span> significance level.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>flu_diff <span class="ot">=</span> <span class="fu">diff</span>(flu.ts, <span class="at">lag =</span> <span class="dv">52</span>, <span class="at">differences =</span> <span class="dv">1</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu_diff, <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"ACF: Differenced Influenza Deaths TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Ignoring unknown parameters: main</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As can be seen below, the result of the ADF test results in a p-value of 0.01. Because this is less than my set significance level, I will conclude that the data set is now stationary enough to move on to SARIMA modeling.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  flu_diff
+Dickey-Fuller = -4.23, Lag order = 7, p-value = 0.01
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+</section>
+<section id="sarimapdqxpdqs-modeling" class="level4">
+<h4 class="anchored" data-anchor-id="sarimapdqxpdqs-modeling">SARIMA(p,d,q)x(P,D,Q)s Modeling</h4>
+<p>Now that the data is in the proper format, the first step of SARIMA modeling is to find the regular and seasonal parameters to use in our equation.</p>
+<p>Because regular first-order differencing and seasonal differencing was performed on the model, we know that both d and D should be equal to 1.</p>
+<p>For the ARIMA terms, looking at the PACF plot would suggest 2 AR terms for the model. Looking at the ACF plot is a bit more difficult, as the lags extend pretty far. Because of this, I am going to select an MA term of 4 for this iteration, as I do not believe increasing this number will have much of an impact on model performance.</p>
+<p>For the SARIMA terms, the same rule applies but considers the seasonal lag, which can be seen below at Lag 52. Because the PACF plot does not show a lag extending beyond the condfidence interval at lag 52, I am going to select an SAR term of 0. For the SAR term, we do see a lag extend beyond the interval at 52, but not at 104. Because of this, I will select an SAR term of 1.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>So, the resulting parameters for the model will be: <strong>SARIMA(2,1,4)x(0,1,1)</strong></p>
+<p>Now, I will proceed with modeling and modeling diagnostics for my chosen parameters.</p>
+<p>In the results of the model seen below, we can see that the p-values in the Ljung-Box statistic are relatively high, suggesting that the values are independent from one another.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>flu.fit <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">4</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(flu.fit[<span class="dv">80</span><span class="sc">:</span><span class="dv">113</span>], flu.fit[<span class="fu">length</span>(flu.fit)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+arima(x = xdata, order = c(p, d, q), seasonal = list(order = c(P, D, Q), period = S), 
+    include.mean = !no.constant, transform.pars = trans, fixed = fixed, optim.control = list(trace = trc, 
+        REPORT = 1, reltol = tol))
+
+Coefficients:
+         ar1      ar2      ma1     ma2      ma3     ma4     sma1
+      1.7059  -0.7643  -1.0780  0.0549  -0.0521  0.0919  -0.9735
+s.e.  0.0769   0.0711   0.0931  0.0814   0.0857  0.0708      NaN
+
+sigma^2 estimated as 1778:  log likelihood = -2001.98,  aic = 4019.95
+
+$degrees_of_freedom
+[1] 371
+
+$ttable
+     Estimate     SE  t.value p.value
+ar1    1.7059 0.0769  22.1754  0.0000
+ar2   -0.7643 0.0711 -10.7477  0.0000
+ma1   -1.0780 0.0931 -11.5824  0.0000
+ma2    0.0549 0.0814   0.6746  0.5003
+ma3   -0.0521 0.0857  -0.6082  0.5434
+ma4    0.0919 0.0708   1.2967  0.1955
+sma1  -0.9735    NaN      NaN     NaN
+
+$AIC
+[1] 10.6348
+
+$AICc
+[1] 10.6356
+
+$BIC
+[1] 10.71808</code></pre>
+</div>
+</div>
+<p>The resulting model has AIC 10.63 and BIC 10.72. When looking at the coefficients, we can see that MA(2), MA(3) and MA(4) are insignificant. I will remove these terms from the next SARIMA model to see if this will improve model performance.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>flu.fit2 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">1</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(flu.fit2[<span class="dv">56</span><span class="sc">:</span><span class="dv">85</span>], flu.fit2[<span class="fu">length</span>(flu.fit2)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+arima(x = xdata, order = c(p, d, q), seasonal = list(order = c(P, D, Q), period = S), 
+    include.mean = !no.constant, transform.pars = trans, fixed = fixed, optim.control = list(trace = trc, 
+        REPORT = 1, reltol = tol))
+
+Coefficients:
+         ar1      ar2      ma1     sma1
+      1.6206  -0.6882  -0.9835  -0.9317
+s.e.  0.0381   0.0381   0.0152   0.2151
+
+sigma^2 estimated as 1854:  log likelihood = -2003.02,  aic = 4016.05
+
+$degrees_of_freedom
+[1] 374
+
+$ttable
+     Estimate     SE  t.value p.value
+ar1    1.6206 0.0381  42.4829       0
+ar2   -0.6882 0.0381 -18.0623       0
+ma1   -0.9835 0.0152 -64.5593       0
+sma1  -0.9317 0.2151  -4.3318       0
+
+$AIC
+[1] 10.62446
+
+$AICc
+[1] 10.62475
+
+$BIC
+[1] 10.67651</code></pre>
+</div>
+</div>
+<p>When removing the insignificant terms from the previous model, we see that AIC and BIC have been very slightly reduced to 10.62 and 10.68, respectively.</p>
+</section>
+<section id="fitting-with-auto.arima-1" class="level4">
+<h4 class="anchored" data-anchor-id="fitting-with-auto.arima-1">Fitting with auto.arima()</h4>
+<p>Like I did before with my ARIMA model, I am going to use auto.arima() to see if model performance can be increased on the SARIMA model to effectively predict future deaths caused by influenza.</p>
+<p>According to auto.arima(), the parameters for the best seasonal model are SARIMA(4,0,0)x(0,0,2). Although it seems to pass the Ljung-Box test, the AIC and BIC values are extremely high. As a result, I will use my chosen reduced model for forecasting.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auto.arima</span>(flu.ts, <span class="at">seasonal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: flu.ts 
+ARIMA(4,0,0)(0,0,2)[52] with non-zero mean 
+
+Coefficients:
+         ar1      ar2     ar3      ar4    sma1    sma2      mean
+      1.6559  -0.7493  0.0439  -0.0109  0.0870  0.1880  126.0456
+s.e.  0.0510   0.0982  0.0983   0.0511  0.0552  0.0548   43.2511
+
+sigma^2 = 2031:  log likelihood = -2253.37
+AIC=4522.75   AICc=4523.09   BIC=4555.28</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>auto.fit <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">4</span>, <span class="at">d =</span> <span class="dv">0</span>, <span class="at">q =</span><span class="dv">0</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">0</span>, <span class="at">Q =</span> <span class="dv">2</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="forecasting-1" class="level4">
+<h4 class="anchored" data-anchor-id="forecasting-1">Forecasting</h4>
+<p>Finally, I am going to forecast the number of influenza deaths in the U.S. in the two years. To do this, I will be using my reduced hand-selected SARIMA model, with the parameters SARIMA(2,1,1)x(0,1,1).</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="comparing-benchmark-methods-1" class="level4">
+<h4 class="anchored" data-anchor-id="comparing-benchmark-methods-1">Comparing Benchmark Methods</h4>
+<p>As I did before, I am going to use a window of data to see how effectively the benchmark methods perform against the SARIMA model. To do this, I am going to set a window starting at 2015 and ending at 2019 instead of the original 2023.</p>
+<p>The plot of the window of data can be seen below:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>flu.window <span class="ot">=</span> <span class="fu">window</span>(flu.ts, <span class="at">start =</span> <span class="dv">2015</span>, <span class="at">end =</span> <span class="dv">2019</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.window)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"U.S. Influenza Deaths (2015-2019)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><em>Mean</em></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>flu.mean <span class="ot">=</span> <span class="fu">meanf</span>(flu.window, <span class="at">h=</span><span class="dv">2</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(flu.mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Ljung-Box test
+
+data:  Residuals from Mean
+Q* = 1031.4, df = 41, p-value &lt; 2.2e-16
+
+Model df: 1.   Total lags used: 42</code></pre>
+</div>
+</div>
+<p><em>Naive</em></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>flu.naive <span class="ot">=</span> <span class="fu">naive</span>(flu.window, <span class="at">h=</span><span class="dv">2</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(flu.naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Ljung-Box test
+
+data:  Residuals from Naive method
+Q* = 244.81, df = 42, p-value &lt; 2.2e-16
+
+Model df: 0.   Total lags used: 42</code></pre>
+</div>
+</div>
+<p>Now, I will plot the three forecasts together: my SARIMA model, the Mean, and the Naive model to see which performs the best in terms of prediction</p>
+<p>Comparing against the original data:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts) <span class="sc">+</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(flu.window, <span class="at">h=</span><span class="dv">208</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(flu.window, <span class="at">h=</span><span class="dv">208</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  flu.window <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"SARIMA(2,1,1)x(0,1,1)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggtitle</span>(<span class="st">"Forecasting Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Unfortunately, it looks like the SARIMA model performs pretty poorly based off of the short window alone. However, it is important to note that when predicting into the future, the SARIMA model seems to map a very feasible pattern of predictions. Because of this, I would still argue it is a better model than the benchmark methods, as it is able to more accurately capture the ebbs and flows of seasonality.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts)<span class="sc">+</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"SARIMA(2,1,1)x(0,1,1)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Forecasting Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="autoregressive-models_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 

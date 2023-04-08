@@ -71,9 +71,9 @@ ggPacf(pharma.ts, 48, main = "PACF: IHE ETF TS")
 tseries::adf.test(pharma.ts)
 ```
 
-### Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary 
+### Detrending and Differencing : Making the Out-of-Pocket Drug Cost Time Series Stationary
 
-As seen in the last section, we can confirm that both datasets in this study are non-stationary. So, before moving on to ARIMA modeling, it is necessary to transform the dataset so that it is at least weakly stationary. 
+As seen in the last section, we can confirm that both datasets in this study are non-stationary. So, before moving on to ARIMA modeling, it is necessary to transform the dataset so that it is at least weakly stationary.
 
 ```{r, warning=FALSE, message=FALSE}
 require(gridExtra)
@@ -97,6 +97,7 @@ plot3 = ggAcf(diff(drug.ts), 48, main="First Differenced Data: Drug Cost")
 
 grid.arrange(plot2, plot3,nrow=2)
 ```
+
 ```{r, warning=FALSE}
 drug.diff = diff(drug.ts)
 ```
@@ -109,12 +110,13 @@ To determine the p,d, and q parameters for ARIMA, we need to take another look a
 
 Because the data was differenced one time, we can say that d will be equal to 1.
 
-There are 3 significant lag terms in the ACF, meaning that the initial q value will be equal to 3. There is 1 significant lag term in the PACF, so the initial p value will be equal to three. 
+There are 3 significant lag terms in the ACF, meaning that the initial q value will be equal to 3. There is 1 significant lag term in the PACF, so the initial p value will be equal to three.
 
 ```{r, warning=FALSE}
 ggAcf(drug.diff, 48, main="ACF: Differenced Data")
 ggPacf(drug.diff, 48, main="PACF: Differenced Data")
 ```
+
 We can now proceed with the ARIMA(1,1,3) model.
 
 As seen below, the p-values in the Ljung-Box statistic are very small in most cases, suggesting that the values might be showing some dependence on each other.
@@ -135,7 +137,7 @@ cat(drug.arima113[142:168], drug.arima113[length(drug.arima113)], sep = "\n")
 
 Because MA2 and MA3 are insignificant in the model above, I am going to test ARIMA(1,1,1) to see if this improves model performance and reduces error.
 
-Overall, this model seems to perform a bit better than ARIMA(1,1,3). The p-values for Ljung-Box are larger across the board, and the AIC and BIC error have decreased slightly to 17.5 and 17.7, respectively. Additionally, we can see that all coefficients in the model are significant. 
+Overall, this model seems to perform a bit better than ARIMA(1,1,3). The p-values for Ljung-Box are larger across the board, and the AIC and BIC error have decreased slightly to 17.5 and 17.7, respectively. Additionally, we can see that all coefficients in the model are significant.
 
 ```{r}
 set.seed(73)
@@ -151,32 +153,33 @@ As a result, I will be proceeding with ARIMA(1,1,1) as my manually-selected ARIM
 
 #### Fitting with auto.arima()
 
-In R, auto.arima() is a function that automatically selects ARIMA parameters when fed a set of time-series data. 
+In R, auto.arima() is a function that automatically selects ARIMA parameters when fed a set of time-series data.
 
 Using the function with the differenced out-of-pocket prescription drug cost dataset, we get:
 
 ```{r}
 auto.arima(drug.diff)
 ```
+
 The auto.arima() function suggests that an ARIMA(1,0,0), or AR(1), model is this best for the differenced time series dataset.
 
-Although I was initially suspicious of how this would perform, this model does in fact appear to be a slightly better fit than my previous models. Not only is the coefficient significant, but the Ljung-Box p-values are all significantly different from zero. Additionally, the AIC and BIC have decreased further to 17.4 and 17.5, respectively. 
+Although I was initially suspicious of how this would perform, this model does in fact appear to be a slightly better fit than my previous models. Not only is the coefficient significant, but the Ljung-Box p-values are all significantly different from zero. Additionally, the AIC and BIC have decreased further to 17.4 and 17.5, respectively.
 
 ```{r}
 drug.arima100 = capture.output(sarima(drug.diff, 1,0,0))
 ```
+
 ```{r}
 cat(drug.arima100[28:50], drug.arima100[length(drug.arima100)], sep = "\n")
 ```
 
-As seen above, the auto.arima() selection is different than my manually chosen model of ARIMA(1,1,1). I am not exactly sure why this is the case, but it may have something to do with the auto.arima() function prioritizing a lower number of parameters when there is little performance improvement from adding additional parameters. 
+As seen above, the auto.arima() selection is different than my manually chosen model of ARIMA(1,1,1). I am not exactly sure why this is the case, but it may have something to do with the auto.arima() function prioritizing a lower number of parameters when there is little performance improvement from adding additional parameters.
 
 #### Forecasting
 
 Next, I want to forecast the next ten years of out-of-pocket drug costs for both my manually-selected ARIMA(1,1,1) model and the auto.arima() selected ARIMA(1,0,0) model.
 
-As can be seen below, there is practically no difference between the two selected models when it comes to forecasting. 
-
+As can be seen below, there is practically no difference between the two selected models when it comes to forecasting.
 
 ```{r}
 drug.diff %>% Arima(order = c(1,1,1), include.drift = TRUE) %>%
@@ -184,6 +187,7 @@ drug.diff %>% Arima(order = c(1,1,1), include.drift = TRUE) %>%
   autoplot()+
   ylab("Out-of-pocket Drug Cost Predictions")+theme_minimal()
 ```
+
 ```{r}
 drug.diff %>% Arima(order = c(1,0,0), include.drift = TRUE) %>%
   forecast %>%
@@ -193,21 +197,20 @@ drug.diff %>% Arima(order = c(1,0,0), include.drift = TRUE) %>%
 
 #### Comparing Benchmark Methods
 
-Finally, I am going to compare my chosen ARIMA model to some simple benchmark models to prove its comparative forecasting power. To do this, I will test the three methods: mean forecasting, naive forecasting, and my ARIMA(1,0,0) and see their ability to predict the ten-year interval from 1995 to 2005. 
+Finally, I am going to compare my chosen ARIMA model to some simple benchmark models to prove its comparative forecasting power. To do this, I will test the three methods: mean forecasting, naive forecasting, and my ARIMA(1,0,0) and see their ability to predict the ten-year interval from 1995 to 2005.
 
 As a reminder, here is the time series plot for the first-order differenced data.
 
 ```{r, warning=FALSE}
-autoplot(drug.diff)+ggtitle("Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")
+autoplot(drug.diff)+ggtitle("Out-of-Pocket Drug Costs (1960-2020) (1st-order differenced)")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")+theme_minimal()
 ```
 
 Selecting only the the window of interesting, the plot looks like:
 
 ```{r, warning=FALSE}
 drug.diff2 = window(drug.diff, start=1960, end=1995)
-autoplot(drug.diff2)+ggtitle("Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")
+autoplot(drug.diff2)+ggtitle("Out-of-Pocket Drug Costs (1960-1995) (1st-order differenced)")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")+theme_minimal()
 ```
-
 
 *Mean*
 
@@ -234,7 +237,7 @@ autoplot(drug.diff2) +
   forecast %>%
   autolayer(series = "ARIMA(1,0,0)", PI=FALSE)+
   
-  ggtitle("10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")+guides(colour=guide_legend(title = "10-Yr Forecast"))
+  ggtitle("10-Year Forecast (1995-2005) for Out-of-Pocket Drug Costs")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")+guides(colour=guide_legend(title = "10-Yr Forecast"))+theme_minimal()
 ```
 
 When compared to the original data, it is clear that the ARIMA model does a better job of forecasting that the mean and naive methods. That being said, none of the models are able to forecast the incredibly steep spike in out-of-pocket prescription drug costs beginning in 1994.
@@ -249,21 +252,210 @@ autoplot(drug.diff3) +
   forecast %>%
   autolayer(series = "ARIMA(1,0,0)", PI=FALSE)+
   
-  ggtitle("Forecasting Out-of-Pocket Drug Costs")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")+guides(colour=guide_legend(title = "10-Yr Forecast"))
+  ggtitle("Forecasting Out-of-Pocket Drug Costs")+xlab("Year")+ylab("Out-of-Pocket Cost (Differenced)")+guides(colour=guide_legend(title = "10-Yr Forecast"))+theme_minimal()
 
 ```
 
+### SARIMA: Weekly Influenza Deaths and the Prescription Drug Market
+
+#### Determining Seasonality
+
+To analyze seasonal data as it relates to this topic, I want to take a look at the year over year weekly flu deaths in the United States to determine if it is in fact seasonal and if flu deaths can be predicted.
+
+The purpose of including this ties into the time series data on out-of-pocket prescription drug costs. Although it difficult to find time series data on illnesses that often require high-cost prescription drugs like chronic pain, diabetes, depression, and so on, there is a wealth of collected influenza data that can be converted into a time series format.
+
+[Tamiflu](https://www.tamiflu.com/) is an antiviral drug often prescribed by doctors to treat the flu by preventing it from multiplying further in the body as well as curbing severe flu symptoms. It along with vaccines is one of the many reasons why the once deadly common flu is less dangerous today than it was in decades past.
+
+Although it is not a perfect comparison to other high-cost drugs, the current price of Tamiflu as of April 2023 can range anywhere from \$156 USD to \$169 USD for a 10-capsule supply for those without insurance. If we can confirm seasonality of flu deaths, we confirm that there are times of the year in which pharmaceutical companies like Genetech, the maker of Tamiflu, made high profits at what may be an unreasonably high cost to lower-income consumers.
+
+```{r}
+flu = read.csv('datasets/flu_deaths.csv')
+flu$Date = as.Date(flu$Date, format = "%m/%d/%Y")
+flu$Date = format(flu$Date, format = "%Y-%m-%d")
+
+flu.ts = subset(flu, select = Influenza.Deaths)
+flu.ts = ts(flu.ts, start=c(2014,52),frequency = 52)
+```
+
+```{r}
+autoplot(flu.ts, main = "Weekly Influenza Deaths in the U.S. (2015-2023)", ylab = "Influenza Deaths", xlab = "Year")+theme_minimal()
+```
+
+Looking at the decomposition below, we can see evidence of what looks like seasonality in the data.
+
+```{r}
+# add_fluts = ts(flu.ts, frequency = 4)
+decompose_flu = decompose(flu.ts)
+autoplot(decompose_flu)
+```
+
+Looking at the lag and ACF plots below as well, we can see what looks like further confirmation of seasonality.
+
+```{r}
+gglagplot(flu.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag Plot: Influenza Deaths") + theme(axis.text.x = element_text(angle=45, hjust = 1))
+```
+
+```{r, warning=FALSE}
+
+ggAcf(flu.ts, main = "ACF: Influenza Deaths TS")
+
+```
+
+To ensure this is is the case, I will perform the Ljung-Box on the residuals of the influenza deaths time series data.
+
+The extremely small p-value means that the null hypothesis of independently distributed residuals can be rejected, indicating seasonality of the data.
+
+```{r}
+residuals <- flu.ts - decompose_flu$trend - decompose_flu$seasonal
+Box.test(residuals, type="Ljung-Box")
+```
+
+#### Seasonal Differencing
+
+Now that the seasonality of the influenza data has been confirmed, differencing needs to be performed before SARIMA modeling can occur.
+
+To recap, by looking at the ACF plot for this data set we can confirm that the data is not stationary and follows a clearly seasonal pattern.
+
+```{r, warning=FALSE}
+ggAcf(flu.ts, 40, main = "ACF: Influenza Deaths TS")
+```
+
+To make the data stationary, I will perform both regular, first-order differencing on the data as well as seasonal differencing. The resulting ACF plot following this differencing is below.
+
+At first glance, it is hard to determine if it is stationary for sure. The lag decreases quickly over time, but to be sure, I will perform an Augmented Dickey-Fuller test with an $\alpha = 0.05$ significance level.
+
+```{r}
+flu_diff = diff(flu.ts, lag = 52, differences = 1)
+ggAcf(flu_diff, 40, main = "ACF: Differenced Influenza Deaths TS")
+```
+
+As can be seen below, the result of the ADF test results in a p-value of 0.01. Because this is less than my set significance level, I will conclude that the data set is now stationary enough to move on to SARIMA modeling.
+
+```{r, warning=FALSE}
+adf.test(flu_diff)
+```
+
+#### SARIMA(p,d,q)x(P,D,Q)s Modeling
+
+Now that the data is in the proper format, the first step of SARIMA modeling is to find the regular and seasonal parameters to use in our equation.
+
+Because regular first-order differencing and seasonal differencing was performed on the model, we know that both d and D should be equal to 1.
+
+For the ARIMA terms, looking at the PACF plot would suggest 2 AR terms for the model. Looking at the ACF plot is a bit more difficult, as the lags extend pretty far. Because of this, I am going to select an MA term of 4 for this iteration, as I do not believe increasing this number will have much of an impact on model performance.
+
+For the SARIMA terms, the same rule applies but considers the seasonal lag, which can be seen below at Lag 52. Because the PACF plot does not show a lag extending beyond the condfidence interval at lag 52, I am going to select an SAR term of 0. For the SAR term, we do see a lag extend beyond the interval at 52, but not at 104. Because of this, I will select an SAR term of 1.
+
+```{r}
+ggAcf(flu_diff)
+ggPacf(flu_diff)
+```
+
+So, the resulting parameters for the model will be: **SARIMA(2,1,4)x(0,1,1)**
+
+Now, I will proceed with modeling and modeling diagnostics for my chosen parameters.
+
+In the results of the model seen below, we can see that the p-values in the Ljung-Box statistic are relatively high, suggesting that the values are independent from one another.
+
+```{r, warning=FALSE}
+flu.fit = capture.output(sarima(flu.ts, p = 2, d = 1, q = 4, P = 0, D = 1, Q = 1, S = 52))
+```
+
+```{r, warning=FALSE}
+cat(flu.fit[80:113], flu.fit[length(flu.fit)], sep = "\n")
+```
+
+The resulting model has AIC 10.63 and BIC 10.72. When looking at the coefficients, we can see that MA(2), MA(3) and MA(4) are insignificant. I will remove these terms from the next SARIMA model to see if this will improve model performance.
+
+```{r}
+flu.fit2 = capture.output(sarima(flu.ts, p = 2, d = 1, q = 1, P = 0, D = 1, Q = 1, S = 52))
+```
+
+```{r}
+cat(flu.fit2[56:85], flu.fit2[length(flu.fit2)], sep = "\n")
+```
+
+When removing the insignificant terms from the previous model, we see that AIC and BIC have been very slightly reduced to 10.62 and 10.68, respectively.
+
+#### Fitting with auto.arima()
+
+Like I did before with my ARIMA model, I am going to use auto.arima() to see if model performance can be increased on the SARIMA model to effectively predict future deaths caused by influenza.
+
+According to auto.arima(), the parameters for the best seasonal model are SARIMA(4,0,0)x(0,0,2). Although it seems to pass the Ljung-Box test, the AIC and BIC values are extremely high. As a result, I will use my chosen reduced model for forecasting.
+
+```{r}
+auto.arima(flu.ts, seasonal = TRUE)
+```
+
+```{r}
+auto.fit = capture.output(sarima(flu.ts, p = 4, d = 0, q =0, P = 0, D = 0, Q = 2, S = 52))
+```
+
+#### Forecasting
+
+Finally, I am going to forecast the number of influenza deaths in the U.S. in the two years. To do this, I will be using my reduced hand-selected SARIMA model, with the parameters SARIMA(2,1,1)x(0,1,1).
+
+```{r, include=FALSE}
+flu_omit = na.omit(flu.ts)
+flu.fit3 = capture.output(sarima(flu_omit, p = 2, d = 1, q = 1, P = 0, D = 1, Q = 1, S = 52))
+```
+
+```{r}
+flu.ts %>% Arima(order = c(2,1,1), seasonal = c(0,1,1)) %>%
+  forecast %>%
+  autoplot()+
+  ylab("Count of Influenza Deaths")+theme_minimal()
+```
+
+#### Comparing Benchmark Methods
+
+As I did before, I am going to use a window of data to see how effectively the benchmark methods perform against the SARIMA model. To do this, I am going to set a window starting at 2015 and ending at 2019 instead of the original 2023.
+
+The plot of the window of data can be seen below:
+
+```{r}
+flu.window = window(flu.ts, start = 2015, end = 2019)
+autoplot(flu.window)+ggtitle("U.S. Influenza Deaths (2015-2019)")+xlab("Year")+ylab("Count of Influenza Deaths")+theme_minimal()
+
+```
+
+*Mean*
+
+```{r}
+
+flu.mean = meanf(flu.window, h=2)
+checkresiduals(flu.mean)
+```
+
+*Naive*
+
+```{r}
+flu.naive = naive(flu.window, h=2)
+checkresiduals(flu.naive)
+```
+
+Now, I will plot the three forecasts together: my SARIMA model, the Mean, and the Naive model to see which performs the best in terms of prediction
+
+Comparing against the original data:
+
+```{r}
+autoplot(flu.ts) +
+  autolayer(meanf(flu.window, h=208), series = "Mean", PI=FALSE)+
+  autolayer(naive(flu.window, h=208), series = "Naive", PI=FALSE)+
+  
+  flu.window %>% Arima(order = c(2,1,1), seasonal = c(0,1,1)) %>%
+  forecast %>%
+  autolayer(series = "SARIMA(2,1,1)x(0,1,1)", PI=FALSE)+
+  
+ ggtitle("Forecasting Influenza Deaths")+xlab("Year")+ylab("Count of Influenza Deaths")+guides(colour=guide_legend(title = "Forecast"))+theme_minimal()
+```
+
+Unfortunately, it looks like the SARIMA model performs pretty poorly based off of the short window alone. However, it is important to note that when predicting into the future, the SARIMA model seems to map a very feasible pattern of predictions. Because of this, I would still argue it is a better model than the benchmark methods, as it is able to more accurately capture the ebbs and flows of seasonality.
+
+```{r}
+autoplot(flu.ts)+
+flu.ts %>% Arima(order = c(2,1,1), seasonal = c(0,1,1)) %>%
+  forecast %>%
+  autolayer(series = "SARIMA(2,1,1)x(0,1,1)", PI=FALSE)+ggtitle("Forecasting Influenza Deaths")+xlab("Year")+ylab("Count of Influenza Deaths")+guides(colour=guide_legend(title = "Forecast"))+theme_minimal()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+```
