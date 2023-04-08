@@ -1,8 +1,0 @@
----
-title: "Spectral Analysis and Filtering"
-format: 
-  html:
-    theme: lux
----
-
-Add Spectral Analysis and Filtering section here!
