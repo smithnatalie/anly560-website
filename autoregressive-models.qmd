@@ -467,47 +467,51 @@ Finally, I want to perform seasonal cross validation using a 1-step ahead foreca
 ```{r}
 k = 75 #minimum model fitting length
 n = length(flu.ts)
-n-k
+# n-k
+```
+
+I will once again use my previously determined SARIMA(2,1,1)x(0,1,1) model for the cross-validation. The MAE and RMSE of the 1-step cross-validation are listed below.
+
+```{r}
+farima1 = function(x,h){forecast(Arima(flu.ts, order = c(2,1,1), seasonal = c(0,1,1)), h=h)}
+
+ts1.res = tsCV(flu.ts, farima1, h=1)
+length(ts1.res)
 ```
 
 ```{r}
+MAE1 = abs(mean(ts1.res, na.rm = TRUE))
+RMSE1 = sqrt(mean(ts1.res^2, na.rm = TRUE))
 
-mae1 <- matrix(NA,n-k,52)
-mae2 <- matrix(NA,n-k,52)
+print("MAE:")
+MAE1
+print("RMSE:")
+RMSE1
+```
 
-st = tsp(flu.ts)[1]+(k-2)/52
+Next, I will perform the s-step (52-step) cross-validation. The MAE and RMSE of the 52-step cross-validation are listed below.
 
-for(i in 1:(n-k))
-{
-  #xtrain <- window(a10, start=st+(i-k+1)/12, end=st+i/12)
-  xtrain <- window(flu.ts, end=st + i-1)
-  xtest <- window(flu.ts, start=st + (i-1) + 1/52, end=st + i)
-  
-  fit <- Arima(xtrain, order=c(2,1,1), seasonal=list(order=c(0,1,1), period=52),
-                lambda=0, method="ML")
-  fcast <- forecast(fit, h=52)
-  
-  # fit2 <- Arima(xtrain, order=c(1,1,1), seasonal=list(order=c(0,1,1), period=12),
-  #               include.drift=TRUE, lambda=0, method="ML")
-  # fcast2 <- forecast(fit2, h=12)
-  
-  mae1[i,1:length(xtest)] <- abs(fcast$mean-xtest)
-  # mae2[i,1:length(xtest)] <- abs(fcast2$mean-xtest)
-  
-}
-
-plot(1:52, colMeans(mae1,na.rm=TRUE), type="l", col=2, xlab="horizon", ylab="MAE")
-# lines(1:12, colMeans(mae2,na.rm=TRUE), type="l",col=3)
-legend("topleft",legend=c("M1"),col=2:4,lty=1)
-
+```{r}
+ts52.res = tsCV(flu.ts, farima1, h=52)
+length(ts52.res)
 ```
 
 ```{r}
-print("1 step ahead mean error")
-mean(err1)
+MAE2 = abs(mean(ts52.res, na.rm = TRUE))
+RMSE2 = sqrt(mean(ts52.res^2, na.rm = TRUE))
+
+print("MAE:")
+MAE2
+print("RMSE:")
+RMSE2
+
 ```
 
+Finally, I will plot the MSE values against the forecast horizon for the 52-step cross-validation.
+
 ```{r}
-print("s steps ahead mean error")
-mean(err2)
+flu.mse = colMeans(ts52.res^2, na.rm = TRUE)
+
+data.frame(h=1:52, MSE = flu.mse) %>%
+  ggplot(aes(x = h, y = MSE)) + geom_point()
 ```

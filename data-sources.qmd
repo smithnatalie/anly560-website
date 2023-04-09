@@ -5,52 +5,24 @@ format:
     theme: lux
 ---
 
-Various data sources were gathered to create a hollistic, detailed study of climate impacts to the state of Florida. 
+Various data sources were gathered to create a holistic, detailed study of the pharmaceutical industry.
 
 All references and links to the following data on the web is located in the References tab.
 
-#### Temperature Data
+#### Out-of-Pocket Prescription Drug Costs
 
-National Oceanic and Atmospheric Administration's (NOAA) National Centers for Environmental Information:
+This data was pulled from the Centers for Medicare & Medicaid Services' National Health Expenditure Accounts, which track a wide variety of types health spending in the United States.
 
-- [December Monthly Average Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tavg/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
-- [December Monthly Minimum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmax/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
-- [December Monthly Maximum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmin/1/12/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
-- [July Monthly Average Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tavg/1/7/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
-- [July Monthly Minimum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmin/1/7/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
-- [July Monthly Maximum Temperature (1895-2022)](https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/8/tmax/1/7/1895-2022?base_prd=true&begbaseyear=1901&endbaseyear=2000)
+The link to this data source can be found [here](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/NationalHealthAccountsProjected).
 
+#### U.S. Pharmaceutical Companies Stock ETF
 
-#### Precipitation Data
+This data was pulled from Yahoo Finance's stock price record of the iShares U.S. Pharmaceuticals ETF, or IHE. This ETF tracks overall market performance and changes for the largest Pharmaceutical companies in the United States.
 
-Also from NOAA's National Centers for Environmental Information:
+The link to this data source can be found [here](https://finance.yahoo.com/quote/IHE?p=IHE).
 
-- Monthly Precipitation Levels (in inches)(1895-2022)
+#### U.S. Weekly Influenza Deaths
 
-#### Hurricane and Tropical Storm Data
+This data was pulled from the CDC's Weekly Influenza Surveillance Report which tracks weekly influenza, pneumonia, and COVID-19 deaths in the United States. In this project, I focused on the weekly influenza data, which will be explained further in future tabs.
 
-NOAA Historical Hurricane Tracks:
-
-- Hurricanes and Tropical Storms that made landfall in Florida (1851 - 2021)
-    + Includes storm name, year, date range, wind speed, and pressure.
-
-NOAA National Centers for Environmental Information - Storm Events Database:
-
-- Property damage caused by hurricanes and tropical storms in USD (1996-2022)
-
-#### Flooding
-
-NOAA National Centers for Environmental Information - Storm Events Database:
-
-- Recorded Flooding in Florida (General Floods, Coastal Floods, and Flash Floods) (1996-2022)
-    + Includes data on flood-related property damage in USD
-
-#### Coastal Erosion
-
-Florida Department of Environmental Protection:
-
-- Critical Coastal Erosion Areas
-- Critically Eroded Beaches in Florida
-- Historical Shoreline Database (*Currently reaching out to Florida Department of Environmental Protection GIS and Support department to get access to this data*)
-
-
+The link to this data source can be found [here](https://www.cdc.gov/flu/weekly/index.htm#FluSurvNet).

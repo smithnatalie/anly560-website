@@ -134,7 +134,14 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#literature-review" id="toc-literature-review" class="nav-link active" data-scroll-target="#literature-review">Literature Review</a></li>
+  <li><a href="#var-modeling" id="toc-var-modeling" class="nav-link" data-scroll-target="#var-modeling">VAR Modeling</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -156,8 +163,23 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="literature-review" class="level3">
+<h3 class="anchored" data-anchor-id="literature-review">Literature Review</h3>
+<p>There is a wealth of news coverage and information criticizing the connection between spikes in drug prices and pharmaceutical company profits. In this <a href="https://khn.org/news/sky-high-drug-prices-driven-by-pharma-profits-house-dems-charge/">Kaiser Family Foundation article</a>, for example, the authors discuss that the unregulated nature of drug pricing and wildly increasing pharmaceutical company profits has made its way to U.S. Congress multiple times, with lawmakers highlighting how these companies manage to rake in billions of dollars in profit each year at the expense of patients who need life-saving medicine, and that currently no laws exist to force these companies to adhere to price ceilings or other methods of price control.</p>
+<p>In this project, my big picture, ultimate goal is to draw a connection between the increased profitability of the U.S. pharmaceutical industry and rising out-of-pocket prescription drug costs for consumers. In the previous tab of the this project that analyzed ARIMA and SARIMA modeling, I performed different modeling techniques on three different data sets to begin to draw different insights:</p>
+<ul>
+<li><p>Performance of the IHE U.S. pharmaceutical companies ETF</p></li>
+<li><p>Out-of-pocket prescription drug costs for consumers in the U.S.</p></li>
+<li><p>Weekly influenza deaths in the U.s.</p></li>
+</ul>
+<p>Although the weekly influenza deaths data set added an interesting seasonal component to this analysis in the context of a relatively high-cost prescription drug used to treat an extremely common, contagious disease, I believe this aspect serves as more of an addendum to the points I hope to make with the other two data sets.</p>
+<p>Because I believe there exists interdependence between pharmaceutical ETF performance, which I argue indicates profitability of the market, and out-of-pocket prescription drug costs, I want to use VAR (Vector Autoregression) modeling to analyze the relationship between these two unique time series data sets. The reason for this is that VAR models assume there exists some kind of dependent behavior between multiple time series variables. I believe this will allow for interesting insights to be drawn that can quantitatively codify this relationship.</p>
+</section>
+<section id="var-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="var-modeling">VAR Modeling</h3>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
