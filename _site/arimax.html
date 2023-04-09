@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -140,6 +203,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#literature-review" id="toc-literature-review" class="nav-link active" data-scroll-target="#literature-review">Literature Review</a></li>
   <li><a href="#var-modeling" id="toc-var-modeling" class="nav-link" data-scroll-target="#var-modeling">VAR Modeling</a></li>
+  <li><a href="#forecasting" id="toc-forecasting" class="nav-link" data-scroll-target="#forecasting">Forecasting</a></li>
   </ul>
 </nav>
     </div>
@@ -177,6 +241,473 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="var-modeling" class="level3">
 <h3 class="anchored" data-anchor-id="var-modeling">VAR Modeling</h3>
+<section id="setting-windows-and-plotting" class="level4">
+<h4 class="anchored" data-anchor-id="setting-windows-and-plotting">Setting Windows and Plotting</h4>
+<p>To start, I want to plot the two time series together to get a better idea of how they have changed over time. Because we have more historical data on the changing cost of prescription drug prices, I will apply windows to the data to ensure they match up. Additionally, because the pharmaceutical stock data is monthly rather than yearly, I will take an average for each year to ensure modeling can be performed.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pharma.yearly <span class="ot">=</span> <span class="fu">aggregate</span>(pharma.ts, <span class="at">nfrequency =</span> <span class="dv">12</span>, <span class="at">FUN=</span>mean)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pharma.yearly.ts <span class="ot">=</span> <span class="fu">ts</span>(pharma.yearly, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2007</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2020</span>), <span class="at">frequency =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>drug.window.ts <span class="ot">=</span> <span class="fu">window</span>(drug.ts, <span class="at">start=</span><span class="fu">c</span>(<span class="dv">2007</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Although the full plot of out-of-pocket drug costs has increased over time, there is more up and down variation in this window, meaning that it will be interesting to see if, based on the data available for this window alone, there exists some relationship between these two time series that can be quantified through modeling.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pharma.yearly.ts, <span class="at">main =</span> <span class="st">"U.S. Pharmaceutical ETF (2007-2020)"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(drug.window.ts, <span class="at">main =</span> <span class="st">"Out-of-Pocket Prescription Drug Costs (2007-2020)"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When looking at their paired relationship:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(<span class="fu">cbind</span>(<span class="at">Pharma =</span> pharma.yearly.ts, <span class="at">Drug =</span> drug.window.ts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now, we can combine the two time series together into one for analysis using cbind().</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ts.combo <span class="ot">=</span> <span class="fu">cbind</span>(pharma.yearly.ts, drug.window.ts)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(ts.combo, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"Year"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="determining-lags-and-parameters" class="level4">
+<h4 class="anchored" data-anchor-id="determining-lags-and-parameters">Determining Lags and Parameters</h4>
+<p>First, let me take another look at the ACF and PACF for my yearly pharmaceutical ETF data and my out-of-pocket drug cost data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(pharma.yearly.ts, <span class="at">main =</span> <span class="st">"ACF for Yearly Pharma ETF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(pharma.yearly.ts, <span class="at">main =</span> <span class="st">"PACF for Yearly Pharma ETF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(drug.window.ts, <span class="at">main =</span> <span class="st">"ACF for Yearly Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(drug.window.ts, <span class="at">main =</span> <span class="st">"PACF for Yearly Drug Cost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Next, I want to find the optimal number of lags to use for the combined model. To do this, I will use VARselect().</p>
+<p>I will fit two different models here. Because the original out-of-pocket drug cost dataset required detrending, I will fit one model with a type of “both”, which takes into account detrending, and one model with a type of “constant”, which ignores detrending.</p>
+<p>According to the results for the “both” model variant, I should use 1 lag for the model, as that was the most frequent result from the different metrics.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: MASS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:plotly':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: strucchange</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: sandwich</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'strucchange'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stringr':
+
+    boundary</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: urca</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lmtest</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'vars'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:tidyquant':
+
+    VAR</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>best.lag <span class="ot">=</span> <span class="fu">VARselect</span>(ts.combo, <span class="at">lag.max =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"both"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>best.lag<span class="sc">$</span>selection</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC(n)  HQ(n)  SC(n) FPE(n) 
+     1      1      1      2 </code></pre>
+</div>
+</div>
+<p>According to the results for the “constant” model variant, I should use two lags for the model.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>best.lag <span class="ot">=</span> <span class="fu">VARselect</span>(ts.combo, <span class="at">lag.max =</span> <span class="dv">10</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>best.lag<span class="sc">$</span>selection</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>AIC(n)  HQ(n)  SC(n) FPE(n) 
+     2      2      2      1 </code></pre>
+</div>
+</div>
+</section>
+<section id="building-and-diagnosing-the-var-model" class="level4">
+<h4 class="anchored" data-anchor-id="building-and-diagnosing-the-var-model">Building and Diagnosing the VAR Model</h4>
+<p><em>Detrended Model</em></p>
+<p>Now, I will build the first VAR model. Based on the results of the model, it seems like the only coefficient with any significant effect is the out-of-pocket drug cost of lag 1 on the original drug cost time series. None of the coefficients have an effect on the yearly pharmaceutical ETF time series.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>var.model<span class="fl">.1</span> <span class="ot">=</span> <span class="fu">VAR</span>(ts.combo, <span class="at">p =</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">"both"</span>, <span class="at">season =</span> <span class="cn">NULL</span>, <span class="at">exogen =</span> <span class="cn">NULL</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(var.model<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+VAR Estimation Results:
+========================= 
+Endogenous variables: pharma.yearly.ts, drug.window.ts 
+Deterministic variables: both 
+Sample size: 13 
+Log Likelihood: -137.09 
+Roots of the characteristic polynomial:
+0.5152 0.5152
+Call:
+VAR(y = ts.combo, p = 1, type = "both", exogen = NULL)
+
+
+Estimation results for equation pharma.yearly.ts: 
+================================================= 
+pharma.yearly.ts = pharma.yearly.ts.l1 + drug.window.ts.l1 + const + trend 
+
+                      Estimate Std. Error t value Pr(&gt;|t|)
+pharma.yearly.ts.l1  4.894e-01  3.442e-01   1.422    0.189
+drug.window.ts.l1    1.492e-05  1.525e-04   0.098    0.924
+const                2.241e+01  1.990e+01   1.126    0.289
+trend               -1.497e-01  1.505e-01  -0.995    0.346
+
+
+Residual standard error: 1.596 on 9 degrees of freedom
+Multiple R-Squared: 0.3913, Adjusted R-squared: 0.1885 
+F-statistic: 1.929 on 3 and 9 DF,  p-value: 0.1955 
+
+
+Estimation results for equation drug.window.ts: 
+=============================================== 
+drug.window.ts = pharma.yearly.ts.l1 + drug.window.ts.l1 + const + trend 
+
+                      Estimate Std. Error t value Pr(&gt;|t|)  
+pharma.yearly.ts.l1  -538.0175   447.8700  -1.201   0.2603  
+drug.window.ts.l1       0.5259     0.1985   2.650   0.0265 *
+const               46537.3779 25898.5172   1.797   0.1059  
+trend                 -72.3526   195.8282  -0.369   0.7203  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 2077 on 9 degrees of freedom
+Multiple R-Squared: 0.6232, Adjusted R-squared: 0.4975 
+F-statistic: 4.961 on 3 and 9 DF,  p-value: 0.02661 
+
+
+
+Covariance matrix of residuals:
+                 pharma.yearly.ts drug.window.ts
+pharma.yearly.ts            2.548         -814.9
+drug.window.ts           -814.879      4314693.2
+
+Correlation matrix of residuals:
+                 pharma.yearly.ts drug.window.ts
+pharma.yearly.ts           1.0000        -0.2458
+drug.window.ts            -0.2458         1.0000</code></pre>
+</div>
+</div>
+<p>Next, I am going to plot the ACFs of the residuals. Overall, the residuals look good and seem to resemble white noise.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(var.model<span class="fl">.1</span>)[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(var.model<span class="fl">.1</span>)[,<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><em>Constant Model</em></p>
+<p>Now, I will build the second VAR model that does not take detrending into account to see if it performs any better than the first model. This model will take two lags into account as based on the results of VARselect() earlier.</p>
+<p>Based on the results of the model, it looks like none of the coefficients have a significant effect on the drug time series. For the pharmaceutical time series, the 1st pharmaceutical ETF lag seems to have a relatively weak but still significant predictive effect.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>var.model<span class="fl">.2</span> <span class="ot">=</span> <span class="fu">VAR</span>(ts.combo, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">type =</span> <span class="st">"const"</span>, <span class="at">season =</span> <span class="cn">NULL</span>, <span class="at">exogen =</span> <span class="cn">NULL</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(var.model<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+VAR Estimation Results:
+========================= 
+Endogenous variables: pharma.yearly.ts, drug.window.ts 
+Deterministic variables: const 
+Sample size: 12 
+Log Likelihood: -121.628 
+Roots of the characteristic polynomial:
+0.8045 0.8045 0.6858 0.6858
+Call:
+VAR(y = ts.combo, p = 2, type = "const", exogen = NULL)
+
+
+Estimation results for equation pharma.yearly.ts: 
+================================================= 
+pharma.yearly.ts = pharma.yearly.ts.l1 + drug.window.ts.l1 + pharma.yearly.ts.l2 + drug.window.ts.l2 + const 
+
+                      Estimate Std. Error t value Pr(&gt;|t|)  
+pharma.yearly.ts.l1  0.7606126  0.3025707   2.514   0.0402 *
+drug.window.ts.l1   -0.0001477  0.0002754  -0.536   0.6083  
+pharma.yearly.ts.l2 -0.7889308  0.3650763  -2.161   0.0675 .
+drug.window.ts.l2    0.0001992  0.0001885   1.057   0.3257  
+const               42.1004468 24.6802485   1.706   0.1318  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 1.321 on 7 degrees of freedom
+Multiple R-Squared: 0.6736, Adjusted R-squared: 0.487 
+F-statistic: 3.611 on 4 and 7 DF,  p-value: 0.06673 
+
+
+Estimation results for equation drug.window.ts: 
+=============================================== 
+drug.window.ts = pharma.yearly.ts.l1 + drug.window.ts.l1 + pharma.yearly.ts.l2 + drug.window.ts.l2 + const 
+
+                      Estimate Std. Error t value Pr(&gt;|t|)  
+pharma.yearly.ts.l1  -274.2096   438.9946  -0.625   0.5520  
+drug.window.ts.l1       0.7732     0.3996   1.935   0.0942 .
+pharma.yearly.ts.l2   -84.0652   529.6828  -0.159   0.8784  
+drug.window.ts.l2      -0.3646     0.2735  -1.333   0.2242  
+const               43933.6357 35808.1408   1.227   0.2595  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+
+Residual standard error: 1917 on 7 degrees of freedom
+Multiple R-Squared: 0.6082, Adjusted R-squared: 0.3843 
+F-statistic: 2.717 on 4 and 7 DF,  p-value: 0.1178 
+
+
+
+Covariance matrix of residuals:
+                 pharma.yearly.ts drug.window.ts
+pharma.yearly.ts            1.746      5.185e+01
+drug.window.ts             51.854      3.675e+06
+
+Correlation matrix of residuals:
+                 pharma.yearly.ts drug.window.ts
+pharma.yearly.ts          1.00000        0.02047
+drug.window.ts            0.02047        1.00000</code></pre>
+</div>
+</div>
+<p>Next, I am going to plot the ACFs of the residuals. Overall, the residuals look good and seem to resemble white noise.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(var.model<span class="fl">.1</span>)[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(var.model<span class="fl">.1</span>)[,<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Next, I will look at the cross correlation matrix. There seems to be white noise here as well.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(var.model<span class="fl">.2</span>)[,<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">residuals</span>(var.model<span class="fl">.2</span>)[,<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="cross-validation" class="level4">
+<h4 class="anchored" data-anchor-id="cross-validation">Cross-Validation</h4>
+<p>Now, I am going to perform cross-validation to determine which of the two VAR models tested above has the lowest RMSE.</p>
+<p>I will start by splitting the combined time series into training and testing components.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>combo.train <span class="ot">=</span> <span class="fu">window</span>(ts.combo, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2019</span>,<span class="dv">1</span>))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>combo.test <span class="ot">=</span> <span class="fu">window</span>(ts.combo, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Next, I will perform the cross-validation. The RMSE values for the two models can be seen below.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">10</span>){</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>train.var<span class="fl">.1</span> <span class="ot">=</span> <span class="fu">VAR</span>(combo.train, <span class="at">p =</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">"both"</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>train.var<span class="fl">.2</span> <span class="ot">=</span> <span class="fu">VAR</span>(combo.train, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>var.pred<span class="fl">.1</span> <span class="ot">=</span> <span class="fu">predict</span>(train.var<span class="fl">.1</span>, <span class="at">n.ahead =</span> <span class="fu">length</span>(combo.test))</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>var.pred<span class="fl">.2</span> <span class="ot">=</span> <span class="fu">predict</span>(train.var<span class="fl">.2</span>, <span class="at">n.ahead =</span> <span class="fu">length</span>(combo.test))</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>model1.fpharma <span class="ot">=</span> var.pred<span class="fl">.1</span><span class="sc">$</span>fcst<span class="sc">$</span>pharma.yearly.ts</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>model1.fdrug <span class="ot">=</span> var.pred<span class="fl">.1</span><span class="sc">$</span>fcst<span class="sc">$</span>drug.window.ts</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>model1.fdf <span class="ot">=</span> <span class="fu">data.frame</span>(model1.fpharma[,<span class="dv">1</span>], model1.fdrug[,<span class="dv">1</span>])</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>model2.fpharma <span class="ot">=</span> var.pred<span class="fl">.2</span><span class="sc">$</span>fcst<span class="sc">$</span>pharma.yearly.ts</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>model2.fdrug <span class="ot">=</span> var.pred<span class="fl">.2</span><span class="sc">$</span>fcst<span class="sc">$</span>drug.window.ts</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>model2.fdf <span class="ot">=</span> <span class="fu">data.frame</span>(model2.fpharma[,<span class="dv">1</span>], model2.fdrug[,<span class="dv">1</span>])</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co"># pred.rmse.1 = accuracy(var.pred.1$fcst, combo.test)[2]</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="co"># pred.rmse.2 = accuracy(var.pred.2$fcst, combo.test)[2]</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"RMSE for Detrended Model: "</span>, <span class="fu">round</span>(pred.rmse<span class="fl">.1</span>,<span class="dv">2</span>)))</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"RMSE for Constant Model: "</span>, <span class="fu">round</span>(pred.rmse<span class="fl">.2</span>,<span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>(Still need to figure this out)</p>
+</section>
+</section>
+<section id="forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting">Forecasting</h3>
+<p>Finally, using the results of the VAR model, I am going to forecast two years into the future.</p>
+<p>The results of the first, detrended model are below.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">pred.var.1 =</span> <span class="fu">predict</span>(var.model<span class="fl">.1</span>, <span class="at">n.ahead =</span> <span class="dv">2</span>, <span class="at">ci =</span> <span class="fl">0.95</span>)) <span class="co"># 2 yrs ahead</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$pharma.yearly.ts
+         fcst    lower    upper       CI
+[1,] 40.59175 37.46335 43.72015 3.128397
+[2,] 40.60159 37.12467 44.07851 3.476924
+
+$drug.window.ts
+         fcst    lower    upper       CI
+[1,] 48195.52 44124.31 52266.72 4071.206
+[2,] 48889.03 43813.19 53964.87 5075.840</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fanchart</span>(pred.var<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The results of the second, constant model are below.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">pred.var.2 =</span> <span class="fu">predict</span>(var.model<span class="fl">.2</span>, <span class="at">n.ahead =</span> <span class="dv">2</span>, <span class="at">ci =</span> <span class="fl">0.95</span>)) <span class="co"># 2 yrs ahead</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$pharma.yearly.ts
+         fcst    lower    upper       CI
+[1,] 43.25170 40.66220 45.84121 2.589507
+[2,] 45.40174 42.10808 48.69541 3.293665
+
+$drug.window.ts
+         fcst    lower    upper       CI
+[1,] 47668.46 43911.40 51425.53 3757.070
+[2,] 48598.39 43805.37 53391.42 4793.026</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fanchart</span>(pred.var<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arimax_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
 </section>

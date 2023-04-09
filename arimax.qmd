@@ -3,6 +3,7 @@ title: "ARIMAX/SARIMAX/VAR"
 format: 
   html:
     theme: lux
+    code-fold: true
 ---
 
 ### Literature Review
@@ -22,3 +23,227 @@ Although the weekly influenza deaths data set added an interesting seasonal comp
 Because I believe there exists interdependence between pharmaceutical ETF performance, which I argue indicates profitability of the market, and out-of-pocket prescription drug costs, I want to use VAR (Vector Autoregression) modeling to analyze the relationship between these two unique time series data sets. The reason for this is that VAR models assume there exists some kind of dependent behavior between multiple time series variables. I believe this will allow for interesting insights to be drawn that can quantitatively codify this relationship.
 
 ### VAR Modeling
+
+#### Setting Windows and Plotting
+
+To start, I want to plot the two time series together to get a better idea of how they have changed over time. Because we have more historical data on the changing cost of prescription drug prices, I will apply windows to the data to ensure they match up. Additionally, because the pharmaceutical stock data is monthly rather than yearly, I will take an average for each year to ensure modeling can be performed.
+
+```{r, message=FALSE, include=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+library(dplyr)
+
+#prescription drug costs
+drug = read.csv("datasets/nhe_drug.csv")
+drug = head(drug, -10)
+
+drug$Total.Expenditures = as.numeric(gsub(",","",drug$Total.Expenditures))
+drug$Out.of.Pocket = as.numeric(gsub(",","",drug$Out.of.Pocket))
+drug$Health.Insurance = as.numeric(gsub(",","",drug$Health.Insurance))
+drug$Private.Health.Insurance = as.numeric(gsub(",","",drug$Private.Health.Insurance))
+drug$Medicare = as.numeric(gsub(",","",drug$Medicare))
+drug$Medicaid..Title.XIX. = as.numeric(gsub(",","",drug$Medicaid..Title.XIX.))
+drug$Other.Health.Insurance = as.numeric(gsub(",","",drug$Other.Health.Insurance))
+drug$Other.Third.Party.Payers.and.Programs = as.numeric(gsub(",","",drug$Other.Third.Party.Payers.and.Programs))
+drug$Year = as.Date(paste0(drug$Year, "-12-31"))
+drug.ts = subset(drug, select = Out.of.Pocket)
+drug.ts = ts(drug.ts, start=1960, frequency = 1)
+
+#us pharma etf
+pharma = read.csv("datasets/IHE.csv")
+pharma$Date = as.Date(pharma$Date)
+pharma.ts = subset(pharma, select = Adj.Close)
+pharma.ts = ts(pharma.ts, start=c(2007,1),frequency = 12)
+
+```
+
+```{r}
+
+pharma.yearly = aggregate(pharma.ts, nfrequency = 12, FUN=mean)
+pharma.yearly.ts = ts(pharma.yearly, start = c(2007), end = c(2020), frequency = 1)
+```
+
+```{r}
+drug.window.ts = window(drug.ts, start=c(2007))
+```
+
+Although the full plot of out-of-pocket drug costs has increased over time, there is more up and down variation in this window, meaning that it will be interesting to see if, based on the data available for this window alone, there exists some relationship between these two time series that can be quantified through modeling.
+
+```{r}
+
+plot(pharma.yearly.ts, main = "U.S. Pharmaceutical ETF (2007-2020)", xlab = "", ylab = "")
+plot(drug.window.ts, main = "Out-of-Pocket Prescription Drug Costs (2007-2020)", xlab = "", ylab = "")
+```
+
+When looking at their paired relationship:
+
+```{r}
+
+pairs(cbind(Pharma = pharma.yearly.ts, Drug = drug.window.ts))
+```
+
+Now, we can combine the two time series together into one for analysis using cbind().
+
+```{r}
+ts.combo = cbind(pharma.yearly.ts, drug.window.ts)
+plot.ts(ts.combo, main = "", xlab = "Year", ylab = "")
+
+```
+
+#### Determining Lags and Parameters
+
+First, let me take another look at the ACF and PACF for my yearly pharmaceutical ETF data and my out-of-pocket drug cost data.
+
+```{r, warning=FALSE}
+par(mar=c(5,4,3,2)+0.1)
+acf(pharma.yearly.ts, main = "ACF for Yearly Pharma ETF")
+pacf(pharma.yearly.ts, main = "PACF for Yearly Pharma ETF")
+
+acf(drug.window.ts, main = "ACF for Yearly Drug Cost")
+pacf(drug.window.ts, main = "PACF for Yearly Drug Cost")
+```
+
+Next, I want to find the optimal number of lags to use for the combined model. To do this, I will use VARselect().
+
+I will fit two different models here. Because the original out-of-pocket drug cost dataset required detrending, I will fit one model with a type of "both", which takes into account detrending, and one model with a type of "constant", which ignores detrending.
+
+According to the results for the "both" model variant, I should use 1 lag for the model, as that was the most frequent result from the different metrics.
+
+```{r, warning=FALSE}
+library(vars)
+library(astsa)
+
+best.lag = VARselect(ts.combo, lag.max = 10, type = "both")
+best.lag$selection
+```
+
+According to the results for the "constant" model variant, I should use two lags for the model.
+
+```{r, warning=FALSE}
+
+
+best.lag = VARselect(ts.combo, lag.max = 10, type = "const")
+best.lag$selection
+```
+
+#### Building and Diagnosing the VAR Model
+
+*Detrended Model*
+
+Now, I will build the first VAR model. Based on the results of the model, it seems like the only coefficient with any significant effect is the out-of-pocket drug cost of lag 1 on the original drug cost time series. None of the coefficients have an effect on the yearly pharmaceutical ETF time series.
+
+```{r}
+var.model.1 = VAR(ts.combo, p = 1, type = "both", season = NULL, exogen = NULL)
+summary(var.model.1)
+```
+
+Next, I am going to plot the ACFs of the residuals. Overall, the residuals look good and seem to resemble white noise.
+
+```{r}
+par(mar=c(5,4,3,2)+0.1)
+acf(residuals(var.model.1)[,1])
+acf(residuals(var.model.1)[,2])
+
+```
+
+*Constant Model*
+
+Now, I will build the second VAR model that does not take detrending into account to see if it performs any better than the first model. This model will take two lags into account as based on the results of VARselect() earlier.
+
+Based on the results of the model, it looks like none of the coefficients have a significant effect on the drug time series. For the pharmaceutical time series, the 1st pharmaceutical ETF lag seems to have a relatively weak but still significant predictive effect.
+
+```{r}
+var.model.2 = VAR(ts.combo, p = 2, type = "const", season = NULL, exogen = NULL)
+summary(var.model.2)
+```
+
+Next, I am going to plot the ACFs of the residuals. Overall, the residuals look good and seem to resemble white noise.
+
+```{r}
+par(mar=c(5,4,3,2)+0.1)
+acf(residuals(var.model.1)[,1])
+acf(residuals(var.model.1)[,2])
+
+```
+
+Next, I will look at the cross correlation matrix. There seems to be white noise here as well.
+
+```{r}
+par(mar=c(5,4,3,2)+0.1)
+acf(residuals(var.model.2)[,1])
+acf(residuals(var.model.2)[,2])
+```
+
+#### Cross-Validation
+
+Now, I am going to perform cross-validation to determine which of the two VAR models tested above has the lowest RMSE.
+
+I will start by splitting the combined time series into training and testing components.
+
+```{r}
+
+combo.train = window(ts.combo, end = c(2019,1))
+combo.test = window(ts.combo, start = c(2020,1))
+```
+
+Next, I will perform the cross-validation. The RMSE values for the two models can be seen below.
+
+```{r, eval=FALSE}
+for (i in 10){
+
+train.var.1 = VAR(combo.train, p = 1, type = "both")
+train.var.2 = VAR(combo.train, p = 2, type = "const")
+
+var.pred.1 = predict(train.var.1, n.ahead = length(combo.test))
+var.pred.2 = predict(train.var.2, n.ahead = length(combo.test))
+
+model1.fpharma = var.pred.1$fcst$pharma.yearly.ts
+model1.fdrug = var.pred.1$fcst$drug.window.ts
+
+model1.fdf = data.frame(model1.fpharma[,1], model1.fdrug[,1])
+
+model2.fpharma = var.pred.2$fcst$pharma.yearly.ts
+model2.fdrug = var.pred.2$fcst$drug.window.ts
+
+model2.fdf = data.frame(model2.fpharma[,1], model2.fdrug[,1])
+
+# pred.rmse.1 = accuracy(var.pred.1$fcst, combo.test)[2]
+# pred.rmse.2 = accuracy(var.pred.2$fcst, combo.test)[2]
+
+print(paste0("RMSE for Detrended Model: ", round(pred.rmse.1,2)))
+print(paste0("RMSE for Constant Model: ", round(pred.rmse.2,2)))
+```
+
+(Still need to figure this out)
+
+### Forecasting
+
+Finally, using the results of the VAR model, I am going to forecast two years into the future.
+
+The results of the first, detrended model are below.
+
+```{r}
+(pred.var.1 = predict(var.model.1, n.ahead = 2, ci = 0.95)) # 2 yrs ahead
+```
+
+```{r}
+fanchart(pred.var.1)
+```
+
+The results of the second, constant model are below.
+
+```{r}
+(pred.var.2 = predict(var.model.2, n.ahead = 2, ci = 0.95)) # 2 yrs ahead
+```
+
+```{r}
+fanchart(pred.var.2)
+```
