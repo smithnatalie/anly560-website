@@ -653,7 +653,7 @@ drug.window.ts            0.02047        1.00000</code></pre>
 </section>
 <section id="forecasting" class="level3">
 <h3 class="anchored" data-anchor-id="forecasting">Forecasting</h3>
-<p>Finally, using the results of the VAR model, I am going to forecast two years into the future.</p>
+<p>Finally, using the results of the VAR model, I am going to forecast two years into the future. Based on the effectiveness of the coefficients in the first detrended model, I am going to proceed with forecasting on that model instead of the constant model.</p>
 <p>The results of the first, detrended model are below.</p>
 <div class="cell">
 <details>
@@ -679,33 +679,6 @@ $drug.window.ts
 </details>
 <div class="cell-output-display">
 <p><img src="arimax_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>The results of the second, constant model are below.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">pred.var.2 =</span> <span class="fu">predict</span>(var.model<span class="fl">.2</span>, <span class="at">n.ahead =</span> <span class="dv">2</span>, <span class="at">ci =</span> <span class="fl">0.95</span>)) <span class="co"># 2 yrs ahead</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>$pharma.yearly.ts
-         fcst    lower    upper       CI
-[1,] 43.25170 40.66220 45.84121 2.589507
-[2,] 45.40174 42.10808 48.69541 3.293665
-
-$drug.window.ts
-         fcst    lower    upper       CI
-[1,] 47668.46 43911.40 51425.53 3757.070
-[2,] 48598.39 43805.37 53391.42 4793.026</code></pre>
-</div>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fanchart</span>(pred.var<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="arimax_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 

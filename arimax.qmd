@@ -226,7 +226,7 @@ print(paste0("RMSE for Constant Model: ", round(pred.rmse.2,2)))
 
 ### Forecasting
 
-Finally, using the results of the VAR model, I am going to forecast two years into the future.
+Finally, using the results of the VAR model, I am going to forecast two years into the future. Based on the effectiveness of the coefficients in the first detrended model, I am going to proceed with forecasting on that model instead of the constant model. 
 
 The results of the first, detrended model are below.
 
@@ -238,12 +238,3 @@ The results of the first, detrended model are below.
 fanchart(pred.var.1)
 ```
 
-The results of the second, constant model are below.
-
-```{r}
-(pred.var.2 = predict(var.model.2, n.ahead = 2, ci = 0.95)) # 2 yrs ahead
-```
-
-```{r}
-fanchart(pred.var.2)
-```
