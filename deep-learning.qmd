@@ -51,7 +51,7 @@ from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 ```
 
-#### Recurrent Neural Network (RNN)
+### Recurrent Neural Network (RNN)
 
 For the RNN model, the first thing I am going to do is reformat the data into the correct shape for Keras.
 
@@ -331,7 +331,7 @@ However, it is very important to note that overfitting might be occurring. After
 ![arima](./datasets/arima.png)
 
 
-#### Gated Recurrent Unit (GRU)
+### Gated Recurrent Unit (GRU)
 
 Next, I will move to the GRU to see how it performs comparatively to the successful RNN. The process is very similar to what was done before, and I will be using the same number of recurrent hidden units and epochs, the same fraction batch size, and the same validation split of 0.2. Once again, I am applying regularization to the model.
 
@@ -441,7 +441,7 @@ print('Train MSE = %.5f RMSE = %.5f' % (train_rmse**2.0,train_rmse))
 print('Test MSE = %.5f RMSE = %.5f' % (test_rmse**2.0,test_rmse))  
 ```
 
-#### Long Short-Term Memory (LSTM)
+### Long Short-Term Memory (LSTM)
 
 Finally, I am going to look at the last model, LSTM, to determine if it is able to outperform the current leader of RNN in terms of predictive ability and minimal testing error.
 
@@ -554,7 +554,7 @@ print('Train MSE = %.5f RMSE = %.5f' % (train_rmse**2.0,train_rmse))
 print('Test MSE = %.5f RMSE = %.5f' % (test_rmse**2.0,test_rmse))  
 ```
 
-#### Neural Network Model Comparison and Forecasting: Are the Deep Learning Models Reliable?
+### Neural Network Model Comparison and Forecasting: Are the Deep Learning Models Reliable?
 
 Because the GRU and LSTM perform equaly well, it's a bit difficult to determine which is best. However, I believe that the GRU is the model, as it is far less complex than the LSTM. This is important for two reasons. The first reason is that my dataset is relatively small, even after changing the time series from yearly to monthly, therefore the computing power and possible overfitting of the LSTM may not be necessary, especially if they have the same error rates. The second reason is that all modeling and simulation for this project is done on an M2 Mac chip, which is considered by many to perhaps be a bit too efficient when it comes to faster training times and increased computational power. Because these tensorflow and keras models were not developed for the M2 chip's power, it is possible that an M2 chip may overfit when compared to other chips, which also leads me to believe that the GRU is a better choice due to its lower complexity.
 
@@ -592,7 +592,7 @@ forecast_start = "1995-01-31"
 dates = pd.date_range(forecast_start, periods=num_steps, freq='M')
 
 plt.plot(dates, forecast)
-plt.title('Out-of-Pocket Cost: GRU Forecast (2030-2040)')
+plt.title('Out-of-Pocket Cost: GRU Forecast (1995-2005)')
 plt.xlabel('Year')
 plt.ylabel('Out-of-Pocket Cost (Millions of USD)')
 plt.show()
