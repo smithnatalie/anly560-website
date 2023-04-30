@@ -3,9 +3,10 @@ project:
 
 website:
   title: "Time Series - Natalie Smith"
-  navbar:
-    left:
-      - text: "Home"
+  sidebar:
+    style: "docked"
+    contents:
+      - text: "About Me"
         file: index.qmd
       - introduction.qmd
       - data-sources.qmd
