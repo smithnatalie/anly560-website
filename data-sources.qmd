@@ -15,14 +15,20 @@ This data was pulled from the Centers for Medicare & Medicaid Services' National
 
 The link to this data source can be found [here](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/NationalHealthAccountsProjected).
 
+![](dollar_pill.png)
+
 #### U.S. Pharmaceutical Companies Stock ETF
 
 This data was pulled from Yahoo Finance's stock price record of the iShares U.S. Pharmaceuticals ETF, or IHE. This ETF tracks overall market performance and changes for the largest Pharmaceutical companies in the United States.
 
 The link to this data source can be found [here](https://finance.yahoo.com/quote/IHE?p=IHE).
 
+![](pharma.png)
+
 #### U.S. Weekly Influenza Deaths
 
 This data was pulled from the CDC's Weekly Influenza Surveillance Report which tracks weekly influenza, pneumonia, and COVID-19 deaths in the United States. In this project, I focused on the weekly influenza data, which will be explained further in future tabs.
 
 The link to this data source can be found [here](https://www.cdc.gov/flu/weekly/index.htm#FluSurvNet).
+
+![](tamiflu.png)
