@@ -10,7 +10,7 @@ For the financial time series modeling section of this project, I am once again 
 
 More specifically, I am going to be modeling and forecasting the volatility of future returns.
 
-### Plotting, Stationarity, and Volatility 
+### Plotting, Stationarity, and Volatility
 
 ```{r, message=FALSE}
 library(tidyverse)
@@ -26,7 +26,7 @@ library(kableExtra)
 library(dplyr)
 ```
 
-Just by looking at the time series plot for the adjusted closing prices below, we can see that the data is not stationary. 
+Just by looking at the time series plot for the adjusted closing prices below, we can see that the data is not stationary.
 
 ```{r}
 pharma = read.csv("datasets/IHE.csv")
@@ -46,9 +46,10 @@ As can be seen below, there appear to be some points of high volatility, particu
 returns = log(pharma.ts) %>% diff()
 autoplot(returns) + ggtitle("IHE ETF Returns")
 ```
+
 To determine if this is now stationary, we can look at the ACF and PACF plots for these returns.
 
-Based on the results of below, I will conclude that the returns are at least weakly stationary. 
+Based on the results of below, I will conclude that the returns are at least weakly stationary.
 
 ```{r}
 par(mar=c(5,4,3,2)+0.1)
@@ -64,7 +65,7 @@ pacf(returns)
 
 We can also see the results of the ACF and PACF for the absolute values of the returns and the squared values of the returns below.
 
-Looking at the results, there appears to be some correlation between the plots, as the results follow the same pattern for the absolute value of the returns and the squared value of the returns. 
+Looking at the results, there appears to be some correlation between the plots, as the results follow the same pattern for the absolute value of the returns and the squared value of the returns.
 
 *Absolute Value*
 
@@ -82,7 +83,7 @@ acf(returns^2)
 pacf(returns^2)
 ```
 
-By looking at the PACF of the squared returns seen above, the p parameter for the ARCH(p) model can be found. Based on the results above, it seems like p = 4 is the best option. 
+By looking at the PACF of the squared returns seen above, the p parameter for the ARCH(p) model can be found. Based on the results above, it seems like p = 4 is the best option.
 
 I will fit the following ARCH(p) model with p = 4 below:
 
@@ -91,22 +92,25 @@ library(fGarch)
 arch.fit1 = garchFit(~garch(4,0), data = returns, trace = F)
 summary(arch.fit1)
 ```
+
 Looking at the results above, we can see that none of the alpha coefficients are significant. To see if this changes when we reduce the p parameter, I will perform the following ARCH(p) model where p = 1.
 
 ```{r}
 arch.fit2 = garchFit(~garch(1,0), data = returns, trace = F)
 summary(arch.fit2)
 ```
-Once again, we see that the alpha coefficient is not significant. 
+
+Once again, we see that the alpha coefficient is not significant.
 
 Because of this, I want to check for the presence of ARCH effects using a function called ArchTest(). If the null hypothesis can be rejected at the $\alpha = 0.05$ level, we can conclude that ARCH effects are present in the returns. If the null hypothesis cannot be rejected, then we will conclude that we cannot prove that ARCH effects are present in the returns.
 
-When lag = 1, we can see below that ARCH effects are not present. 
+When lag = 1, we can see below that ARCH effects are not present.
 
 ```{r, message=FALSE}
 library(FinTS)
 ArchTest(returns, lags = 1, demean=TRUE)
 ```
+
 However, when lag = 4, as was tested in the first ARCH model, we can reject the null hypothesis and conclude that ARCH(4) effects are present.
 
 ```{r}
@@ -115,7 +119,7 @@ ArchTest(returns, lags = 4, demean=TRUE)
 
 ### Improving the Model with GARCH
 
-Because I was able to conclude the presence of ARCH(4) effects in the returns, but believe the model can be improved, I am going to attempt to use GARCH(p,q) modeling to improve potential volatility forecasting ability. 
+Because I was able to conclude the presence of ARCH(4) effects in the returns, but believe the model can be improved, I am going to attempt to use GARCH(p,q) modeling to improve potential volatility forecasting ability.
 
 As a refresher, the ACF and PACF for the squared returns can be seen below.
 
@@ -125,9 +129,9 @@ acf(returns^2)
 pacf(returns^2)
 ```
 
-Based on the results above, I believe that the ideal GARCH model will contain a p parameter between 1 and 4 and a q parameter between 1 and 5. 
+Based on the results above, I believe that the ideal GARCH model will contain a p parameter between 1 and 4 and a q parameter between 1 and 5.
 
-To find the model with the lowest AIC error, I am going to create a for loop that will create a model for each of these options and extract the AIC values for each. 
+To find the model with the lowest AIC error, I am going to create a for loop that will create a model for each of these options and extract the AIC values for each.
 
 ```{r}
 garch.model = list()
@@ -152,12 +156,14 @@ which(garch.aic == min(garch.aic))
 ```{r}
 garch.model[[which(garch.aic == min(garch.aic))]]
 ```
+
 Based on the results above, it seems that the best model is GARCH(1,1). The summary of the model is seen below.
 
 ```{r}
 summary(garchFit(~garch(1,1), returns,trace = F)) 
 ```
-The results of the Ljung-Box test above prove the validity of the GARCH(1,1) in capturing all residual autocorrelation. For the Ljung-Box test, an inability to reject the null hypothesis means that the GARCH model is capturing autocorrelation. Because each test above has a high p-value, we can conclude that the model is a great fit. 
+
+The results of the Ljung-Box test above prove the validity of the GARCH(1,1) in capturing all residual autocorrelation. For the Ljung-Box test, an inability to reject the null hypothesis means that the GARCH model is capturing autocorrelation. Because each test above has a high p-value, we can conclude that the model is a great fit.
 
 I will plot the residuals to add further evidence to this. Looking at the standardized residuals plot, it does not seem like further modeling is needed. The residuals a appear stationary, and there does not appear to be any especially high points of volatility.
 
@@ -168,14 +174,13 @@ checkresiduals(best.garch)
 
 ### GARCH Model Equation
 
-The resulting equation for the chosen GARCH(1,1) model is: 
+The resulting equation for the chosen GARCH(1,1) model is:
 
 $\sigma_t^2 = \alpha_0 + \alpha_1r^2_{t-1} + \beta_1\sigma^2_{t-1}$
 
 Adding in the coefficients from the model summary:
 
 $\sigma_t^2 = \alpha_0 + 0.0847339r^2_{t-1} + 0.7126294\sigma^2_{t-1}$
-
 
 ### Forecasting
 
@@ -185,9 +190,3 @@ The prediction for the next 12 months can be seen below.
 best.fit = garchFit(~garch(1,1), returns)
 predict(best.fit , n.ahead = 12, trace = FALSE, plot=TRUE)
 ```
-
-
-
-
-
-

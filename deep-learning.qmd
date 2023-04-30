@@ -127,7 +127,7 @@ t2=len(train_data)+np.array([*range(0,len(test_data))])
 plotly_line_plot([t1,t2],[train_data,test_data],title="Out-of-Pocket Drug Costs Since 1960")
 ```
 
-Now that the train-test split has been completed, I will reshape the time series for the Keras model. 
+Now that the train-test split has been completed, I will reshape the time series for the Keras model.
 
 ```{python}
 # PREPARE THE INPUT X AND TARGET Y
@@ -164,7 +164,7 @@ testX, testY = get_XY(test_data, p)
 trainX, trainY = get_XY(train_data, p)
 ```
 
-Below, we can see the shape of the split. Everything looks normal. 
+Below, we can see the shape of the split. Everything looks normal.
 
 ```{python}
 print(testX.shape,testY.shape)
@@ -194,7 +194,7 @@ plotly_line_plot(tmp1,tmp2,title="Out-of-Pocket Cost: 10-Year Checkpoint Increas
 
 #### Creating the RNN Model
 
-First, I am going to establish the parameters. I will be using 3 recurrent hidden units, 200 epochs, and fraction batch size of 0.2, and a validation split of 0.2. The results of this are seen below. 
+First, I am going to establish the parameters. I will be using 3 recurrent hidden units, 200 epochs, and fraction batch size of 0.2, and a validation split of 0.2. The results of this are seen below.
 
 ```{python}
 recurrent_hidden_units=3
@@ -207,7 +207,7 @@ print(trainX.shape,p,trainY.shape)
 print(p,trainX.shape,testX.shape,trainY.shape,testY.shape)
 ```
 
-Now, I will create and run the RNN model. I will also add regularization to the model. 
+Now, I will create and run the RNN model. I will also add regularization to the model.
 
 ```{python}
 from tensorflow.keras import regularizers
@@ -231,7 +231,7 @@ drug_rnn.compile(loss='MeanSquaredError', optimizer=optimizer)
 drug_rnn.summary()
 ```
 
-Now that the model is created, I will begin the training process. 
+Now that the model is created, I will begin the training process.
 
 ```{python}
 import random
@@ -317,7 +317,7 @@ def plot_result(trainY, testY, train_predict, test_predict):
 plot_result(trainY, testY, train_predict, test_predict)
 ```
 
-As seen earlier, the training and testing MSE and RMSE are below. This is very low, and will act as a point of comparison when moving to the GRU and LSTM models. 
+As seen earlier, the training and testing MSE and RMSE are below. This is very low, and will act as a point of comparison when moving to the GRU and LSTM models.
 
 ```{python}
 print('Train MSE = %.5f RMSE = %.5f' % (train_rmse**2.0,train_rmse))
@@ -329,7 +329,6 @@ However, even before training those models, I can already say that the RNN model
 However, it is very important to note that overfitting might be occurring. After all the models have been run, I will be performing forecasting to see how the "best" deep learning model attempts to forecast the next 10 years. If it performs poorly, I will have to conclude that the model is performing so well likely becasue it is overfitting, and therefore may not be reliable.
 
 ![arima](./datasets/arima.png)
-
 
 ### Gated Recurrent Unit (GRU)
 
@@ -368,7 +367,7 @@ validation_split=validation_split,
 verbose=0)
 ```
 
-Once again, I will take a look at the visual learning history to ensure everything looks normal and that the model is learning as expected. Interestingly enough, the GRU model appears to be learning more quickly than the RNN, as the validation loss plummets before epoch 50. 
+Once again, I will take a look at the visual learning history to ensure everything looks normal and that the model is learning as expected. Interestingly enough, the GRU model appears to be learning more quickly than the RNN, as the validation loss plummets before epoch 50.
 
 ```{python}
 #HISTORY PLOT
@@ -400,7 +399,7 @@ plt.plot(epochs_steps, history.history['val_loss'], 'b', label='Validation loss'
 plt.legend()
 ```
 
-Looking at the parity plot and the actual vs predicted values over time, we can see that the GRU seems to be performing at par with the RNN. 
+Looking at the parity plot and the actual vs predicted values over time, we can see that the GRU seems to be performing at par with the RNN.
 
 ```{python}
 fig = px.scatter(x=trainY,y=train_predict,height=600,width=800)
@@ -547,7 +546,7 @@ def plot_result(trainY, testY, train_predict, test_predict):
 plot_result(trainY, testY, train_predict, test_predict)
 ```
 
-The results of the training and testing MSE and RMSE for the LSTM model are interesting, as they match that of the GRU model despite having unique training processes. 
+The results of the training and testing MSE and RMSE for the LSTM model are interesting, as they match that of the GRU model despite having unique training processes.
 
 ```{python}
 print('Train MSE = %.5f RMSE = %.5f' % (train_rmse**2.0,train_rmse))
@@ -558,7 +557,7 @@ print('Test MSE = %.5f RMSE = %.5f' % (test_rmse**2.0,test_rmse))
 
 Because the GRU and LSTM perform equaly well, it's a bit difficult to determine which is best. However, I believe that the GRU is the model, as it is far less complex than the LSTM. This is important for two reasons. The first reason is that my dataset is relatively small, even after changing the time series from yearly to monthly, therefore the computing power and possible overfitting of the LSTM may not be necessary, especially if they have the same error rates. The second reason is that all modeling and simulation for this project is done on an M2 Mac chip, which is considered by many to perhaps be a bit too efficient when it comes to faster training times and increased computational power. Because these tensorflow and keras models were not developed for the M2 chip's power, it is possible that an M2 chip may overfit when compared to other chips, which also leads me to believe that the GRU is a better choice due to its lower complexity.
 
-Just as I did before with the ARIMA models in an earlier tab of this portfolio, I am going to attempt to use the GRU to forecast out-of-pocket drug costs ten years into the future. Again, I will be using the monthly data used to train the model, making it a bit different from the ARIMA modeling. 
+Just as I did before with the ARIMA models in an earlier tab of this portfolio, I am going to attempt to use the GRU to forecast out-of-pocket drug costs ten years into the future. Again, I will be using the monthly data used to train the model, making it a bit different from the ARIMA modeling.
 
 ```{python}
 num_steps = 10 * 12 #because I converted the data to monthly data
@@ -578,9 +577,9 @@ for i in range(num_steps):
     init = np.vstack([init[1:,:], output])
 ```
 
-Below are the forecasted values for the next 10 years according to the GRU model. As mentioned earlier, extremely poor forecasting by the deep learning models may suggest overfitting is present, and that the models are likely unreliable for forecasting this dataset. 
+Below are the forecasted values for the next 10 years according to the GRU model. As mentioned earlier, extremely poor forecasting by the deep learning models may suggest overfitting is present, and that the models are likely unreliable for forecasting this dataset.
 
-Below, I performed the same 10-year forecasting done for the ARIMA model, where I predicted ten years into the future beginning in 1995 and ending in 2005. 
+Below, I performed the same 10-year forecasting done for the ARIMA model, where I predicted ten years into the future beginning in 1995 and ending in 2005.
 
 ```{python}
 drug_subset = drug_month.loc[drug_month.index[0:420]]
@@ -605,5 +604,3 @@ Comparing this to the differenced ARIMA(1,0,0) 10-year forecast referenced earli
 #### References
 
 For this section, I utilized much of the code from Professor James Hickman's "sunspots.ipynb" lab, which can be found [HERE](https://georgetown.instructure.com/courses/162127/files/folder/DL-2-share).
-
-
