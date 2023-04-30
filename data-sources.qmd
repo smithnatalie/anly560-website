@@ -7,11 +7,11 @@ format:
 
 Various data sources were gathered to create a holistic, detailed study of the pharmaceutical industry.
 
-All references and links to the following data on the web is located in the References tab.
+All references and links to the following data on the web are also located in the References tab.
 
 #### Out-of-Pocket Prescription Drug Costs
 
-This data was pulled from the Centers for Medicare & Medicaid Services' National Health Expenditure Accounts, which track a wide variety of types health spending in the United States.
+This data was pulled from the Centers for Medicare & Medicaid Services' National Health Expenditure Accounts, which track a wide variety of types of health spending in the United States.
 
 The link to this data source can be found [here](https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/NationalHealthExpendData/NationalHealthAccountsProjected).
 
@@ -19,7 +19,7 @@ The link to this data source can be found [here](https://www.cms.gov/Research-St
 
 #### U.S. Pharmaceutical Companies Stock ETF
 
-This data was pulled from Yahoo Finance's stock price record of the iShares U.S. Pharmaceuticals ETF, or IHE. This ETF tracks overall market performance and changes for the largest Pharmaceutical companies in the United States.
+This data was pulled from Yahoo Finance's stock price record of the iShares U.S. Pharmaceuticals ETF, or IHE. This ETF tracks overall market performance for the largest pharmaceutical companies in the United States.
 
 The link to this data source can be found [here](https://finance.yahoo.com/quote/IHE?p=IHE).
 
