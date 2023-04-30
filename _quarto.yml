@@ -4,6 +4,8 @@ project:
 website:
   title: "Time Series - Natalie Smith"
   navbar:
+    - search: true
+    - collapse: true
     - text: "About Me"
       file: index.qmd
       - introduction.qmd
