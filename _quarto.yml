@@ -6,9 +6,8 @@ website:
   sidebar:
     style: "docked"
     search: true
-      - text: "About Me"
-        file: index.qmd
-        menu:
+    contents:
+        - index.qmd
         - introduction.qmd
         - data-sources.qmd
         - data-visualization.qmd
@@ -19,6 +18,20 @@ website:
         - deep-learning.qmd
         - conclusions.qmd
         - references.qmd
+
+      # - text: "About Me"
+      #   file: index.qmd
+      #   menu:
+      #   - introduction.qmd
+      #   - data-sources.qmd
+      #   - data-visualization.qmd
+      #   - eda.qmd
+      #   - autoregressive-models.qmd
+      #   - arimax.qmd
+      #   - financial-models.qmd
+      #   - deep-learning.qmd
+      #   - conclusions.qmd
+      #   - references.qmd
       
 format:
   html:
