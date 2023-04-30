@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./arimax.html">
- <span class="menu-text">ARIMAX/SARIMAX/VAR Models</span></a>
+ <span class="menu-text">ARIMAX/SARIMAX/VAR</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./financial-models.html">
@@ -336,7 +336,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="eda_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Next, I want to turn the data a time series object for further analysis, using the “Year” variable as the time-step and “Out of Pocket” costs as the variable we are taking a look at.</p>
+<p>Next, I want to turn the data into a time series object for further analysis, using the “Year” variable as the time-step and “Out-of-Pocket” costs as the variable we are taking a look at.</p>
 <p>To start, I need to convert the “Year” categories to date types that can be used for time series analysis:</p>
 <div class="cell">
 <details>
@@ -365,7 +365,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <section id="decomposition-observing-trends-and-seasonality" class="level3">
 <h3 class="anchored" data-anchor-id="decomposition-observing-trends-and-seasonality">Decomposition: Observing trends and seasonality</h3>
-<p>First, I will take an additive decomposition to separate the out-of-pocket prescription drug costs time series into its different components.</p>
+<p>First, I will take an additive decomposition to separate the out-of-pocket prescription drug cost time series into its different components.</p>
 <p>Below, we can see that while there isn’t a seasonal component, there is absolutely an upward trend present over time in this data.</p>
 <div class="cell">
 <details>
@@ -400,7 +400,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="detecting-lag-are-yearly-out-of-pocket-prescription-drug-costs-random-or-non-random" class="level3">
 <h3 class="anchored" data-anchor-id="detecting-lag-are-yearly-out-of-pocket-prescription-drug-costs-random-or-non-random">Detecting Lag: Are yearly out-of-pocket prescription drug costs random or non-random?</h3>
-<p>Next, I will be creating a lag plot of my prescription drug cost dataset. The purpose of this portion of exploratory data analysis is to check for randomness or non-random structures in the dataset, outliers, potential model suitability, correlation, and seasonality. Even though seasonality was pretty much ruled out through decomposition, other forms of lag and autocorrelation can still exist within the data that need to be explored.</p>
+<p>Next, I will be creating a lag plot of my prescription drug cost dataset. The purpose of this portion of exploratory data analysis is to check for random or non-random structures in the dataset, outliers, potential model suitability, correlation, and seasonality. Even though seasonality was pretty much ruled out through decomposition, other forms of lag and autocorrelation can still exist within the data that need to be explored.</p>
 <p>Below, we can see that the highest autocorrelation is at lag 1, followed by lag 2, with each increasing lag showing less and less autocorrelation. However, even though there is no seasonality, there is an interesting pattern that forms when looking at the different time steps. The first 20 years of the data (about 1960-1980) all share a similar pattern, the next 20 years (about 1980-2000) share a similar pattern, and then finally the next 20 years (about 2000-2020) share a similar pattern.</p>
 <p>Overall, the data shows a positive linear pattern, suggesting positive autocorrelation.</p>
 <div class="cell">
