@@ -383,21 +383,21 @@ alternative hypothesis: stationary</code></pre>
 <pre><code>
 Coefficients:
          ar1      ma1      ma2     ma3  constant
-      0.7113  -0.8990  -0.2796  0.1785   -7.3396
-s.e.  0.1828   0.2181   0.2209  0.1857   30.2138
+      0.7113  -0.8990  -0.2795  0.1785   -7.3447
+s.e.  0.1828   0.2181   0.2209  0.1857   30.2147
 
-sigma^2 estimated as 1963201:  log likelihood = -512.47,  aic = 1036.94
+sigma^2 estimated as 1963218:  log likelihood = -512.47,  aic = 1036.94
 
 $degrees_of_freedom
 [1] 54
 
 $ttable
          Estimate      SE t.value p.value
-ar1        0.7113  0.1828  3.8907  0.0003
-ma1       -0.8990  0.2181 -4.1218  0.0001
-ma2       -0.2796  0.2209 -1.2657  0.2110
-ma3        0.1785  0.1857  0.9615  0.3406
-constant  -7.3396 30.2138 -0.2429  0.8090
+ar1        0.7113  0.1828  3.8906  0.0003
+ma1       -0.8990  0.2181 -4.1216  0.0001
+ma2       -0.2795  0.2209 -1.2651  0.2113
+ma3        0.1785  0.1857  0.9611  0.3408
+constant  -7.3447 30.2147 -0.2431  0.8089
 
 $AIC
 [1] 17.57523
@@ -431,8 +431,8 @@ $BIC
 <pre><code>
 Coefficients:
         ar1      ma1  constant
-      0.689  -0.9998   -7.2324
-s.e.  0.102   0.0547   30.7778
+      0.689  -0.9998   -7.2319
+s.e.  0.102   0.0547   30.7779
 
 sigma^2 estimated as 2024579:  log likelihood = -513.31,  aic = 1034.63
 
@@ -442,8 +442,8 @@ $degrees_of_freedom
 $ttable
          Estimate      SE  t.value p.value
 ar1        0.6890  0.1020   6.7567  0.0000
-ma1       -0.9998  0.0547 -18.2728  0.0000
-constant  -7.2324 30.7778  -0.2350  0.8151
+ma1       -0.9998  0.0547 -18.2729  0.0000
+constant  -7.2319 30.7779  -0.2350  0.8151
 
 $AIC
 [1] 17.53608
@@ -522,11 +522,14 @@ $BIC
 </div>
 </div>
 <p>As seen above, the auto.arima() selection is different than my manually chosen model of ARIMA(1,1,1). I am not exactly sure why this is the case, but it may have something to do with the auto.arima() function prioritizing a lower number of parameters when there is little performance improvement from adding additional parameters.</p>
+<p><em>ARIMA(1,0,0) Equation</em></p>
+<p>The equation for ARIMA(1,0,0) with a drift term included can be written as follows:</p>
+<p><span class="math inline">\(Y_t = 0.660(Y_t-1) + \epsilon_t + c\)</span>, where 0.660 is the AR(1) coefficient estimate for the model.</p>
 </section>
 <section id="forecasting" class="level4">
 <h4 class="anchored" data-anchor-id="forecasting">Forecasting</h4>
 <p>Next, I want to forecast the next ten years of out-of-pocket drug costs for both my manually-selected ARIMA(1,1,1) model and the auto.arima() selected ARIMA(1,0,0) model.</p>
-<p>As can be seen below, there is practically no difference between the two selected models when it comes to forecasting.</p>
+<p>As can be seen below, there is practically no difference between the two selected models when it comes to forecasting. As a result, I will proceed with using ARIMA(1,0,0) for the rest of this portfolio as the error is the smallest of the models tested.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -591,9 +594,9 @@ $BIC
     Ljung-Box test
 
 data:  Residuals from Mean
-Q* = 37.841, df = 6, p-value = 1.207e-06
+Q* = 37.841, df = 7, p-value = 3.248e-06
 
-Model df: 1.   Total lags used: 7</code></pre>
+Model df: 0.   Total lags used: 7</code></pre>
 </div>
 </div>
 <p><em>Naive Method</em></p>
@@ -752,9 +755,6 @@ X-squared = 349.15, df = 1, p-value &lt; 2.2e-16</code></pre>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>flu_diff <span class="ot">=</span> <span class="fu">diff</span>(flu.ts, <span class="at">lag =</span> <span class="dv">52</span>, <span class="at">differences =</span> <span class="dv">1</span>)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu_diff, <span class="dv">40</span>, <span class="at">main =</span> <span class="st">"ACF: Differenced Influenza Deaths TS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Ignoring unknown parameters: main</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -763,7 +763,7 @@ X-squared = 349.15, df = 1, p-value &lt; 2.2e-16</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -784,14 +784,14 @@ alternative hypothesis: stationary</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(flu_diff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid" width="672"></p>
@@ -803,7 +803,7 @@ alternative hypothesis: stationary</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>flu.fit <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">4</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>flu.fit <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">4</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
@@ -812,7 +812,7 @@ alternative hypothesis: stationary</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(flu.fit[<span class="dv">80</span><span class="sc">:</span><span class="dv">113</span>], flu.fit[<span class="fu">length</span>(flu.fit)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(flu.fit[<span class="dv">80</span><span class="sc">:</span><span class="dv">113</span>], flu.fit[<span class="fu">length</span>(flu.fit)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
@@ -854,7 +854,7 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>flu.fit2 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">1</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>flu.fit2 <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="dv">1</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">1</span>, <span class="at">Q =</span> <span class="dv">1</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
@@ -863,7 +863,7 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(flu.fit2[<span class="dv">56</span><span class="sc">:</span><span class="dv">85</span>], flu.fit2[<span class="fu">length</span>(flu.fit2)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(flu.fit2[<span class="dv">56</span><span class="sc">:</span><span class="dv">85</span>], flu.fit2[<span class="fu">length</span>(flu.fit2)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
@@ -907,25 +907,25 @@ $BIC
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auto.arima</span>(flu.ts, <span class="at">seasonal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">auto.arima</span>(flu.ts, <span class="at">seasonal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Series: flu.ts 
-ARIMA(4,0,0)(0,0,2)[52] with non-zero mean 
+ARIMA(3,0,1)(0,0,2)[52] with zero mean 
 
 Coefficients:
-         ar1      ar2     ar3      ar4    sma1    sma2      mean
-      1.6559  -0.7493  0.0439  -0.0109  0.0870  0.1880  126.0456
-s.e.  0.0510   0.0982  0.0983   0.0511  0.0552  0.0548   43.2511
+         ar1      ar2     ar3      ma1    sma1    sma2
+      1.6783  -0.7724  0.0456  -0.0050  0.0894  0.1945
+s.e.  0.4772   0.7863  0.3345   0.4732  0.0555  0.0547
 
-sigma^2 = 2031:  log likelihood = -2253.37
-AIC=4522.75   AICc=4523.09   BIC=4555.28</code></pre>
+sigma^2 = 2056:  log likelihood = -2256.7
+AIC=4527.4   AICc=4527.67   BIC=4555.86</code></pre>
 </div>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>auto.fit <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">4</span>, <span class="at">d =</span> <span class="dv">0</span>, <span class="at">q =</span><span class="dv">0</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">0</span>, <span class="at">Q =</span> <span class="dv">2</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>auto.fit <span class="ot">=</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(flu.ts, <span class="at">p =</span> <span class="dv">4</span>, <span class="at">d =</span> <span class="dv">0</span>, <span class="at">q =</span><span class="dv">0</span>, <span class="at">P =</span> <span class="dv">0</span>, <span class="at">D =</span> <span class="dv">0</span>, <span class="at">Q =</span> <span class="dv">2</span>, <span class="at">S =</span> <span class="dv">52</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
@@ -935,13 +935,17 @@ AIC=4522.75   AICc=4523.09   BIC=4555.28</code></pre>
 <section id="forecasting-1" class="level4">
 <h4 class="anchored" data-anchor-id="forecasting-1">Forecasting</h4>
 <p>Finally, I am going to forecast the number of influenza deaths in the U.S. in the two years. To do this, I will be using my reduced hand-selected SARIMA model, with the parameters SARIMA(2,1,1)x(0,1,1).</p>
+<p><em>SARIMA(2,1,1)x(0,1,1) Equation</em></p>
+<p>The equation for my chosen reduced SARIMA(2,1,1)x(0,1,1) can be written as follows:</p>
+<p><span class="math inline">\(Y_t - Y_(t-1) - Y_(t-s) + Y_(t-s-1) = 1.6206(Y_(t-1) - Y_(t-2) - Y_(t-s-1) + Y_(t-s-2)) - 0.6882(Y_(t-2) - Y_(t-3) - Y_(t-s-2) + Y_(t-s-3)) - 0.9835(ε_(t-1) - ε_(t-s-1)) - 0.9317(1-B^s)ε_t\)</span></p>
+<p>Here, the corresponding coefficients are: 1. AR(1): 1.6206 2. AR(2): -0.6882 3. MA(1): -0.9835 4. SMA(1): -0.9317</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()<span class="sc">+</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
@@ -955,8 +959,8 @@ AIC=4522.75   AICc=4523.09   BIC=4555.28</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>flu.window <span class="ot">=</span> <span class="fu">window</span>(flu.ts, <span class="at">start =</span> <span class="dv">2015</span>, <span class="at">end =</span> <span class="dv">2019</span>)</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.window)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"U.S. Influenza Deaths (2015-2019)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>flu.window <span class="ot">=</span> <span class="fu">window</span>(flu.ts, <span class="at">start =</span> <span class="dv">2015</span>, <span class="at">end =</span> <span class="dv">2019</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.window)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"U.S. Influenza Deaths (2015-2019)"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
@@ -966,8 +970,8 @@ AIC=4522.75   AICc=4523.09   BIC=4555.28</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>flu.mean <span class="ot">=</span> <span class="fu">meanf</span>(flu.window, <span class="at">h=</span><span class="dv">2</span>)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(flu.mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>flu.mean <span class="ot">=</span> <span class="fu">meanf</span>(flu.window, <span class="at">h=</span><span class="dv">2</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(flu.mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
@@ -977,17 +981,17 @@ AIC=4522.75   AICc=4523.09   BIC=4555.28</code></pre>
     Ljung-Box test
 
 data:  Residuals from Mean
-Q* = 1031.4, df = 41, p-value &lt; 2.2e-16
+Q* = 1031.4, df = 42, p-value &lt; 2.2e-16
 
-Model df: 1.   Total lags used: 42</code></pre>
+Model df: 0.   Total lags used: 42</code></pre>
 </div>
 </div>
 <p><em>Naive</em></p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>flu.naive <span class="ot">=</span> <span class="fu">naive</span>(flu.window, <span class="at">h=</span><span class="dv">2</span>)</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(flu.naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>flu.naive <span class="ot">=</span> <span class="fu">naive</span>(flu.window, <span class="at">h=</span><span class="dv">2</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">checkresiduals</span>(flu.naive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
@@ -1007,15 +1011,15 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts) <span class="sc">+</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(flu.window, <span class="at">h=</span><span class="dv">208</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(flu.window, <span class="at">h=</span><span class="dv">208</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  flu.window <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"SARIMA(2,1,1)x(0,1,1)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggtitle</span>(<span class="st">"Forecasting Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts) <span class="sc">+</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">meanf</span>(flu.window, <span class="at">h=</span><span class="dv">208</span>), <span class="at">series =</span> <span class="st">"Mean"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">naive</span>(flu.window, <span class="at">h=</span><span class="dv">208</span>), <span class="at">series =</span> <span class="st">"Naive"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  flu.window <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"SARIMA(2,1,1)x(0,1,1)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggtitle</span>(<span class="st">"Forecasting Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
@@ -1025,10 +1029,10 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts)<span class="sc">+</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"SARIMA(2,1,1)x(0,1,1)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Forecasting Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(flu.ts)<span class="sc">+</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>flu.ts <span class="sc">%&gt;%</span> <span class="fu">Arima</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  forecast <span class="sc">%&gt;%</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="at">series =</span> <span class="st">"SARIMA(2,1,1)x(0,1,1)"</span>, <span class="at">PI=</span><span class="cn">FALSE</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Forecasting Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">xlab</span>(<span class="st">"Year"</span>)<span class="sc">+</span><span class="fu">ylab</span>(<span class="st">"Count of Influenza Deaths"</span>)<span class="sc">+</span><span class="fu">guides</span>(<span class="at">colour=</span><span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Forecast"</span>))<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
@@ -1041,19 +1045,19 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">=</span> <span class="dv">75</span> <span class="co">#minimum model fitting length</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(flu.ts)</span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="co"># n-k</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">=</span> <span class="dv">75</span> <span class="co">#minimum model fitting length</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">length</span>(flu.ts)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="co"># n-k</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>I will once again use my previously determined SARIMA(2,1,1)x(0,1,1) model for the cross-validation. The MAE and RMSE of the 1-step cross-validation are listed below.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>farima1 <span class="ot">=</span> <span class="cf">function</span>(x,h){<span class="fu">forecast</span>(<span class="fu">Arima</span>(flu.ts, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)), <span class="at">h=</span>h)}</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>ts1.res <span class="ot">=</span> <span class="fu">tsCV</span>(flu.ts, farima1, <span class="at">h=</span><span class="dv">1</span>)</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(ts1.res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>farima1 <span class="ot">=</span> <span class="cf">function</span>(x,h){<span class="fu">forecast</span>(<span class="fu">Arima</span>(flu.ts, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="at">seasonal =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)), <span class="at">h=</span>h)}</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>ts1.res <span class="ot">=</span> <span class="fu">tsCV</span>(flu.ts, farima1, <span class="at">h=</span><span class="dv">1</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(ts1.res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 431</code></pre>
@@ -1062,31 +1066,31 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>MAE1 <span class="ot">=</span> <span class="fu">abs</span>(<span class="fu">mean</span>(ts1.res, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>RMSE1 <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(ts1.res<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"MAE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>MAE1 <span class="ot">=</span> <span class="fu">abs</span>(<span class="fu">mean</span>(ts1.res, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>RMSE1 <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(ts1.res<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"MAE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "MAE:"</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>MAE1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>MAE1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 131.4065</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"RMSE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"RMSE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "RMSE:"</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>RMSE1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>RMSE1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 278.3929</code></pre>
@@ -1096,8 +1100,8 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>ts52.res <span class="ot">=</span> <span class="fu">tsCV</span>(flu.ts, farima1, <span class="at">h=</span><span class="dv">52</span>)</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(ts52.res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>ts52.res <span class="ot">=</span> <span class="fu">tsCV</span>(flu.ts, farima1, <span class="at">h=</span><span class="dv">52</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(ts52.res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 22412</code></pre>
@@ -1106,31 +1110,31 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>MAE2 <span class="ot">=</span> <span class="fu">abs</span>(<span class="fu">mean</span>(ts52.res, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>RMSE2 <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(ts52.res<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"MAE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>MAE2 <span class="ot">=</span> <span class="fu">abs</span>(<span class="fu">mean</span>(ts52.res, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>RMSE2 <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(ts52.res<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"MAE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "MAE:"</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>MAE2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>MAE2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 20.14897</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"RMSE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"RMSE:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "RMSE:"</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>RMSE2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>RMSE2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 292.686</code></pre>
@@ -1140,10 +1144,10 @@ Model df: 0.   Total lags used: 42</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>flu.mse <span class="ot">=</span> <span class="fu">colMeans</span>(ts52.res<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">h=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">52</span>, <span class="at">MSE =</span> flu.mse) <span class="sc">%&gt;%</span></span>
-<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> h, <span class="at">y =</span> MSE)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>flu.mse <span class="ot">=</span> <span class="fu">colMeans</span>(ts52.res<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">h=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">52</span>, <span class="at">MSE =</span> flu.mse) <span class="sc">%&gt;%</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> h, <span class="at">y =</span> MSE)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="autoregressive-models_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="672"></p>

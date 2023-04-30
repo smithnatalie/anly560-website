@@ -16,7 +16,7 @@ In this project, my big picture, ultimate goal is to draw a connection between t
 
 -   Out-of-pocket prescription drug costs for consumers in the U.S.
 
--   Weekly influenza deaths in the U.s.
+-   Weekly influenza deaths in the U.S.
 
 Although the weekly influenza deaths data set added an interesting seasonal component to this analysis in the context of a relatively high-cost prescription drug used to treat an extremely common, contagious disease, I believe this aspect serves as more of an addendum to the points I hope to make with the other two data sets.
 
@@ -226,7 +226,7 @@ print(paste0("RMSE for Constant Model: ", round(pred.rmse.2,2)))
 
 ### Forecasting
 
-Finally, using the results of the VAR model, I am going to forecast two years into the future. Based on the effectiveness of the coefficients in the first detrended model, I am going to proceed with forecasting on that model instead of the constant model. 
+Finally, using the results of the VAR model, I am going to forecast two years into the future. Based on the effectiveness of the coefficients in the first detrended model, I am going to proceed with forecasting on that model instead of the constant model.
 
 The results of the first, detrended model are below.
 
@@ -237,4 +237,3 @@ The results of the first, detrended model are below.
 ```{r}
 fanchart(pred.var.1)
 ```
-

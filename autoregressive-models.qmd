@@ -175,11 +175,17 @@ cat(drug.arima100[28:50], drug.arima100[length(drug.arima100)], sep = "\n")
 
 As seen above, the auto.arima() selection is different than my manually chosen model of ARIMA(1,1,1). I am not exactly sure why this is the case, but it may have something to do with the auto.arima() function prioritizing a lower number of parameters when there is little performance improvement from adding additional parameters.
 
+*ARIMA(1,0,0) Equation*
+
+The equation for ARIMA(1,0,0) with a drift term included can be written as follows:
+
+$Y_t = 0.660(Y_t-1) + \epsilon_t + c$, where 0.660 is the AR(1) coefficient estimate for the model.
+
 #### Forecasting
 
 Next, I want to forecast the next ten years of out-of-pocket drug costs for both my manually-selected ARIMA(1,1,1) model and the auto.arima() selected ARIMA(1,0,0) model.
 
-As can be seen below, there is practically no difference between the two selected models when it comes to forecasting.
+As can be seen below, there is practically no difference between the two selected models when it comes to forecasting. As a result, I will proceed with using ARIMA(1,0,0) for the rest of this portfolio as the error is the smallest of the models tested.
 
 ```{r}
 drug.diff %>% Arima(order = c(1,1,1), include.drift = TRUE) %>%
@@ -324,7 +330,7 @@ To make the data stationary, I will perform both regular, first-order differenci
 
 At first glance, it is hard to determine if it is stationary for sure. The lag decreases quickly over time, but to be sure, I will perform an Augmented Dickey-Fuller test with an $\alpha = 0.05$ significance level.
 
-```{r}
+```{r, warning=FALSE}
 flu_diff = diff(flu.ts, lag = 52, differences = 1)
 ggAcf(flu_diff, 40, main = "ACF: Differenced Influenza Deaths TS")
 ```
@@ -393,6 +399,18 @@ auto.fit = capture.output(sarima(flu.ts, p = 4, d = 0, q =0, P = 0, D = 0, Q = 2
 #### Forecasting
 
 Finally, I am going to forecast the number of influenza deaths in the U.S. in the two years. To do this, I will be using my reduced hand-selected SARIMA model, with the parameters SARIMA(2,1,1)x(0,1,1).
+
+*SARIMA(2,1,1)x(0,1,1) Equation*
+
+The equation for my chosen reduced SARIMA(2,1,1)x(0,1,1) can be written as follows:
+
+$Y_t - Y_(t-1) - Y_(t-s) + Y_(t-s-1) = 1.6206(Y_(t-1) - Y_(t-2) - Y_(t-s-1) + Y_(t-s-2)) - 0.6882(Y_(t-2) - Y_(t-3) - Y_(t-s-2) + Y_(t-s-3)) - 0.9835(ε_(t-1) - ε_(t-s-1)) - 0.9317(1-B^s)ε_t$
+
+Here, the corresponding coefficients are:
+1. AR(1): 1.6206
+2. AR(2): -0.6882
+3. MA(1): -0.9835
+4. SMA(1): -0.9317
 
 ```{r, include=FALSE}
 flu_omit = na.omit(flu.ts)
