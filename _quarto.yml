@@ -7,17 +7,19 @@ website:
     style: "docked"
     search: true
     contents:
-        - index.qmd
-        - introduction.qmd
-        - data-sources.qmd
-        - data-visualization.qmd
-        - eda.qmd
-        - autoregressive-models.qmd
-        - arimax.qmd
-        - financial-models.qmd
-        - deep-learning.qmd
-        - conclusions.qmd
-        - references.qmd
+      - section: "Website"
+        contents:
+          - index.qmd
+          - introduction.qmd
+          - data-sources.qmd
+          - data-visualization.qmd
+          - eda.qmd
+          - autoregressive-models.qmd
+          - arimax.qmd
+          - financial-models.qmd
+          - deep-learning.qmd
+          - conclusions.qmd
+          - references.qmd
 
       # - text: "About Me"
       #   file: index.qmd
