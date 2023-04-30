@@ -5,4 +5,18 @@ format:
     theme: lux
 ---
 
-This is the home page for Natalie's Time Series portfolio. More information will be added here soon. 
+Natalie Smith is currently a graduate student in the Data Science and Analytics (DSAN) Master's program at Georgetown University.
+
+```{=html}
+<center><img src="mypicture.png" height="400" width="400"></center>
+```
+<br>
+
+She has lived in the DC area since 2015, starting with getting her undergraduate degree at the George Washington University where she double majored with a B.S. in Statistics and a B.S. in Political Science. After graduation, she spent three years working in the defense consulting space, acting as a data analyst, operations research analyst, software tester, project manager, consultant, and wargame designer among other roles before returning to school to join the world of data science.
+
+Her hobbies include exercising, hiking, cooking, playing video games, gardening, and exploring the DC and Northern Virginia area in her free time!
+
+```{=html}
+<p style="color: blue">GU netID: nls73</p>
+```
+
