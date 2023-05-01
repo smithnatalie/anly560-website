@@ -13,6 +13,10 @@ These out-of-pocket expenses include deductibles, co-pays, and, perhaps most not
 
 Meanwhile, as the American public suffers under ever-increasing drug costs for life saving medicine, massive pharmaceutical companies like Pfizer and Eli Lilly are seeing record profits year after year, while increasing prices on frequently prescribed medications by anywhere from 40 to 71 percent during 2011 to 2015 alone, according to the Center for American Progress.
 
+This infographic from Proclinical highlights the top 10 U.S. pharmaceutical companies as of 2022.
+
+![](proclinical.png)
+
 ### **Guiding Questions for Analysis**
 
 In this project, I will be using time series analysis to study the current state of the pharmaceutical industry. To do this, I will be analyzing how prescription drug costs have changed over the years, and explore the extent to which prices have increased and forecast what future price increases might look like. Additionally, I will be analyzing the rising profits of the pharmaceutical industry by looking at the performance of the IHE U.S. Pharmaceutical ETF over time.
