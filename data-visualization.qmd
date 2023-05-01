@@ -6,27 +6,11 @@ format:
     code-fold: true
 ---
 
+In this section, I want to use basic data visualization techniques to take an initial look at both of my datasets.
 
-### **Temperature: How has temperature in the state of Florida changed over the years?**
+### **ggplot:Have out-of-pocket prescription drug costs increased over the years?**
 
-
-In this section, I want to use time series analysis in the form of time series plots and visualizations to analyze if Florida's minimum, maximum, and average temperature has changed over the years, and, if it has, to what extent it has changed. Although more analysis will need to be done later to determine the significance of these changes, starting with a visual approach will allow for immediate notice of trends over time. 
-
-The goal of this first set of visualizations ties back to the following questions listed out in the Guiding Questions for Analysis listed out in the Introduction page of this project:
-
-1. How has Florida’s temperature changed over the last few decades?
-      i) Have averages temperatures continued to trend upwards?
-      ii) Is Florida experiencing consistent record-high temperatures in the summer year after year?
-      
-2. Is Florida seeing consistent temperature increases in every season compared to previous years?
-      i) For example, are winters in Florida in the 2010s and 2020s consistently hotter than the Florida winters of previous decades?
-
-To begin to answer these questions, I will be looking at temperature changes observed during the month of **December** specifically.
-
-
-
-### Plotting December Temperature Data Using Plotly:
-
+Using ggplot, I want to start to answer my first guiding question: have out-of-pocket prescription drug costs increased since 1960?
 
 ```{r, message=FALSE}
 library(tidyverse)
@@ -42,191 +26,76 @@ library(kableExtra)
 library(dplyr)
 ```
 
+I will first perform some basic cleaning of the dataset.
+```{r, warning=FALSE}
+drug = read.csv("datasets/nhe_drug.csv")
 
-As highlighted in the Data Sources tab of this project, the minimum, maximum, and monthly average temperatures from 1895-2022 in Florida are spread across three different datasets from NOAA's National Centers for Environmental Information. The first thing I need to do is combine this information into one cohesive data frame that can be used for analysis.
+drug = head(drug, -10)
 
+drug$Total.Expenditures = as.numeric(gsub(",","",drug$Total.Expenditures))
+drug$Out.of.Pocket = as.numeric(gsub(",","",drug$Out.of.Pocket))
+drug$Health.Insurance = as.numeric(gsub(",","",drug$Health.Insurance))
+drug$Private.Health.Insurance = as.numeric(gsub(",","",drug$Private.Health.Insurance))
+drug$Medicare = as.numeric(gsub(",","",drug$Medicare))
+drug$Medicaid..Title.XIX. = as.numeric(gsub(",","",drug$Medicaid..Title.XIX.))
+drug$Other.Health.Insurance = as.numeric(gsub(",","",drug$Other.Health.Insurance))
+drug$Other.Third.Party.Payers.and.Programs = as.numeric(gsub(",","",drug$Other.Third.Party.Payers.and.Programs))
+```
+
+Next, I will turn the data into a time series object and plot the results.
 
 ```{r}
-#Reading in all three datasets:
+drug.ts = subset(drug, select = Out.of.Pocket)
 
-avg.temp = read.csv("datasets/temperature/Avg_Temp_1895-2022.csv")
-min.temp = read.csv("datasets/temperature/Min_Temp_1895-2022.csv")
-max.temp = read.csv("datasets/temperature/Max_Temp_1895-2022.csv")
+drug.ts = ts(drug.ts, start=1960, frequency = 1)
 
+autoplot(drug.ts, main = "Consumer Out-of-Pocket Prescription Drug Costs (1960-2020)", xlab = "Year", ylab = "Out-of-Pocket Cost (Millions of USD)")
 
-#For each, remove the first three rows and the last column, as these are not useful for this analysis
-avg.temp = avg.temp[-(1:4),]
-avg.temp = avg.temp %>% select(-December)
+drug.ts.df = fortify(drug.ts)
 
-min.temp = min.temp[-(1:4),]
-min.temp = min.temp %>% select(-December)
+ggplot(drug.ts.df, aes(x=x, y=y))+geom_line()+
 
-max.temp = max.temp[-(1:4),]
-max.temp = max.temp %>% select(-December)
-
-#Join all dataframes together 
-
-temp.combo = list(avg.temp, min.temp, max.temp)
-temp.combo = temp.combo %>% reduce(full_join, by='Florida')
-
-#Rename 'Florida' column as Date
-
-temp.combo = temp.combo %>% rename("Date" = "Florida")
-
-# Change Date from character to actual date-time structure
-
-temp.combo$Date = as.Date(paste0(as.character(temp.combo$Date), '01'), format = '%Y%m%d')
-
+  
+  ggtitle("Out-of-Pocket Prescription Costs (1960-2020)")+ylab("Out-of-Pocket Cost (Millions of USD)")+xlab("Year")+theme_minimal()
 ```
-
-
-A table of the first ten values of the combined temperature dataframe can be seen below. (*Note that the date will always say "December 1st" of each month to ensure this is in proper datetime format - it is not necessarily the case that these temperatures (in the case of min and max) were observed on the first of each December.*):
-
+We can also add line breaks to observe the changes occurring in ten year intervals.
 
 ```{r}
-kable(head(temp.combo, 10), align = 'c') %>%
-  kable_styling(font_size = 13) %>%
-    row_spec(0, bold = TRUE, color = "white", background = "darkblue")
-  
+ggplot(drug.ts.df, aes(x=x, y=y))+geom_line()+
+   geom_vline(xintercept = seq(1960, 2020, by = 10),
+             linetype = "dashed", color = "red") +
+  ggtitle("Out-of-Pocket Prescription Costs (1960-2020)")+ylab("Out-of-Pocket Cost (Millions of USD)")+xlab("Year")+theme_minimal()
+```
+From the visualizations alone, I can conclude that out-of-pocket prescription drug costs have increased over time, particularly between 1990 and 2000 and between 2000 and 2008.
+
+ 
+
+### **Plotly: Has the U.S. pharmaceutical industry become more profitable since the IHE ETF was established in 2007?**
+
+Using plotly, I want to answer another guiding question, this time by seeing if the U.S. IHE ETF has increased its adjusted closing price since its establishment in 2007, and to what extent it has increased.
+
+Once again, I will clean the dataset and turn it into a time series object before plotting.
+
+```{r}
+pharma = read.csv("datasets/IHE.csv")
+pharma$Date = as.Date(pharma$Date)
+pharma.ts = subset(pharma, select = Adj.Close)
+
+pharma.ts = ts(pharma.ts, start=c(2007,1),frequency = 12)
+
+pharma.ts.df = data.frame(date=time(pharma.ts), price=as.numeric(pharma.ts))
 ```
 
 ```{r}
-require(dplyr)
-require(plotly)
-figure = plot_ly(x = ~temp.combo$Date, y= ~temp.combo$Average.Temperature) %>%
-  add_lines(y = temp.combo$Maximum.Temperature, name = "Maximum Temperature") %>%
-  add_lines(y = temp.combo$Average.Temperature, name = "Average Temperature") %>%
-  add_lines(y = temp.combo$Minimum.Temperature, name = "Minimum Temperature") %>%
+plot_ly(pharma.ts.df, x = ~date, y = ~price, type = "scatter",
+        mode = "lines", line = list(color = "blue")) %>%
   
-  layout(xaxis = list(title = "Year"), yaxis=list(title="Temperature (F)"), title = "December Temperatures in Florida (1895-2022)",
-         legend  = list(x=100, y = 0.5))
-  
-  
-figure
+  # Add axis titles and a chart title
+  layout(title = "IHE ETF Adjusted Closing Prices (2007-2022)",
+         xaxis = list(title = "Year", tickformat = "%Y.%m"),
+         yaxis = list(title = "Adjusted Closing Price"))
 ```
-
-
-Overall, it's a bit hard to tell from this data visualization alone whether or not December temperatures on average across Florida have risen significantly. What we can see, however, are years with especially cold or especially warm December in the state. For example, 1931 and 2015 have the two highest maximum, minimum, and average temperatures across the entire dataset, while the coldest December on record was actually in 2010, followed by 1903. 
-
-Interestingly enough, a quick search on Florida 2010 December yields a number of results, each reporting the year as the "Coldest December on Record", according to a report from NOAA's [2014 South Florida Weather Year in Review](https://www.weather.gov/media/mfl/news/2010WxSummary.pdf). In this report, they discuss that 2010 overall was a year of extremes, with the summer earlier in the year being recorded as the hottest summer in South Florida history at that time. 
-
-
-
-### Plotting July Temperature Data Using ggplot:
-
-Through using plotly, I was able to learn a bit more about Florida's temperature and climate. Overall, it seems like the minimum, maximum, and average temperatures during the winter have not changed all that much since 1895. However, the plot encouraged some additional exploration into December 2010 in the state, after which I learned that the same year that saw record low temperatures during the winter also saw record high temperatures during the summer. This prompted further exploration into Florida's hottest month of the year, July, to answer my guiding questions for this project.
-
-As with the December temperature data before, the July temperature date must be cleaned and combined into something usable and clean for analysis. 
-
-```{r}
-#Reading in all three datasets:
-
-avg.jul.temp = read.csv("datasets/temperature/July_Avg_Temp_1895-2022.csv")
-min.jul.temp = read.csv("datasets/temperature/July_Min_Temp_1895_2022.csv")
-max.jul.temp = read.csv("datasets/temperature/July_Max_Temp_1895-2022.csv")
-
-
-#For each, remove the first three rows and the last column, as these are not useful for this analysis
-avg.jul.temp = avg.jul.temp[-(1:4),]
-avg.jul.temp = avg.jul.temp %>% select(-July)
-
-min.jul.temp = min.jul.temp[-(1:4),]
-min.jul.temp = min.jul.temp %>% select(-July)
-
-max.jul.temp = max.jul.temp[-(1:4),]
-max.jul.temp = max.jul.temp %>% select(-July)
-
-#Join all dataframes together 
-
-jul.temp.combo = list(avg.jul.temp, min.jul.temp, max.jul.temp)
-jul.temp.combo = jul.temp.combo %>% reduce(full_join, by='Florida')
-
-#Rename 'Florida' column as Date
-
-jul.temp.combo = jul.temp.combo %>% rename("Date" = "Florida")
-
-# Change Date from character to actual date-time structure
-
-#jul.temp.combo$Date = as.Date(paste0(as.character(jul.temp.combo$Date), '01'), format = '%Y%m%d')
-jul.temp.combo$Date = substr(jul.temp.combo$Date, 1,4)
-
-
-#Converting characters to numeric for use in ggplot
-jul.temp.combo$Date = as.numeric(jul.temp.combo$Date)
-jul.temp.combo$Average.Temperature = as.numeric(jul.temp.combo$Average.Temperature)
-jul.temp.combo$Maximum.Temperature = as.numeric(jul.temp.combo$Maximum.Temperature)
-jul.temp.combo$Minimum.Temperature = as.numeric(jul.temp.combo$Minimum.Temperature)
-
-
-
-```
-
-The first ten values of the July temperature dataframe can be seen below:
-
-```{r}
-kable(head(jul.temp.combo, 10), align = 'c') %>%
-  kable_styling(font_size = 13) %>%
-    row_spec(0, bold = TRUE, color = "black", background = "darkorange")
-  
-```
-
-```{r, echo=FALSE}
-library(scales)
-july = ggplot(jul.temp.combo, aes(x=Date))+
-
-  geom_line(aes(y=Maximum.Temperature, colour = "Maximum Temperature"))+
-  geom_line(aes(y=Average.Temperature, colour = "Average Temperature"))+
-  geom_line(aes(y=Minimum.Temperature, colour = "Minimum Temperature"))+
-  
-  scale_x_continuous(breaks = scales::pretty_breaks(n=10))+
-  scale_color_manual(name = "Temperatures", values = c("Maximum Temperature" = "red", "Average Temperature" = "orange",
-                                                       "Minimum Temperature" = "gold"))+
-  ylab("Temperature (F)")+xlab("Year")+ggtitle("July Temperatures in Florida (1895-2022)")+
-  theme(plot.title = element_text(hjust = 0.5))
-  
-
-
-
-july
-```
-
-When plotting all three lines together as seen above, it's a bit hard to notice any clear increases or decreases. At first glance it seems that the maximum temperature each July has not changed all that much, while the average temperature has change slightly, and the minimum temperature appears to be increasing since around the 1980s. To be certain, I want to plot each temperature series as a separate scatter plot, and then use a trend line to determine for sure how the temperature has changed since 1895. The following trend lines are calculated using LOESS, or locally estimated scatterplot smoothing. 
-
-Looking at the three plots below, we can see that the maximum, average, and minimum temperatures have all increased over time. The most drastic increase is the minimum July temperature, which seems to have increased drastically since the 1980s. 
-
-
-```{r, message=FALSE}
-scatter1 = ggplot() +
-  ggtitle("Maximum July Temperatures (1895-2022)")+
-  geom_point(data=jul.temp.combo, aes(x=Date, y=Maximum.Temperature), color = "red")+
-  geom_smooth(data=jul.temp.combo, aes(x=Date,y=Maximum.Temperature), color = "black")+
-  scale_x_continuous(breaks = scales::pretty_breaks(n=5))+scale_y_continuous(breaks=scales::pretty_breaks(n=10))+
-  xlab("Year") + ylab("Temperature (F)") + theme(plot.title = element_text(hjust = 0.5))
-  
-  
-scatter2 = ggplot()+
-  ggtitle("Average July Temperatures (1895-2022)")+
-  geom_point(data=jul.temp.combo, aes(x=Date, y=Average.Temperature), color = "orange")+
-  geom_smooth(data=jul.temp.combo, aes(x=Date,y=Average.Temperature), color = "black")+
-  scale_x_continuous(breaks = scales::pretty_breaks(n=5))+scale_y_continuous(breaks=scales::pretty_breaks(n=10))+
-  xlab("Year") + ylab("Temperature (F)") + theme(plot.title = element_text(hjust = 0.5))
-
-scatter3 = ggplot()+
-  ggtitle("Minimum July Temperatures (1895-2022)")+
-  geom_point(data=jul.temp.combo, aes(x=Date, y=Minimum.Temperature), color = "gold")+
-    geom_smooth(data=jul.temp.combo, aes(x=Date,y=Minimum.Temperature), color = "black")+
-  scale_x_continuous(breaks = scales::pretty_breaks(n=5))+scale_y_continuous(breaks=scales::pretty_breaks(n=10))+
-  xlab("Year") + ylab("Temperature (F)") + theme(plot.title = element_text(hjust = 0.5))
-
-scatter1
-scatter2
-scatter3
-```
-
-
-
-
-
+Here, we can see that the U.S. pharmaceutical industry's market value, and therefore its overall profits and performance, has increased since 2007, especialy between the years of 2010 and 2015.
 
 
 

@@ -234,7 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p>Performance of the IHE U.S. pharmaceutical companies ETF</p></li>
 <li><p>Out-of-pocket prescription drug costs for consumers in the U.S.</p></li>
-<li><p>Weekly influenza deaths in the U.s.</p></li>
+<li><p>Weekly influenza deaths in the U.S.</p></li>
 </ul>
 <p>Although the weekly influenza deaths data set added an interesting seasonal component to this analysis in the context of a relatively high-cost prescription drug used to treat an extremely common, contagious disease, I believe this aspect serves as more of an addendum to the points I hope to make with the other two data sets.</p>
 <p>Because I believe there exists interdependence between pharmaceutical ETF performance, which I argue indicates profitability of the market, and out-of-pocket prescription drug costs, I want to use VAR (Vector Autoregression) modeling to analyze the relationship between these two unique time series data sets. The reason for this is that VAR models assume there exists some kind of dependent behavior between multiple time series variables. I believe this will allow for interesting insights to be drawn that can quantitatively codify this relationship.</p>
@@ -608,48 +608,6 @@ drug.window.ts            0.02047        1.00000</code></pre>
 </div>
 </div>
 </section>
-<section id="cross-validation" class="level4">
-<h4 class="anchored" data-anchor-id="cross-validation">Cross-Validation</h4>
-<p>Now, I am going to perform cross-validation to determine which of the two VAR models tested above has the lowest RMSE.</p>
-<p>I will start by splitting the combined time series into training and testing components.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>combo.train <span class="ot">=</span> <span class="fu">window</span>(ts.combo, <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2019</span>,<span class="dv">1</span>))</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>combo.test <span class="ot">=</span> <span class="fu">window</span>(ts.combo, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Next, I will perform the cross-validation. The RMSE values for the two models can be seen below.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">10</span>){</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>train.var<span class="fl">.1</span> <span class="ot">=</span> <span class="fu">VAR</span>(combo.train, <span class="at">p =</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">"both"</span>)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>train.var<span class="fl">.2</span> <span class="ot">=</span> <span class="fu">VAR</span>(combo.train, <span class="at">p =</span> <span class="dv">2</span>, <span class="at">type =</span> <span class="st">"const"</span>)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>var.pred<span class="fl">.1</span> <span class="ot">=</span> <span class="fu">predict</span>(train.var<span class="fl">.1</span>, <span class="at">n.ahead =</span> <span class="fu">length</span>(combo.test))</span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>var.pred<span class="fl">.2</span> <span class="ot">=</span> <span class="fu">predict</span>(train.var<span class="fl">.2</span>, <span class="at">n.ahead =</span> <span class="fu">length</span>(combo.test))</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>model1.fpharma <span class="ot">=</span> var.pred<span class="fl">.1</span><span class="sc">$</span>fcst<span class="sc">$</span>pharma.yearly.ts</span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>model1.fdrug <span class="ot">=</span> var.pred<span class="fl">.1</span><span class="sc">$</span>fcst<span class="sc">$</span>drug.window.ts</span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>model1.fdf <span class="ot">=</span> <span class="fu">data.frame</span>(model1.fpharma[,<span class="dv">1</span>], model1.fdrug[,<span class="dv">1</span>])</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>model2.fpharma <span class="ot">=</span> var.pred<span class="fl">.2</span><span class="sc">$</span>fcst<span class="sc">$</span>pharma.yearly.ts</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>model2.fdrug <span class="ot">=</span> var.pred<span class="fl">.2</span><span class="sc">$</span>fcst<span class="sc">$</span>drug.window.ts</span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>model2.fdf <span class="ot">=</span> <span class="fu">data.frame</span>(model2.fpharma[,<span class="dv">1</span>], model2.fdrug[,<span class="dv">1</span>])</span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co"># pred.rmse.1 = accuracy(var.pred.1$fcst, combo.test)[2]</span></span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="co"># pred.rmse.2 = accuracy(var.pred.2$fcst, combo.test)[2]</span></span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"RMSE for Detrended Model: "</span>, <span class="fu">round</span>(pred.rmse<span class="fl">.1</span>,<span class="dv">2</span>)))</span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"RMSE for Constant Model: "</span>, <span class="fu">round</span>(pred.rmse<span class="fl">.2</span>,<span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>(Still need to figure this out)</p>
-</section>
 </section>
 <section id="forecasting" class="level3">
 <h3 class="anchored" data-anchor-id="forecasting">Forecasting</h3>
@@ -658,7 +616,7 @@ drug.window.ts            0.02047        1.00000</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">pred.var.1 =</span> <span class="fu">predict</span>(var.model<span class="fl">.1</span>, <span class="at">n.ahead =</span> <span class="dv">2</span>, <span class="at">ci =</span> <span class="fl">0.95</span>)) <span class="co"># 2 yrs ahead</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">pred.var.1 =</span> <span class="fu">predict</span>(var.model<span class="fl">.1</span>, <span class="at">n.ahead =</span> <span class="dv">2</span>, <span class="at">ci =</span> <span class="fl">0.95</span>)) <span class="co"># 2 yrs ahead</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>$pharma.yearly.ts
@@ -675,10 +633,10 @@ $drug.window.ts
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fanchart</span>(pred.var<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fanchart</span>(pred.var<span class="fl">.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="arimax_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="arimax_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 

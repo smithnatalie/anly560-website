@@ -182,48 +182,6 @@ acf(residuals(var.model.2)[,1])
 acf(residuals(var.model.2)[,2])
 ```
 
-#### Cross-Validation
-
-Now, I am going to perform cross-validation to determine which of the two VAR models tested above has the lowest RMSE.
-
-I will start by splitting the combined time series into training and testing components.
-
-```{r}
-
-combo.train = window(ts.combo, end = c(2019,1))
-combo.test = window(ts.combo, start = c(2020,1))
-```
-
-Next, I will perform the cross-validation. The RMSE values for the two models can be seen below.
-
-```{r, eval=FALSE}
-for (i in 10){
-
-train.var.1 = VAR(combo.train, p = 1, type = "both")
-train.var.2 = VAR(combo.train, p = 2, type = "const")
-
-var.pred.1 = predict(train.var.1, n.ahead = length(combo.test))
-var.pred.2 = predict(train.var.2, n.ahead = length(combo.test))
-
-model1.fpharma = var.pred.1$fcst$pharma.yearly.ts
-model1.fdrug = var.pred.1$fcst$drug.window.ts
-
-model1.fdf = data.frame(model1.fpharma[,1], model1.fdrug[,1])
-
-model2.fpharma = var.pred.2$fcst$pharma.yearly.ts
-model2.fdrug = var.pred.2$fcst$drug.window.ts
-
-model2.fdf = data.frame(model2.fpharma[,1], model2.fdrug[,1])
-
-# pred.rmse.1 = accuracy(var.pred.1$fcst, combo.test)[2]
-# pred.rmse.2 = accuracy(var.pred.2$fcst, combo.test)[2]
-
-print(paste0("RMSE for Detrended Model: ", round(pred.rmse.1,2)))
-print(paste0("RMSE for Constant Model: ", round(pred.rmse.2,2)))
-```
-
-(Still need to figure this out)
-
 ### Forecasting
 
 Finally, using the results of the VAR model, I am going to forecast two years into the future. Based on the effectiveness of the coefficients in the first detrended model, I am going to proceed with forecasting on that model instead of the constant model.
