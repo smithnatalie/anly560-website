@@ -20,3 +20,5 @@ format:
 3.  Hananel Director, S., Hananel, S., Director, Gordon Director, P., Gordon, P., Manager, N. F. S., Fowler, N., Manager, S., Jarsulic, M., Wong, T. K., Chang, R., & Olinsky, B. (n.d.). How big pharma reaps profits while hurting everyday Americans. Center for American Progress. Retrieved from <https://www.americanprogress.org/article/big-pharma-reaps-profits-hurting-everyday-americans/>
 
 4.  Proclinical.com. (n.d.). Retrieved from <https://www.proclinical.com/blogs/2022-6/who-are-the-top-10-pharma-companies-in-the-world-2022>
+
+5. How the ACA has affected prescription access and affordability. (n.d.). Retrieved from <https://www.goodrx.com/hcp/providers/aca-impact-prescription-access>
