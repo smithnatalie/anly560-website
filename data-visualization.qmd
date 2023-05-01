@@ -48,9 +48,6 @@ Next, I will turn the data into a time series object and plot the results.
 drug.ts = subset(drug, select = Out.of.Pocket)
 
 drug.ts = ts(drug.ts, start=1960, frequency = 1)
-
-autoplot(drug.ts, main = "Consumer Out-of-Pocket Prescription Drug Costs (1960-2020)", xlab = "Year", ylab = "Out-of-Pocket Cost (Millions of USD)")
-
 drug.ts.df = fortify(drug.ts)
 
 ggplot(drug.ts.df, aes(x=x, y=y))+geom_line()+
@@ -95,6 +92,7 @@ plot_ly(pharma.ts.df, x = ~date, y = ~price, type = "scatter",
          xaxis = list(title = "Year", tickformat = "%Y.%m"),
          yaxis = list(title = "Adjusted Closing Price"))
 ```
+
 Here, we can see that the U.S. pharmaceutical industry's market value, and therefore its overall profits and performance, has increased since 2007, especialy between the years of 2010 and 2015.
 
 
