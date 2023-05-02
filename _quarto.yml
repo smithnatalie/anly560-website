@@ -29,15 +29,23 @@ website:
       - section: "About Me"
         contents: 
         - index.qmd
+      - section: "Introduction"
+        contents:
         - introduction.qmd
+      - section: "Data"
+        contents:
         - data-sources.qmd
         - data-visualization.qmd
         - eda.qmd
+      - section: "Modeling and Methods"
+        contents:
         - autoregressive-models.qmd
         - arimax.qmd
         - financial-models.qmd
         - deep-learning.qmd
+      - section: "Conclusions"
         - conclusions.qmd
+      - section: "References"
         - references.qmd
 
       
