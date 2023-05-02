@@ -1,8 +1,10 @@
 /* css styles */
-.navbar-nav{
-    display: flex;
-    flex-wrap: wrap;
-}
-h1.title {
-    font-size: 10px;
+nav {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  nav ul li {
+    min-width: 100px;
+    display: inline-block;
   }
