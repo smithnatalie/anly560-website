@@ -1,4 +1,5 @@
 /* css styles */
-.navbar-brand {
-    font-size: smaller;
-  }
+.navbar-nav{
+    display: flex;
+    flex-wrap: wrap;
+}
