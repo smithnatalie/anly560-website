@@ -13,7 +13,7 @@ Hello! My name is Natalie Smith, and I am currently a first-year graduate studen
 <br>
 
 I have lived in the DC area since 2015, starting with getting my undergraduate degree at the George Washington University where I double majored with a B.S. in Statistics and a B.S. in Political Science. After graduation, I spent three years working in the defense consulting space, acting as a data analyst, operations research analyst, software tester, project manager, consultant, and DOD wargame designer among other roles before returning to school to join the world of data science. At Georgetown, I currently work as a graduate research assistant and scholar at the Massive Data Institute.
-
+ 
 Outside of school and work, my hobbies include exercising, hiking, cooking, playing video games, gardening, and exploring the DC and Northern Virginia area in my free time. Thanks for checking out my portfolio!
 
 ```{=html}
