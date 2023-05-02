@@ -10,6 +10,7 @@ website:
       - type: button
         text: ☰
         toggle: true
+    right:
       - text: "About Me"
         file: index.qmd
       - introduction.qmd
