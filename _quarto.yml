@@ -5,6 +5,7 @@ website:
   title: "Time Series - Natalie Smith"
   navbar:
     collapse: true
+    scroll: true
     left:
       - text: "About Me"
         file: index.qmd
