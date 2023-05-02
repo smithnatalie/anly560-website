@@ -6,6 +6,6 @@ nav {
   
   /* Set a minimum width for the navbar items */
   nav ul li {
-    min-width: 100px;
+    min-width: 500px;
     display: inline-block;
   }
