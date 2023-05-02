@@ -3,3 +3,6 @@
     display: flex;
     flex-wrap: wrap;
 }
+h1.title {
+    font-size: 10px;
+  }

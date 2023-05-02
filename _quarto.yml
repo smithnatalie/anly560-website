@@ -7,10 +7,6 @@ website:
     collapse: true
     scroll: true
     left:
-      - type: button
-        text: ☰
-        toggle: true
-    right:
       - text: "About Me"
         file: index.qmd
       - introduction.qmd
