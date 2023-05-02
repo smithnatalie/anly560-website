@@ -1,0 +1,29 @@
+{
+    "id": "3D721E17",
+    "path": "~/C:/Users/smithnatalie/Desktop/anly560-quarto/anly560-website/autoregressive-models.qmd",
+    "project_path": "autoregressive-models.qmd",
+    "type": "quarto_markdown",
+    "hash": "3066767073",
+    "contents": "",
+    "dirty": false,
+    "created": 1681673313891.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "rmdVisualMode": "true",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "2:0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1681001052,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1681001052,
+    "read_only": false,
+    "read_only_alternatives": []
+}

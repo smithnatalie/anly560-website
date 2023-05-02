@@ -1,0 +1,2 @@
+"0","returns = log(pharma.ts) %>% diff()"
+"0","autoplot(returns) + ggtitle(""IHE ETF Returns"")"

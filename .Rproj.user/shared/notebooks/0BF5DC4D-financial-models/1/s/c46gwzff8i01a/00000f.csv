@@ -1,0 +1,6 @@
+"0","garch.aic <- sapply(garch.model, AIC)"
+"0","which(garch.aic == min(garch.aic))"
+"1","[1]"
+"1"," 1"
+"1","
+"

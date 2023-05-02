@@ -1,0 +1,334 @@
+---
+title: "Exploratory Data Analysis"
+format: 
+  html:
+    theme: lux
+    code-fold: true
+---
+
+In this section, I will be performing exploratory data analysis on two datasets to begin to answer the questions listed out in the Guiding Questions for Analysis in my Introduction to this project:
+
+## **Dataset 1: Out-of-pocket prescription drug costs**
+
+To start, I will read in and clean the data before moving on to EDA.
+
+```{r, message=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+library(dplyr)
+```
+
+I am removing the last 10 rows of this dataset, because they represent predicted expenditures rather than the actual captured historical expenditures that I would like to use in my analysis.
+
+```{r}
+drug = read.csv("datasets/nhe_drug.csv")
+
+
+drug = head(drug, -10)
+
+head(drug)
+```
+
+Next, I need to turn the expenditure numbers from characters to numbers so that they can be used in time series analysis.
+
+```{r, warning=FALSE}
+
+drug$Total.Expenditures = as.numeric(gsub(",","",drug$Total.Expenditures))
+drug$Out.of.Pocket = as.numeric(gsub(",","",drug$Out.of.Pocket))
+drug$Health.Insurance = as.numeric(gsub(",","",drug$Health.Insurance))
+drug$Private.Health.Insurance = as.numeric(gsub(",","",drug$Private.Health.Insurance))
+drug$Medicare = as.numeric(gsub(",","",drug$Medicare))
+drug$Medicaid..Title.XIX. = as.numeric(gsub(",","",drug$Medicaid..Title.XIX.))
+drug$Other.Health.Insurance = as.numeric(gsub(",","",drug$Other.Health.Insurance))
+drug$Other.Third.Party.Payers.and.Programs = as.numeric(gsub(",","",drug$Other.Third.Party.Payers.and.Programs))
+
+```
+
+Before turning the dataset into a time series object, I want to create some basic plots to look at the data for my variable of choice: Out-of-pocket prescription drug costs.
+
+GGPlot2 Line and Column Charts:
+
+```{r}
+drug.plot = ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
+  geom_line()+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  theme_minimal()
+drug.plot
+```
+
+```{r}
+ggplot(data=drug, aes(x=Year, y=Out.of.Pocket))+
+  geom_col()+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  theme_minimal()
+```
+
+Next, I want to turn the data a time series object for further analysis, using the "Year" variable as the time-step and "Out of Pocket" costs as the variable we are taking a look at.
+
+To start, I need to convert the "Year" categories to date types that can be used for time series analysis:
+
+```{r}
+drug$Year = as.Date(paste0(drug$Year, "-12-31"))
+
+class(drug$Year)
+```
+
+The plot below looks the same, but now it is a time series object.
+
+```{r}
+drug.ts = subset(drug, select = Out.of.Pocket)
+
+drug.ts = ts(drug.ts, start=1960, frequency = 1)
+
+autoplot(drug.ts, main = "Consumer Out-of-Pocket Prescription Drug Costs (1960-2020)", xlab = "Year", ylab = "Out-of-Pocket Cost (Millions of USD)")
+
+
+```
+
+### Decomposition: Observing trends and seasonality
+
+First, I will take an additive decomposition to separate the out-of-pocket prescription drug costs time series into its different components.
+
+Below, we can see that while there isn't a seasonal component, there is absolutely an upward trend present over time in this data.
+
+```{r}
+add_drugts = ts(drug.ts, frequency = 4)
+descompose_drug = decompose(add_drugts, "additive")
+autoplot(descompose_drug)
+```
+
+```{r}
+autoplot(as.ts(descompose_drug$trend), main = "Out-of-Pocket Cost Decomposition: Trend Component")
+```
+
+However, when extracting the seasonal component, we can see that there is no pattern that changes between years. This makes sense, as we are not looking at monthly or weekly data that would be able to suggest that costs might be increased in one season or decreased in another. We cannot determine a seasonality component by looking at years alone. However, the next dataset I am exploring for this project uses monthly data, meaning that seasonality is possible and may have to be dealt with.
+
+```{r}
+autoplot(as.ts(descompose_drug$seasonal), main = "Out-of-Pocket Cost Decomposition: Seasonal Component")
+```
+
+### Detecting Lag: Are yearly out-of-pocket prescription drug costs random or non-random?
+
+Next, I will be creating a lag plot of my prescription drug cost dataset. The purpose of this portion of exploratory data analysis is to check for randomness or non-random structures in the dataset, outliers, potential model suitability, correlation, and seasonality. Even though seasonality was pretty much ruled out through decomposition, other forms of lag and autocorrelation can still exist within the data that need to be explored.
+
+Below, we can see that the highest autocorrelation is at lag 1, followed by lag 2, with each increasing lag showing less and less autocorrelation. However, even though there is no seasonality, there is an interesting pattern that forms when looking at the different time steps. The first 20 years of the data (about 1960-1980) all share a similar pattern, the next 20 years (about 1980-2000) share a similar pattern, and then finally the next 20 years (about 2000-2020) share a similar pattern.
+
+Overall, the data shows a positive linear pattern, suggesting positive autocorrelation.
+
+```{r}
+gglagplot(drug.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag Plot: Out-of-Pocket Drug Costs") + theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+```
+
+### Moving Average Smoothing
+
+In this section, I will be looking at four distinct moving average windows, from smallest to largest. This will allow us to see even clearer trends in the data:
+
+-   3-period moving average
+-   7-period moving average
+-   12-period moving average
+-   16-period moving average
+
+```{r, message=FALSE, warning=FALSE}
+require(gridExtra)
+library(smooth)
+
+ma3 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 3), series = "3-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "3-MA" = "blue"),
+                      breaks = c("Drug Cost", "3-MA"))
+
+ma7 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 7), series = "7-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "7-MA" = "blue"),
+                      breaks = c("Drug Cost", "7-MA"))
+  
+ma12 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 12), series = "12-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "12-MA" = "blue"),
+                      breaks = c("Drug Cost", "12-MA"))
+
+
+ma16 = autoplot(drug.ts, series = "Drug Cost")+
+  autolayer(ma(drug.ts, 16), series = "16-MA")+
+  xlab("Year") + ylab("Out-of-Pocket Cost (Millions of USD)")+
+  ggtitle("Out-of-Pocket Prescription Drug Cost (1960-2020)")+
+  scale_colour_manual(values=c("Drug Cost" = "gray", "16-MA" = "blue"),
+                      breaks = c("Drug Cost", "16-MA"))
+
+ma3
+ma7
+ma12
+ma16
+
+```
+
+### Autocorrelation: Is the out-of-pocket prescription drug cost dataset exhibiting stationarity?
+
+The next important step of the EDA lag process is determining if the time series is stationary or non-stationary. In short, a stationary time series is one in which there is no trend, no seasonality, and constant variance over time. Seasonality is an important component of developing a predictive time series model, and non-stationary time series must be transformed to be stationary before proceeding to model development and fitting.
+
+We can determine if the dataset is stationary or not by looking at the ACF and PACF plots below.
+
+Below, we can see visually that the dataset is not stationary, as almost all of the lags fall outside of of the ACF intervals. To confirm the lack of stationarity, we will perform the Augmented Dickey-Fuller Test next.
+
+```{r, warning=FALSE}
+ggAcf(drug.ts, 48, main = "ACF: Prescription Drug Cost TS")
+
+ggPacf(drug.ts, 48, main = "PACF: Prescription Drug Cost TS")
+
+```
+
+### Augmented Dickey-Fuller Test: Confirming lack of stationarity
+
+Below, we can see that the results of the ADF test confirm a lack of stationarity, as the null hypothesis of non-stationarity cannot be rejected.
+
+```{r, warning=FALSE}
+tseries::adf.test(drug.ts)
+```
+
+## **Dataset 2: Monthly Performance of U.S. Pharmaceutical Companies ETF Stock**
+
+Although this dataset is very clean already, there are a few things to do to ensure it is in the correct format for analysis.
+
+```{r}
+pharma = read.csv("datasets/IHE.csv")
+head(pharma)
+```
+
+Now that the data is read in, I will convert the "Date" variable to a date-type object and then use the monthly average adjusted closing price as my variable of interest for time series analysis and modeling.
+
+```{r}
+pharma$Date = as.Date(pharma$Date)
+
+```
+
+Below, we can see the initial line plot of the changes in the adjusted closing price of the IHE pharmaceutical stock ETF since its creation in 2007.
+
+```{r}
+pharm.plot = ggplot(pharma, aes(x=Date))+
+  geom_line(aes(y=Adj.Close))+xlab("Year")+ylab("Adjusted Closing Price")+theme_minimal()
+
+pharm.plot
+```
+
+Next, I will turn this stock price dataset into a time series format for the remainder of the analysis.
+
+```{r}
+pharma.ts = subset(pharma, select = Adj.Close)
+
+pharma.ts = ts(pharma.ts, start=c(2007,1),frequency = 12)
+
+autoplot(pharma.ts, main = "U.S. Pharmaceuticals ETF (IHE) Performance (2007-2022)", xlab = "Date", ylab = "Adjusted Closing Price")
+
+```
+
+### Decomposition: Observing trends and seasonality
+
+As with the previous dataset, I will take an additive decomposition to separate the IHE ETF closing price time series into its different components.
+
+Although we see a clear upward trend, there doesn't really appear to be any seasonality in the adjusted closing prices of the ETF stock.
+
+```{r}
+add_pharma = ts(pharma.ts, frequency = 4)
+decompose_pharma = decompose(add_pharma, "additive")
+autoplot(decompose_pharma)
+```
+
+```{r}
+autoplot(as.ts(decompose_pharma$trend), main = "IHE ETF Closing Price Decomposition: Trend Component")
+autoplot(as.ts(decompose_pharma$seasonal), main = "IHE ETF Closing Price Decomposition: Seasonal Component")
+```
+
+### Detecting Lag: Are the adjusted closing prices of the IHE ETF random or non-random?
+
+Next, I will be creating another lag plot for my IHE ETF closing prices dataset to determine if any autocorrelation is present that may have impacts to stationarity.
+
+As can be seen below, there is very high positve autocorrelation present in these lag plots. Even though the correlation becomes weaker as the number of lags observed increases, even lags as high as lag 16 are showing a positive linear pattern suggesting high autocorrelation.
+
+```{r}
+gglagplot(pharma.ts, do.lines = FALSE) + xlab("Lags") + ylab("Yi") + ggtitle("Lag Plot: IHE ETF Adjust Closing Prices") + theme(axis.text.x = element_text(angle=45, hjust = 1))
+
+```
+
+### Moving Average Smoothing
+
+As with before, I will be looking at four distinct moving average windows, from smallest to largest. This will allow us to see the trends in the data more clearly:
+
+-   6-period moving average
+-   12-period moving average
+-   18-period moving average
+-   24-period moving average
+
+```{r, message=FALSE, warning=FALSE}
+require(gridExtra)
+library(smooth)
+
+ma6 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 6), series = "6-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+  scale_colour_manual(values=c("IHE Closing Price" = "gray", "6-MA" = "green"),
+                      breaks = c("IHE Closing Price", "6-MA"))
+
+ma12 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 12), series = "12-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+  scale_colour_manual(values=c("IHE Closing Price" = "gray", "12-MA" = "green"),
+                      breaks = c("IHE Closing Price", "12-MA"))
+  
+ma18 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 18), series = "18-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+  scale_colour_manual(values=c("IHE Closing Price" = "gray", "18-MA" = "green"),
+                      breaks = c("IHE Closing Price", "18-MA"))
+
+
+ma24 = autoplot(pharma.ts, series = "IHE Closing Price")+
+  autolayer(ma(pharma.ts, 24), series = "24-MA")+
+  xlab("Year") + ylab("Adjusted Closing Price")+
+  ggtitle("IHE ETF Adjusted Closing Prices (2007-2022)")+
+   scale_colour_manual(values=c("IHE Closing Price" = "gray", "24-MA" = "green"),
+                      breaks = c("IHE Closing Price", "24-MA"))
+
+ma6
+ma12
+ma18
+ma24
+```
+
+### Autocorrelation: Is the IHE ETF closing price dataset exhibiting stationarity?
+
+To confirm what appears to be a clear lack of stationarity present in the lag plot above, we can plot the ACF and PACF of the time series dataset.
+
+As expected, the results of the ACF plot show a very clear lack of stationarity in the data, seen by the fact that all lags fall outside of the boundaries even as they are decreasing. As with the prescription drug cost dataset, this means that the data will need to be transformed with detrending or differencing before modeling can be done on the data.
+
+```{r, warning=FALSE}
+ggAcf(pharma.ts, 48, main = "ACF: IHE ETF TS")
+
+ggPacf(pharma.ts, 48, main = "PACF: IHE ETF TS")
+
+```
+
+### Augmented Dickey-Fuller Test: Confirming lack of stationarity
+
+Although the ACF plot is the authority when it comes to determining stationarity or lack thereof, the results of the ADF test below also prove that the IHE ETF dataset is not stationary, as the null hypothesis of non-stationarity cannot be rejected due to a high p-value.
+
+```{r, warning=FALSE}
+tseries::adf.test(pharma.ts)
+```

@@ -1,0 +1,7 @@
+"0","pharma = read.csv(""datasets/IHE.csv"")"
+"0",""
+"0","pharma.ts = subset(pharma, select = Adj.Close)"
+"0",""
+"0","pharma.ts = ts(pharma.ts, start=c(2007,1),frequency = 12)"
+"0",""
+"0","autoplot(pharma.ts, main = ""U.S. Pharmaceuticals ETF (IHE) Performance (2007-2022)"", xlab = ""Date"", ylab = ""Adjusted Closing Price"")"

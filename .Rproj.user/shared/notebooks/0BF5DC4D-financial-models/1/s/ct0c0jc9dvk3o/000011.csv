@@ -1,0 +1,2 @@
+"0","best.garch = garch(returns, order = c(1,1), trace = F)"
+"0","checkresiduals(best.garch)"
