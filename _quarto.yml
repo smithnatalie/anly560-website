@@ -19,6 +19,10 @@ website:
       - deep-learning.qmd
       - conclusions.qmd
       - references.qmd
+    right:
+      - type: button
+        text: ☰
+        toggle: true
       
 format:
   html:
