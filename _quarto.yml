@@ -44,8 +44,10 @@ website:
         - financial-models.qmd
         - deep-learning.qmd
       - section: "Conclusions"
+        contents:
         - conclusions.qmd
       - section: "References"
+        contents:
         - references.qmd
 
       
