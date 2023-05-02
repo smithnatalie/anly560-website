@@ -1,0 +1,12 @@
+/* Add horizontal scrolling to the navbar */
+nav {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Set a minimum width for the navbar items */
+  nav ul li {
+    min-width: 100px;
+    display: inline-block;
+  }
+  

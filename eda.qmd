@@ -90,7 +90,6 @@ drug.ts = ts(drug.ts, start=1960, frequency = 1)
 
 autoplot(drug.ts, main = "Consumer Out-of-Pocket Prescription Drug Costs (1960-2020)", xlab = "Year", ylab = "Out-of-Pocket Cost (Millions of USD)")
 
-
 ```
 
 ### Decomposition: Observing trends and seasonality
