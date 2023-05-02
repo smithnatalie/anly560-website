@@ -7,6 +7,9 @@ website:
     collapse: true
     scroll: true
     left:
+      - type: button
+        text: ☰
+        toggle: true
       - text: "About Me"
         file: index.qmd
       - introduction.qmd
@@ -19,10 +22,7 @@ website:
       - deep-learning.qmd
       - conclusions.qmd
       - references.qmd
-    right:
-      - type: button
-        text: ☰
-        toggle: true
+
       
 format:
   html:
